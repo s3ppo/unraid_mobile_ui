@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:unraid_ui/global/notifiers.dart';
+import 'package:unraid_ui/screens/home.dart';
 import 'package:unraid_ui/screens/login.dart';
+
+import 'notifiers/auth_state.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,17 +16,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Unraid UI',
-      theme: ThemeData(
-        appBarTheme:
-            const AppBarTheme(backgroundColor: Colors.orange, foregroundColor: Colors.black),
-        primarySwatch: Colors.orange,
-        primaryColor: Colors.orange,
-        floatingActionButtonTheme: const FloatingActionButtonThemeData(
-            backgroundColor: Colors.grey, foregroundColor: Colors.white),
-      ),
-      home: const LoginPage(),
-    );
+    return MultiProvider(
+        providers: providers,
+        child: MaterialApp(
+          title: 'Unraid UI',
+          theme: ThemeData(
+            appBarTheme:
+                const AppBarTheme(backgroundColor: Colors.orange, foregroundColor: Colors.black),
+            primarySwatch: Colors.orange,
+            primaryColor: Colors.orange,
+            floatingActionButtonTheme: const FloatingActionButtonThemeData(
+                backgroundColor: Colors.grey, foregroundColor: Colors.white),
+          ),
+          home: Consumer<AuthState>(builder: (context, state, child) {
+            if (state.client != null) {
+              return const HomePage();
+            } else {
+              return const LoginPage();
+            }
+          }),
+        ));
   }
 }

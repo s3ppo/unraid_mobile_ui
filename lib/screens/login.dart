@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:unraid_ui/global/unraidclient.dart';
+import 'package:unraid_ui/notifiers/auth_state.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -9,12 +13,13 @@ class LoginPage extends StatefulWidget {
 
 class _MyLoginPageState extends State<LoginPage> {
   final myServer = TextEditingController();
-  final myEmail = TextEditingController();
-  final myPw = TextEditingController();
+  final myToken = TextEditingController();
+  AuthState? _state;
 
   @override
   void initState() {
     super.initState();
+    _state = Provider.of<AuthState>(context, listen: false);
   }
 
   @override
@@ -26,8 +31,7 @@ class _MyLoginPageState extends State<LoginPage> {
         Container(
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
             child: TextField(
-              keyboardType: TextInputType.emailAddress,
-              controller: myEmail,
+              controller: myServer,
               decoration: const InputDecoration(
                   labelText: 'Server IP',
                   border: OutlineInputBorder(),
@@ -36,23 +40,11 @@ class _MyLoginPageState extends State<LoginPage> {
         Container(
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
             child: TextField(
-              keyboardType: TextInputType.emailAddress,
-              controller: myEmail,
+              controller: myToken,
               decoration: const InputDecoration(
-                  labelText: 'Username',
+                  labelText: 'API Token',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.person)),
-            )),
-        Container(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-            alignment: Alignment.center,
-            child: TextField(
-              controller: myPw,
-              obscureText: true,
-              decoration: const InputDecoration(
-                  labelText: 'Password',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.lock)),
             )),
         Container(
             padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
@@ -67,10 +59,13 @@ class _MyLoginPageState extends State<LoginPage> {
                   ),
                 ),
                 child: const Text('LOGIN', style: TextStyle(fontWeight: FontWeight.w600)),
-                onPressed: () => loginUser())),
+                onPressed: () => loginUser()))
       ])),
     ));
   }
 
-  loginUser() async {}
+  loginUser() async {
+    _state!
+        .connectUnraid(token: myToken.value.text, ip: myServer.value.text, cache: GraphQLCache());
+  }
 }
