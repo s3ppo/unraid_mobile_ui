@@ -29,10 +29,15 @@ class MyApp extends StatelessWidget {
                 backgroundColor: Colors.grey, foregroundColor: Colors.white),
           ),
           home: Consumer<AuthState>(builder: (context, state, child) {
-            if (state.client != null) {
-              return GraphQLProvider(client: state.client, child: const HomePage());
+            if (state.initialized) {
+              if (state.client != null) {
+                return GraphQLProvider(client: state.client, child: const HomePage());
+              } else {
+                return const LoginPage();
+              }
             } else {
-              return const LoginPage();
+              return Container(
+                  padding: const EdgeInsets.all(10), child: const CircularProgressIndicator());
             }
           }),
         ));

@@ -31,21 +31,19 @@ class _MyHomePageState extends State<HomePage> {
           ],
           elevation: 0,
         ),
-        body: SingleChildScrollView(child: showHomeContent()));
+        body: Container(child: showHomeContent()));
   }
 
   Widget showHomeContent() {
-    String readHealth = """
-      query Query {
-        Query {
-          online
+    String readAllDockers = """
+        query Query{
+          dockerContainers(all:true){id,names,image}
         }
-      }
       """;
 
     return Query(
       options: QueryOptions(
-        document: gql(readHealth),
+        document: gql(readAllDockers),
       ),
       builder: (QueryResult? result, {VoidCallback? refetch, FetchMore? fetchMore}) {
         if (result!.hasException) {
@@ -53,17 +51,20 @@ class _MyHomePageState extends State<HomePage> {
         }
 
         if (result.isLoading) {
-          return const Text('Loading');
+          return Container(padding: const EdgeInsets.all(10), child: CircularProgressIndicator());
         }
 
-        List repositories = result.data!['welcome'];
+        List dockers = result.data!['dockerContainers'];
 
         return ListView.builder(
-            itemCount: repositories.length,
+            itemCount: dockers.length,
             itemBuilder: (context, index) {
-              final repository = repositories[index];
+              final docker = dockers[index];
 
-              return Text(repository['name']);
+              return ListTile(
+                title: Text(docker['names'][0]),
+                subtitle: Text(docker['image']),
+              );
             });
       },
     );

@@ -12,8 +12,10 @@ class AuthException implements Exception {
 class AuthState extends ChangeNotifier {
   final storage = const FlutterSecureStorage();
   ValueNotifier<GraphQLClient>? _client;
+  bool _initialized = false;
 
   ValueNotifier<GraphQLClient>? get client => _client;
+  bool get initialized => _initialized;
 
   AuthState() {
     init();
@@ -23,14 +25,17 @@ class AuthState extends ChangeNotifier {
     String? token = await storage.read(key: 'token');
     String? ip = await storage.read(key: 'ip');
     if (token != null && ip != null) {
-      connectUnraid(token: token, ip: ip);
+      await connectUnraid(token: token, ip: ip);
     }
+    _initialized = true;
   }
 
   connectUnraid({required String token, required String ip}) async {
     String endPoint = 'http://$ip/graphql';
     var link = HttpLink(endPoint, defaultHeaders: {
+      'Origin': "com.hw.unraid_ui",
       'Authorization': 'bearer $token',
+      'x-api-key': token
     });
     _client = ValueNotifier(GraphQLClient(link: link, cache: GraphQLCache()));
 
