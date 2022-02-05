@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:unraid_ui/global/unraidclient.dart';
 import 'package:unraid_ui/notifiers/auth_state.dart';
 
 class LoginPage extends StatefulWidget {
@@ -29,6 +28,9 @@ class _MyLoginPageState extends State<LoginPage> {
       child: SingleChildScrollView(
           child: Column(children: <Widget>[
         Container(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),
+            child: Text('Unraid', style: Theme.of(context).textTheme.headline4)),
+        Container(
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
             child: TextField(
               controller: myServer,
@@ -47,7 +49,7 @@ class _MyLoginPageState extends State<LoginPage> {
                   prefixIcon: Icon(Icons.person)),
             )),
         Container(
-            padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+            padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
             alignment: Alignment.center,
             child: OutlinedButton(
                 style: TextButton.styleFrom(
@@ -65,7 +67,6 @@ class _MyLoginPageState extends State<LoginPage> {
   }
 
   loginUser() async {
-    _state!
-        .connectUnraid(token: myToken.value.text, ip: myServer.value.text, cache: GraphQLCache());
+    await _state!.connectUnraid(token: myToken.value.text, ip: myServer.value.text);
   }
 }

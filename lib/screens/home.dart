@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_const
+
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
@@ -21,15 +23,23 @@ class _MyHomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return GraphQLProvider(
-        client: _state!.client,
-        child: Scaffold(body: SingleChildScrollView(child: showHomeContent())));
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Unraid'),
+          actions: <Widget>[
+            IconButton(icon: const Icon(Icons.logout), onPressed: () => _state!.logout())
+          ],
+          elevation: 0,
+        ),
+        body: SingleChildScrollView(child: showHomeContent()));
   }
 
   Widget showHomeContent() {
     String readHealth = """
-      query Health {
-        health
+      query Query {
+        Query {
+          online
+        }
       }
       """;
 
@@ -46,7 +56,7 @@ class _MyHomePageState extends State<HomePage> {
           return const Text('Loading');
         }
 
-        List repositories = result.data!['Health'];
+        List repositories = result.data!['welcome'];
 
         return ListView.builder(
             itemCount: repositories.length,

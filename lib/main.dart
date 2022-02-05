@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:unraid_ui/global/notifiers.dart';
 import 'package:unraid_ui/screens/home.dart';
 import 'package:unraid_ui/screens/login.dart';
-
 import 'notifiers/auth_state.dart';
 
 void main() {
@@ -20,6 +19,7 @@ class MyApp extends StatelessWidget {
         providers: providers,
         child: MaterialApp(
           title: 'Unraid UI',
+          debugShowCheckedModeBanner: false,
           theme: ThemeData(
             appBarTheme:
                 const AppBarTheme(backgroundColor: Colors.orange, foregroundColor: Colors.black),
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
           ),
           home: Consumer<AuthState>(builder: (context, state, child) {
             if (state.client != null) {
-              return const HomePage();
+              return GraphQLProvider(client: state.client, child: const HomePage());
             } else {
               return const LoginPage();
             }
