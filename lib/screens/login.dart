@@ -35,7 +35,7 @@ class _MyLoginPageState extends State<LoginPage> {
             child: TextField(
               controller: myServer,
               decoration: const InputDecoration(
-                  labelText: 'Server IP',
+                  labelText: 'Server IP:Port',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.dns)),
             )),

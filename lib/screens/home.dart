@@ -1,9 +1,10 @@
-// ignore_for_file: unnecessary_const
-
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:unraid_ui/notifiers/auth_state.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../global/routes.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -23,50 +24,74 @@ class _MyHomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Unraid'),
-          actions: <Widget>[
-            IconButton(icon: const Icon(Icons.logout), onPressed: () => _state!.logout())
-          ],
-          elevation: 0,
-        ),
-        body: Container(child: showHomeContent()));
+    return GraphQLProvider(
+        client: _state!.client,
+        child: Scaffold(
+            appBar: AppBar(
+              title: const Text('Unraid mobile'),
+              actions: <Widget>[
+                IconButton(icon: const Icon(Icons.logout), onPressed: () => _state!.logout())
+              ],
+              elevation: 0,
+            ),
+            body: Column(children: [showWelcomeContent(), showListContent()])));
   }
 
-  Widget showHomeContent() {
-    String readAllDockers = """
+  Widget showWelcomeContent() {
+    String readWelcome = """
         query Query{
-          dockerContainers(all:true){id,names,image}
+          welcome{
+            message
+          }
         }
       """;
 
     return Query(
-      options: QueryOptions(
-        document: gql(readAllDockers),
+        options: QueryOptions(
+          document: gql(readWelcome),
+        ),
+        builder: (QueryResult? result, {VoidCallback? refetch, FetchMore? fetchMore}) {
+          if (result!.hasException) {
+            return Text(result.exception.toString());
+          }
+
+          if (result.isLoading) {
+            return Container(
+                padding: const EdgeInsets.all(10), child: const CircularProgressIndicator());
+          }
+
+          String welcome = result.data!['welcome']['message'];
+
+          return Container(
+              padding: const EdgeInsets.all(10),
+              child: Text(welcome, style: TextStyle(color: Theme.of(context).primaryColor)));
+        });
+  }
+
+  Widget showListContent() {
+    return Expanded(
+        child: ListView(children: [
+      ListTile(
+        leading: const FaIcon(FontAwesomeIcons.docker),
+        title: const Text('Dockers'),
+        onTap: () {
+          Navigator.of(context).pushNamed(Routes.dockers);
+        },
       ),
-      builder: (QueryResult? result, {VoidCallback? refetch, FetchMore? fetchMore}) {
-        if (result!.hasException) {
-          return Text(result.exception.toString());
-        }
-
-        if (result.isLoading) {
-          return Container(padding: const EdgeInsets.all(10), child: CircularProgressIndicator());
-        }
-
-        List dockers = result.data!['dockerContainers'];
-
-        return ListView.builder(
-            itemCount: dockers.length,
-            itemBuilder: (context, index) {
-              final docker = dockers[index];
-
-              return ListTile(
-                title: Text(docker['names'][0]),
-                subtitle: Text(docker['image']),
-              );
-            });
-      },
-    );
+      ListTile(
+        leading: const FaIcon(FontAwesomeIcons.desktop),
+        title: const Text('Virtual machines'),
+        onTap: () {
+          Navigator.of(context).pushNamed(Routes.vms);
+        },
+      ),
+      ListTile(
+        leading: const FaIcon(FontAwesomeIcons.puzzlePiece),
+        title: const Text('Plugins'),
+        onTap: () {
+          Navigator.of(context).pushNamed(Routes.plugins);
+        },
+      )
+    ]));
   }
 }

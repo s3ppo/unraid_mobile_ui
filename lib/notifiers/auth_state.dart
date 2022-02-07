@@ -28,6 +28,7 @@ class AuthState extends ChangeNotifier {
       await connectUnraid(token: token, ip: ip);
     }
     _initialized = true;
+    notifyListeners();
   }
 
   connectUnraid({required String token, required String ip}) async {

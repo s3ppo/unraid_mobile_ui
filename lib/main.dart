@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:unraid_ui/global/notifiers.dart';
+import 'package:unraid_ui/global/routes.dart';
 import 'package:unraid_ui/screens/home.dart';
 import 'package:unraid_ui/screens/login.dart';
 import 'notifiers/auth_state.dart';
@@ -28,16 +29,21 @@ class MyApp extends StatelessWidget {
             floatingActionButtonTheme: const FloatingActionButtonThemeData(
                 backgroundColor: Colors.grey, foregroundColor: Colors.white),
           ),
+          onGenerateRoute: Routes.onGenerateRoute,
           home: Consumer<AuthState>(builder: (context, state, child) {
             if (state.initialized) {
               if (state.client != null) {
-                return GraphQLProvider(client: state.client, child: const HomePage());
+                return const HomePage();
               } else {
                 return const LoginPage();
               }
             } else {
-              return Container(
-                  padding: const EdgeInsets.all(10), child: const CircularProgressIndicator());
+              return Scaffold(
+                  body: Center(
+                      child: SingleChildScrollView(
+                          child: Container(
+                              color: Theme.of(context).scaffoldBackgroundColor,
+                              child: const CircularProgressIndicator()))));
             }
           }),
         ));
