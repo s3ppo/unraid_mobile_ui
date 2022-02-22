@@ -72,6 +72,13 @@ class _MyHomePageState extends State<HomePage> {
     return Expanded(
         child: ListView(children: [
       ListTile(
+        leading: const FaIcon(FontAwesomeIcons.hdd),
+        title: const Text('Array'),
+        onTap: () {
+          Navigator.of(context).pushNamed(Routes.array);
+        },
+      ),
+      ListTile(
         leading: const FaIcon(FontAwesomeIcons.docker),
         title: const Text('Dockers'),
         onTap: () {

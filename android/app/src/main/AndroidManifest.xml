@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.unraid_ui">
+    package="com.hw.unraid_ui">
    <application
-        android:label="unraid_ui"
+        android:label="Unraid_UI"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
