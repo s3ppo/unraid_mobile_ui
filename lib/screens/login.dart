@@ -23,12 +23,13 @@ class _MyLoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(
-            child: Column(children: <Widget>[
+        body: Center(
+            child: SingleChildScrollView(
+                child: Column(children: <Widget>[
       Container(
-          height: 300,
+          height: 100,
           width: MediaQuery.of(context).size.width,
-          alignment: Alignment.center,
+          alignment: Alignment.topCenter,
           child: Text('Unraid UI', style: Theme.of(context).textTheme.headline4)),
       Container(
           padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
@@ -62,7 +63,7 @@ class _MyLoginPageState extends State<LoginPage> {
               ),
               child: const Text('LOGIN', style: TextStyle(fontWeight: FontWeight.w600)),
               onPressed: () => loginUser()))
-    ])));
+    ]))));
   }
 
   loginUser() async {
