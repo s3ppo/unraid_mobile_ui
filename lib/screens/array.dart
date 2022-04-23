@@ -77,9 +77,9 @@ class _MyArrayPageState extends State<ArrayPage> {
               final disk = disks[index];
               Icon icon;
               if (disk['status'] == 'DISK_OK') {
-                icon = const Icon(FontAwesomeIcons.dotCircle, color: Colors.green);
+                icon = const Icon(FontAwesomeIcons.circleDot, color: Colors.green);
               } else {
-                icon = const Icon(FontAwesomeIcons.dotCircle, color: Colors.red);
+                icon = const Icon(FontAwesomeIcons.circleDot, color: Colors.red);
               }
 
               double size = disk['size'] / 1024 / 1024 / 1024;
