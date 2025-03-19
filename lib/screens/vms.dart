@@ -27,7 +27,9 @@ class _MyVmsPageState extends State<VmsPage> {
             appBar: AppBar(
               title: const Text('Virtual machines'),
               actions: <Widget>[
-                IconButton(icon: const Icon(Icons.logout), onPressed: () => _state!.logout())
+                IconButton(
+                    icon: const Icon(Icons.logout),
+                    onPressed: () => _state!.logout())
               ],
               elevation: 0,
             ),
@@ -45,14 +47,16 @@ class _MyVmsPageState extends State<VmsPage> {
       options: QueryOptions(
         document: gql(readAllDockers),
       ),
-      builder: (QueryResult? result, {VoidCallback? refetch, FetchMore? fetchMore}) {
+      builder: (QueryResult? result,
+          {VoidCallback? refetch, FetchMore? fetchMore}) {
         if (result!.hasException) {
           return Text(result.exception.toString());
         }
 
         if (result.isLoading) {
           return Container(
-              padding: const EdgeInsets.all(10), child: const CircularProgressIndicator());
+              padding: const EdgeInsets.all(10),
+              child: const CircularProgressIndicator());
         }
 
         List vms = result.data!['vms']['domain'];
@@ -69,6 +73,7 @@ class _MyVmsPageState extends State<VmsPage> {
               return ListTile(
                 leading: Switch(
                   value: running,
+                  activeColor: Colors.green,
                   onChanged: (bool value) {
                     startStopVM(value, running, vm);
                   },

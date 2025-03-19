@@ -30,7 +30,7 @@ class _MyLoginPageState extends State<LoginPage> {
           height: 100,
           width: MediaQuery.of(context).size.width,
           alignment: Alignment.topCenter,
-          child: Text('Unraid UI', style: Theme.of(context).textTheme.headline4)),
+          child: Text('Unraid UI', style: Theme.of(context).textTheme.headlineMedium)),
       Container(
           padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
           child: TextField(
@@ -54,7 +54,7 @@ class _MyLoginPageState extends State<LoginPage> {
           alignment: Alignment.center,
           child: OutlinedButton(
               style: TextButton.styleFrom(
-                primary: Theme.of(context).primaryColor,
+                backgroundColor: Theme.of(context).primaryColor,
                 minimumSize: const Size(150, 40),
                 side: BorderSide(width: 2.0, color: Theme.of(context).primaryColor),
                 shape: const RoundedRectangleBorder(

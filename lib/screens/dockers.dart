@@ -37,7 +37,7 @@ class _MyDockersPageState extends State<DockersPage> {
   Widget showDockersContent() {
     String readAllDockers = """
       query Query{
-        dockerContainers(all:true){id,names,image,state,status}
+        docker { containers { id,names,image,state,status } } 
       }
      """;
 
@@ -55,26 +55,26 @@ class _MyDockersPageState extends State<DockersPage> {
               padding: const EdgeInsets.all(10), child: const CircularProgressIndicator());
         }
 
-        List dockers = result.data!['dockerContainers'];
+        List dockers = result.data!['docker']['containers'];
 
         return ListView.builder(
             itemCount: dockers.length,
             itemBuilder: (context, index) {
               final docker = dockers[index];
               bool running = false;
-              if (docker['state'] == 'running') {
+              if (docker['state'] == 'RUNNING') {
                 running = true;
               }
 
               return ListTile(
                 leading: Switch(
                   value: running,
+                  activeColor: Colors.green,
                   onChanged: (bool value) {
                     startStopDocker(value, running, docker);
                   },
                 ),
-                title: Text(docker['names'][0]),
-                subtitle: Text(docker['image']),
+                title: Text(docker['image'])
               );
             });
       },

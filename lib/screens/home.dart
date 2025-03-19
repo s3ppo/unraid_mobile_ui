@@ -34,10 +34,10 @@ class _MyHomePageState extends State<HomePage> {
               ],
               elevation: 0,
             ),
-            body: Column(children: [showWelcomeContent(), showListContent()])));
+            body: Column(children: [ showListContent()])));
   }
 
-  Widget showWelcomeContent() {
+  /*Widget showWelcomeContent() {
     String readWelcome = """
         query Query{
           welcome{
@@ -66,7 +66,7 @@ class _MyHomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(10),
               child: Text(welcome, style: TextStyle(color: Theme.of(context).primaryColor)));
         });
-  }
+  }*/
 
   Widget showListContent() {
     return Expanded(

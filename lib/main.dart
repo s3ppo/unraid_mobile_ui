@@ -20,14 +20,34 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'Unraid UI',
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            appBarTheme:
-                const AppBarTheme(backgroundColor: Colors.orange, foregroundColor: Colors.black),
-            primarySwatch: Colors.orange,
-            primaryColor: Colors.orange,
-            floatingActionButtonTheme: const FloatingActionButtonThemeData(
-                backgroundColor: Colors.grey, foregroundColor: Colors.white),
-          ),
+            theme: ThemeData(
+                tabBarTheme: TabBarTheme(
+                    indicatorColor: Colors.white, labelColor: Colors.white),
+                    indicatorColor: Colors.orange,
+                    switchTheme: SwitchThemeData(
+                      thumbColor: WidgetStateProperty.all(Colors.orange),
+                      trackColor: WidgetStateProperty.all(Colors.white),
+                      trackOutlineColor: WidgetStateProperty.all(Colors.black),
+                      overlayColor: WidgetStateProperty.all(Colors.black),
+                    ),
+                inputDecorationTheme: InputDecorationTheme(
+                  floatingLabelStyle: TextStyle(color: Colors.deepOrange),
+                  border: OutlineInputBorder(),
+                  focusColor: Colors.orange,
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.orange),
+                  ),
+                ),
+                progressIndicatorTheme:
+                    ProgressIndicatorThemeData(color: Colors.orange),
+                appBarTheme: AppBarTheme(
+                    backgroundColor: Colors.orange,
+                    foregroundColor: Colors.black),
+                primarySwatch: Colors.orange,
+                primaryColor: Colors.orange,
+                floatingActionButtonTheme: FloatingActionButtonThemeData(
+                    backgroundColor: Colors.amber,
+                    foregroundColor: Colors.white)),
           onGenerateRoute: Routes.onGenerateRoute,
           home: Consumer<AuthState>(builder: (context, state, child) {
             if (state.initialized) {

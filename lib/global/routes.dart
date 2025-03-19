@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:unraid_ui/screens/array.dart';
 import 'package:unraid_ui/screens/dockers.dart';
 import 'package:unraid_ui/screens/login.dart';
+import 'package:unraid_ui/screens/plugins.dart';
 
 import '../screens/home.dart';
 import '../screens/vms.dart';
@@ -29,6 +30,8 @@ class Routes {
               return const DockersPage();
             case vms:
               return const VmsPage();
+            case plugins:
+              return const PluginsPage();
             default:
               return const LoginPage();
           }
