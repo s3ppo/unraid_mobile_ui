@@ -47,14 +47,20 @@ class AuthState extends ChangeNotifier {
       _client = ValueNotifier(GraphQLClient(link: link, cache: GraphQLCache()));
       // Test the connection by making a simple query
       final result = await _client!.value.query(
-      QueryOptions(document: gql('{ __typename }')),
+      QueryOptions(document: gql("""
+        query Me {
+          me {
+            id
+          }
+        }
+      """)),
       );
       if (result.hasException) {
-      throw AuthException('Failed to connect: ${result.exception.toString()}');
+        throw AuthException('Connection failed');
       }
     } catch (e) {
       _client = null;
-      throw AuthException('Connection failed: $e');
+      throw AuthException('Connection failed');
     }
 
     await storage.write(key: 'token', value: token);

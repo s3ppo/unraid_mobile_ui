@@ -37,37 +37,6 @@ class _MyHomePageState extends State<HomePage> {
             body: Column(children: [ showListContent()])));
   }
 
-  /*Widget showWelcomeContent() {
-    String readWelcome = """
-        query Query{
-          welcome{
-            message
-          }
-        }
-      """;
-
-    return Query(
-        options: QueryOptions(
-          document: gql(readWelcome),
-        ),
-        builder: (QueryResult? result, {VoidCallback? refetch, FetchMore? fetchMore}) {
-          if (result!.hasException) {
-            return Text(result.exception.toString());
-          }
-
-          if (result.isLoading) {
-            return Container(
-                padding: const EdgeInsets.all(10), child: const CircularProgressIndicator());
-          }
-
-          String welcome = result.data!['welcome']['message'];
-
-          return Container(
-              padding: const EdgeInsets.all(10),
-              child: Text(welcome, style: TextStyle(color: Theme.of(context).primaryColor)));
-        });
-  }*/
-
   Widget showListContent() {
     return Expanded(
         child: ListView(children: [

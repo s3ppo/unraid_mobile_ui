@@ -67,6 +67,13 @@ class _MyLoginPageState extends State<LoginPage> {
   }
 
   loginUser() async {
-    await _state!.connectUnraid(token: myToken.value.text, ip: myServer.value.text);
+    try {
+      await _state!.connectUnraid(token: myToken.value.text, ip: myServer.value.text);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Failed to login'),
+        duration: const Duration(seconds: 5),
+      ));
+    }
   }
 }

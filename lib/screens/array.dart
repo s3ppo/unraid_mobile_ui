@@ -1,8 +1,10 @@
+// ignore_for_file: library_private_types_in_public_api
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:unraid_ui/notifiers/auth_state.dart';
+import 'package:fan_floating_menu/fan_floating_menu.dart';
 
 class ArrayPage extends StatefulWidget {
   const ArrayPage({Key? key}) : super(key: key);
@@ -32,13 +34,23 @@ class _MyArrayPageState extends State<ArrayPage> {
               ],
               elevation: 0,
             ),
-            body: showDockersContent()));
+            body: showDockersContent(),
+        floatingActionButton: FanFloatingMenu(
+          toggleButtonColor: Theme.of(context).floatingActionButtonTheme.backgroundColor!,
+          fanMenuDirection: FanMenuDirection.rtl,
+        menuItems: [
+          FanMenuItem(onTap: () => doStartArray(), icon: Icons.play_arrow, title: 'Start Array', menuItemIconColor: Theme.of(context).floatingActionButtonTheme.backgroundColor!),
+          FanMenuItem(onTap: () => doStopArray(), icon: Icons.stop, title: 'Stop Array', menuItemIconColor: Theme.of(context).floatingActionButtonTheme.backgroundColor!)
+        ],
+      ),
+            ));
   }
 
   Widget showDockersContent() {
     String readAllDockers = """
       query Query{
           array {
+            state
             boot {
               name
               device
@@ -88,9 +100,18 @@ class _MyArrayPageState extends State<ArrayPage> {
               return ListTile(
                   leading: icon,
                   title: Text(disk['name']),
-                  trailing: Text(sizeTB.toString() + ' TB'));
+                  trailing: Text('$sizeTB TB'));
             });
       },
     );
   }
+
+  doStartArray() {
+
+  }
+
+  doStopArray() {
+    
+  }
+
 }

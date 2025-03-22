@@ -71,13 +71,13 @@ class _MyVmsPageState extends State<VmsPage> {
               }
 
               return ListTile(
-                leading: Switch(
+                leading: running ? Icon(Icons.play_circle, color: Colors.green) : Icon(Icons.stop_circle, color: Colors.red), /*Switch(
                   value: running,
                   activeColor: Colors.green,
                   onChanged: (bool value) {
                     startStopVM(value, running, vm);
                   },
-                ),
+                ),*/
                 title: Text(vm['name']),
               );
             });

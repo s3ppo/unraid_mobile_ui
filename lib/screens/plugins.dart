@@ -31,6 +31,12 @@ class _MyPluginsPageState extends State<PluginsPage> {
               ],
               elevation: 0,
             ),
-            body: Container()));
+            body: Container(
+              padding: const EdgeInsets.all(10),
+               child: showPluginsContent())));
+  }
+
+  Widget showPluginsContent() {
+    return const Text('Sorry no plugin query available yet!');
   }
 }

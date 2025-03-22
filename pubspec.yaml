@@ -37,6 +37,7 @@ dependencies:
   font_awesome_flutter: ^10.8.0
   package_info_plus: ^8.3.0
   file: ^7.0.1
+  fan_floating_menu: ^0.0.3  
 
 dev_dependencies:
   flutter_test:

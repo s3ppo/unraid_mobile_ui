@@ -67,13 +67,13 @@ class _MyDockersPageState extends State<DockersPage> {
               }
 
               return ListTile(
-                leading: Switch(
+                leading: running ? Icon(Icons.play_circle, color: Colors.green) : Icon(Icons.stop_circle, color: Colors.red),
+                /*Switch(
                   value: running,
                   activeColor: Colors.green,
                   onChanged: (bool value) {
                     startStopDocker(value, running, docker);
-                  },
-                ),
+                  },*/
                 title: Text(docker['image'])
               );
             });
