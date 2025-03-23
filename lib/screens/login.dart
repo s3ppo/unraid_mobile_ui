@@ -72,7 +72,7 @@ class _MyLoginPageState extends State<LoginPage> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Failed to login'),
-        duration: const Duration(seconds: 5),
+        duration: const Duration(seconds: 3),
       ));
     }
   }
