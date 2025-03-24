@@ -1,4 +1,4 @@
-package com.hw.unraid_ui
+package com.hw.unraidui
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -42,7 +42,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.hw.unraid_ui"
+        applicationId "com.hw.unraidui"
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
