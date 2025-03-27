@@ -30,7 +30,8 @@ class _MyLoginPageState extends State<LoginPage> {
           height: 100,
           width: MediaQuery.of(context).size.width,
           alignment: Alignment.topCenter,
-          child: Text('Unraid UI', style: Theme.of(context).textTheme.headlineMedium)),
+          child: Text('Unraid UI',
+              style: Theme.of(context).textTheme.headlineMedium)),
       Container(
           padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
           child: TextField(
@@ -56,19 +57,22 @@ class _MyLoginPageState extends State<LoginPage> {
               style: TextButton.styleFrom(
                 backgroundColor: Theme.of(context).primaryColor,
                 minimumSize: const Size(150, 40),
-                side: BorderSide(width: 2.0, color: Theme.of(context).primaryColor),
+                side: BorderSide(
+                    width: 2.0, color: Theme.of(context).primaryColor),
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(2)),
                 ),
               ),
-              child: const Text('LOGIN', style: TextStyle(fontWeight: FontWeight.w600)),
+              child: const Text('LOGIN',
+                  style: TextStyle(fontWeight: FontWeight.w600)),
               onPressed: () => loginUser()))
     ]))));
   }
 
   loginUser() async {
     try {
-      await _state!.connectUnraid(token: myToken.value.text, ip: myServer.value.text);
+      await _state!
+          .connectUnraid(token: myToken.value.text, ip: myServer.value.text);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Failed to login'),

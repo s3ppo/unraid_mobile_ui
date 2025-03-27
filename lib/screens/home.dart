@@ -30,21 +30,30 @@ class _MyHomePageState extends State<HomePage> {
             appBar: AppBar(
               title: const Text('Unraid mobile'),
               actions: <Widget>[
-                IconButton(icon: const Icon(Icons.logout), onPressed: () => _state!.logout())
+                IconButton(
+                    icon: const Icon(Icons.logout),
+                    onPressed: () => _state!.logout())
               ],
               elevation: 0,
             ),
-            body: Column(children: [ showListContent()])));
+            body: Column(children: [showListContent()])));
   }
 
   Widget showListContent() {
     return Expanded(
         child: ListView(children: [
       ListTile(
-        leading: const FaIcon(FontAwesomeIcons.hdd),
+        leading: const FaIcon(FontAwesomeIcons.hardDrive),
         title: const Text('Array'),
         onTap: () {
           Navigator.of(context).pushNamed(Routes.array);
+        },
+      ),
+      ListTile(
+        leading: const FaIcon(FontAwesomeIcons.folder),
+        title: const Text('Shares'),
+        onTap: () {
+          Navigator.of(context).pushNamed(Routes.shares);
         },
       ),
       ListTile(

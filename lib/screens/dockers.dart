@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:unraid_ui/notifiers/auth_state.dart';
@@ -27,7 +28,9 @@ class _MyDockersPageState extends State<DockersPage> {
             appBar: AppBar(
               title: const Text('Dockers'),
               actions: <Widget>[
-                IconButton(icon: const Icon(Icons.logout), onPressed: () => _state!.logout())
+                IconButton(
+                    icon: const Icon(Icons.logout),
+                    onPressed: () => _state!.logout())
               ],
               elevation: 0,
             ),
@@ -44,15 +47,18 @@ class _MyDockersPageState extends State<DockersPage> {
     return Query(
       options: QueryOptions(
         document: gql(readAllDockers),
+        queryRequestTimeout: const Duration(seconds: 30),
       ),
-      builder: (QueryResult? result, {VoidCallback? refetch, FetchMore? fetchMore}) {
+      builder: (QueryResult? result,
+          {VoidCallback? refetch, FetchMore? fetchMore}) {
         if (result!.hasException) {
           return Text(result.exception.toString());
         }
 
         if (result.isLoading) {
           return Container(
-              padding: const EdgeInsets.all(10), child: const CircularProgressIndicator());
+              padding: const EdgeInsets.all(10),
+              child: const CircularProgressIndicator());
         }
 
         List dockers = result.data!['docker']['containers'];
@@ -67,15 +73,12 @@ class _MyDockersPageState extends State<DockersPage> {
               }
 
               return ListTile(
-                leading: running ? Icon(Icons.play_circle, color: Colors.green) : Icon(Icons.stop_circle, color: Colors.red),
-                /*Switch(
-                  value: running,
-                  activeColor: Colors.green,
-                  onChanged: (bool value) {
-                    startStopDocker(value, running, docker);
-                  },*/
-                title: Text(docker['image'])
-              );
+                  leading: running
+                      ? Icon(FontAwesomeIcons.play,
+                          size: 15, color: Colors.green)
+                      : Icon(FontAwesomeIcons.stop,
+                          size: 15, color: Colors.red),
+                  title: Text(docker['image']));
             });
       },
     );

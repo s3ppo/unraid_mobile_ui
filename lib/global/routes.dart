@@ -3,6 +3,7 @@ import 'package:unraid_ui/screens/array.dart';
 import 'package:unraid_ui/screens/dockers.dart';
 import 'package:unraid_ui/screens/login.dart';
 import 'package:unraid_ui/screens/plugins.dart';
+import 'package:unraid_ui/screens/shares.dart';
 
 import '../screens/home.dart';
 import '../screens/vms.dart';
@@ -14,6 +15,7 @@ class Routes {
   static const String dockers = "dockers";
   static const String plugins = "plugins";
   static const String vms = "vms";
+  static const String shares = "shares";
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     return MaterialPageRoute(
@@ -32,6 +34,8 @@ class Routes {
               return const VmsPage();
             case plugins:
               return const PluginsPage();
+            case shares:
+              return const SharesPage();
             default:
               return const LoginPage();
           }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:unraid_ui/notifiers/auth_state.dart';
@@ -46,6 +47,7 @@ class _MyVmsPageState extends State<VmsPage> {
     return Query(
       options: QueryOptions(
         document: gql(readAllDockers),
+        queryRequestTimeout: const Duration(seconds: 30),
       ),
       builder: (QueryResult? result,
           {VoidCallback? refetch, FetchMore? fetchMore}) {
@@ -71,13 +73,9 @@ class _MyVmsPageState extends State<VmsPage> {
               }
 
               return ListTile(
-                leading: running ? Icon(Icons.play_circle, color: Colors.green) : Icon(Icons.stop_circle, color: Colors.red), /*Switch(
-                  value: running,
-                  activeColor: Colors.green,
-                  onChanged: (bool value) {
-                    startStopVM(value, running, vm);
-                  },
-                ),*/
+                leading: running
+                    ? Icon(FontAwesomeIcons.play, size: 15, color: Colors.green)
+                    : Icon(FontAwesomeIcons.stop, size: 15, color: Colors.red),
                 title: Text(vm['name']),
               );
             });

@@ -27,13 +27,15 @@ class _MyPluginsPageState extends State<PluginsPage> {
             appBar: AppBar(
               title: const Text('Plugins'),
               actions: <Widget>[
-                IconButton(icon: const Icon(Icons.logout), onPressed: () => _state!.logout())
+                IconButton(
+                    icon: const Icon(Icons.logout),
+                    onPressed: () => _state!.logout())
               ],
               elevation: 0,
             ),
             body: Container(
-              padding: const EdgeInsets.all(10),
-               child: showPluginsContent())));
+                padding: const EdgeInsets.all(10),
+                child: showPluginsContent())));
   }
 
   Widget showPluginsContent() {
