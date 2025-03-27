@@ -99,7 +99,7 @@ class _MySharesPageState extends State<SharesPage> {
 
               return ListTile(
                   title: Text(share['name']), trailing: Text('Free: $sizeGB GB'),
-                  leading: Icon(FontAwesomeIcons.solidCircle, size: 12, color: iconColor)
+                  leading: Icon(FontAwesomeIcons.solidCircle, size: 15, color: iconColor)
                   );
 
             });
