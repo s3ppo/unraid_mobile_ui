@@ -7,10 +7,12 @@ Once there are more features included in my-servers-plugin it will be published 
 
 If you wonder how to get your API Key.
 Open a terminal in your Unraid console and enter:
+```sh
 unraid-api apikey --create
+```
 
 # Beta / Testflight
-Want to help me testing? Here is the Link to join my testflight :-)
+Want to help me testing? Here is my testflight link :-)
 https://testflight.apple.com/join/P1XCE1ym
 
 # Screenshots
