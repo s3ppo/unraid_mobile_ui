@@ -3,8 +3,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:unraid_ui/notifiers/auth_state.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import '../global/routes.dart';
+import 'package:unraid_ui/global/routes.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

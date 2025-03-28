@@ -107,12 +107,4 @@ class _MySharesPageState extends State<SharesPage> {
     );
   }
 
-  startStopDocker(bool value, bool running, Map docker) {
-    if (value) {
-      running = true;
-    } else {
-      running = false;
-    }
-    setState(() {});
-  }
 }

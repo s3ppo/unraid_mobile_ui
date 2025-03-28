@@ -4,9 +4,12 @@ import 'package:unraid_ui/screens/dockers.dart';
 import 'package:unraid_ui/screens/login.dart';
 import 'package:unraid_ui/screens/plugins.dart';
 import 'package:unraid_ui/screens/shares.dart';
-
-import '../screens/home.dart';
-import '../screens/vms.dart';
+import 'package:unraid_ui/screens/home.dart';
+import 'package:unraid_ui/screens/vms.dart';
+import 'package:unraid_ui/screens/system.dart';
+import 'package:unraid_ui/screens/system_baseboard.dart';
+import 'package:unraid_ui/screens/system_cpu.dart';
+import 'package:unraid_ui/screens/system_os.dart';
 
 class Routes {
   static const String login = "login";
@@ -16,6 +19,10 @@ class Routes {
   static const String plugins = "plugins";
   static const String vms = "vms";
   static const String shares = "shares";
+  static const String system = "system";
+  static const String systemBaseboard = "system_baseboard";
+  static const String systemCpu = "system_cpu";
+  static const String systemOs = "system_os";
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     return MaterialPageRoute(
@@ -36,6 +43,14 @@ class Routes {
               return const PluginsPage();
             case shares:
               return const SharesPage();
+            case system:
+              return const SystemPage();
+            case systemBaseboard:
+              return const BaseboardPage();
+            case systemCpu:
+              return const CpuPage();
+            case systemOs:
+              return const OsPage();              
             default:
               return const LoginPage();
           }
