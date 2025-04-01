@@ -5,6 +5,7 @@ import 'package:unraid_ui/screens/login.dart';
 import 'package:unraid_ui/screens/plugins.dart';
 import 'package:unraid_ui/screens/shares.dart';
 import 'package:unraid_ui/screens/home.dart';
+import 'package:unraid_ui/screens/system_memory.dart';
 import 'package:unraid_ui/screens/vms.dart';
 import 'package:unraid_ui/screens/system.dart';
 import 'package:unraid_ui/screens/system_baseboard.dart';
@@ -23,6 +24,7 @@ class Routes {
   static const String systemBaseboard = "system_baseboard";
   static const String systemCpu = "system_cpu";
   static const String systemOs = "system_os";
+  static const String systemMemory = "system_memory";  
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     return MaterialPageRoute(
@@ -46,11 +48,17 @@ class Routes {
             case system:
               return const SystemPage();
             case systemBaseboard:
-              return const BaseboardPage();
+              final args = settings.arguments as Map;
+              return BaseboardPage(baseboard: args);
             case systemCpu:
-              return const CpuPage();
+              final args = settings.arguments as Map;
+              return CpuPage(cpu: args);
             case systemOs:
-              return const OsPage();              
+              final args = settings.arguments as Map;
+              return OsPage(os: args);
+            case systemMemory:
+              final args = settings.arguments as Map;
+              return MemoryPage(memory: args);                          
             default:
               return const LoginPage();
           }

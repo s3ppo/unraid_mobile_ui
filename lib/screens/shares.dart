@@ -34,7 +34,7 @@ class _MySharesPageState extends State<SharesPage> {
               ],
               elevation: 0,
             ),
-            body: Container(child: showSharesContent())));
+            body: showSharesContent()));
   }
 
   Widget showSharesContent() {
@@ -72,9 +72,9 @@ class _MySharesPageState extends State<SharesPage> {
         }
 
         if (result.isLoading) {
-          return Container(
+          return Center( child: Container(
               padding: const EdgeInsets.all(10),
-              child: const CircularProgressIndicator());
+              child: const CircularProgressIndicator()));
         }
 
         List shares = result.data!['shares'];

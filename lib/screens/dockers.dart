@@ -34,7 +34,7 @@ class _MyDockersPageState extends State<DockersPage> {
               ],
               elevation: 0,
             ),
-            body: Container(child: showDockersContent())));
+            body: showDockersContent()));
   }
 
   Widget showDockersContent() {
@@ -56,9 +56,9 @@ class _MyDockersPageState extends State<DockersPage> {
         }
 
         if (result.isLoading) {
-          return Container(
+          return Center( child: Container(
               padding: const EdgeInsets.all(10),
-              child: const CircularProgressIndicator());
+              child: const CircularProgressIndicator()));
         }
 
         List dockers = result.data!['docker']['containers'];

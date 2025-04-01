@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:unraid_ui/notifiers/auth_state.dart';
 
-class CpuPage extends StatefulWidget {
-  final Map cpu;
-  const CpuPage({Key? key, required this.cpu}) : super(key: key);
+class MemoryPage extends StatefulWidget {
+  final Map memory;
+  const MemoryPage({Key? key, required this.memory}) : super(key: key);
 
   @override
-  _MyCpuPageState createState() => _MyCpuPageState();
+  _MyMemoryPageState createState() => _MyMemoryPageState();
 }
 
-class _MyCpuPageState extends State<CpuPage> {
+class _MyMemoryPageState extends State<MemoryPage> {
   AuthState? _state;
 
   @override
@@ -23,7 +23,7 @@ class _MyCpuPageState extends State<CpuPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('CPU'),
+          title: const Text('Memory'),
           actions: <Widget>[
             IconButton(
                 icon: const Icon(Icons.logout),
@@ -36,13 +36,16 @@ class _MyCpuPageState extends State<CpuPage> {
 
   Widget showListContent() {
     return ListView(
-      children: widget.cpu.entries.map((entry) {
+      children: widget.memory.entries.map((entry) {
+        double size = entry.value / 1024 / 1024 / 1024;
+        int sizeGB = size.round();
+
         return ListTile(
           title: Text(entry.key),
           trailing: SizedBox(
             width: MediaQuery.of(context).size.width * 0.5,
             child: Text(
-              entry.value.toString(),
+              '$sizeGB GB',
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.right,
             ),

@@ -106,9 +106,9 @@ class _MyArrayPageState extends State<ArrayPage> {
         }
 
         if (result.isLoading) {
-          return Container(
+          return Center( child: Container(
               padding: const EdgeInsets.all(10),
-              child: const Center(child: CircularProgressIndicator()));
+              child: CircularProgressIndicator()));
         }
 
         Map boots = result.data!['array']['boot'];

@@ -29,15 +29,21 @@ class AuthState extends ChangeNotifier {
     await getPackageInfos();
     String? token = await storage.read(key: 'token');
     String? ip = await storage.read(key: 'ip');
-    if (token != null && ip != null) {
-      await connectUnraid(token: token, ip: ip);
+    String? prot = await storage.read(key: 'prot');
+    if (token != null && ip != null && prot != null) {
+      await connectUnraid(token: token, ip: ip, prot: prot);
     }
     _initialized = true;
     notifyListeners();
   }
 
-  connectUnraid({required String token, required String ip}) async {
-    String endPoint = 'http://$ip/graphql';
+  connectUnraid({ required String token, required String ip, required String prot }) async {
+    String endPoint;
+    if (prot == 'https') {
+      endPoint = 'https://$ip/graphql';
+    } else {
+      endPoint = 'http://$ip/graphql';
+    }
     var link = HttpLink(endPoint, defaultHeaders: {
       'Origin': packageName,
       'Authorization': 'bearer $token',
@@ -65,6 +71,7 @@ class AuthState extends ChangeNotifier {
 
     await storage.write(key: 'token', value: token);
     await storage.write(key: 'ip', value: ip);
+    await storage.write(key: 'https', value: prot);
 
     notifyListeners();
   }
@@ -72,6 +79,7 @@ class AuthState extends ChangeNotifier {
   logout() async {
     await storage.delete(key: 'token');
     await storage.delete(key: 'ip');
+    await storage.delete(key: 'https');
     _client = null;
     notifyListeners();
   }

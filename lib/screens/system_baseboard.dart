@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:unraid_ui/notifiers/auth_state.dart';
 
 class BaseboardPage extends StatefulWidget {
-  const BaseboardPage({Key? key}) : super(key: key);
+  final Map baseboard;
+  const BaseboardPage({Key? key, required this.baseboard}) : super(key: key);
 
   @override
   _MyBaseboardPageState createState() => _MyBaseboardPageState();
@@ -21,25 +21,34 @@ class _MyBaseboardPageState extends State<BaseboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    return GraphQLProvider(
-        client: _state!.client,
-        child: Scaffold(
-            appBar: AppBar(
-              title: const Text('OS'),
-              actions: <Widget>[
-                IconButton(
-                    icon: const Icon(Icons.logout),
-                    onPressed: () => _state!.logout())
-              ],
-              elevation: 0,
-            ),
-            body: Column(children: [showListContent()])));
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Baseboard'),
+          actions: <Widget>[
+            IconButton(
+                icon: const Icon(Icons.logout),
+                onPressed: () => _state!.logout())
+          ],
+          elevation: 0,
+        ),
+        body: Container(child: showListContent()));
   }
 
   Widget showListContent() {
-    return Expanded(
-        child: ListView(children: [
-
-    ]));
+    return ListView(
+      children: widget.baseboard.entries.map((entry) {
+        return ListTile(
+          title: Text(entry.key),
+          trailing: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.5,
+            child: Text(
+              entry.value.toString(),
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.right,
+            ),
+          ),
+        );
+      }).toList(),
+    );
   }
 }
