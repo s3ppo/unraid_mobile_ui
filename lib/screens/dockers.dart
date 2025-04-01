@@ -56,9 +56,10 @@ class _MyDockersPageState extends State<DockersPage> {
         }
 
         if (result.isLoading) {
-          return Center( child: Container(
-              padding: const EdgeInsets.all(10),
-              child: const CircularProgressIndicator()));
+          return Center(
+              child: Container(
+                  padding: const EdgeInsets.all(10),
+                  child: const CircularProgressIndicator()));
         }
 
         List dockers = result.data!['docker']['containers'];

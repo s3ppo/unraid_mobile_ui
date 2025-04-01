@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:unraid_ui/notifiers/auth_state.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:unraid_ui/global/routes.dart';
 
 class SystemPage extends StatefulWidget {
@@ -126,8 +125,7 @@ class _MySystemPageState extends State<SystemPage> {
           os.removeWhere((key, value) => key.startsWith('_'));
           memory.removeWhere((key, value) => key.startsWith('_'));
 
-          return Expanded(
-              child: ListView(children: [
+          return ListView(children: [
             ListTile(
                 title: const Text('OS'),
                 trailing: const Icon(Icons.arrow_forward),
@@ -156,7 +154,7 @@ class _MySystemPageState extends State<SystemPage> {
                   Navigator.of(context)
                       .pushNamed(Routes.systemMemory, arguments: memory);
                 })
-          ]));
+          ]);
         });
   }
 }

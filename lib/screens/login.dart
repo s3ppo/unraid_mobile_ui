@@ -29,13 +29,13 @@ class _MyLoginPageState extends State<LoginPage> {
             child: SingleChildScrollView(
                 child: Column(children: <Widget>[
       Container(
-          height: 100,
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+          height: 80,
           width: MediaQuery.of(context).size.width,
           alignment: Alignment.topCenter,
-          child: Text('Unraid UI',
-              style: Theme.of(context).textTheme.headlineMedium)),
+          child: Image.asset('assets/icon/icon.png')),
       Container(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+          padding: const EdgeInsets.fromLTRB(20, 40, 20, 0),
           child: TextField(
             controller: _myServer,
             decoration: const InputDecoration(
@@ -52,42 +52,42 @@ class _MyLoginPageState extends State<LoginPage> {
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.person)),
           )),
-// Radio buttons für http/https
-    Container(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-        Row(
-          children: [
-          Expanded(
-            child: RadioListTile<String>(
-            title: const Text('http'),
-            value: 'http',
-            groupValue: _protocol,
-            onChanged: (String? value) {
-              setState(() {
-              _protocol = value!;
-              });
-            },
-            ),
-          ),
-          Expanded(
-            child: RadioListTile<String>(
-            title: const Text('https'),
-            value: 'https',
-            groupValue: _protocol,
-            onChanged: (String? value) {
-              setState(() {
-              _protocol = value!;
-              });
-            },
-            ),
-          ),
-          ],
-        ),
-        ],
-      )),          
+//    Radio buttons for http/https
+      Container(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: RadioListTile<String>(
+                      title: const Text('http'),
+                      value: 'http',
+                      groupValue: _protocol,
+                      onChanged: (String? value) {
+                        setState(() {
+                          _protocol = value!;
+                        });
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: RadioListTile<String>(
+                      title: const Text('https'),
+                      value: 'https',
+                      groupValue: _protocol,
+                      onChanged: (String? value) {
+                        setState(() {
+                          _protocol = value!;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          )),
       Container(
           padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
           alignment: Alignment.center,
@@ -102,15 +102,22 @@ class _MyLoginPageState extends State<LoginPage> {
                 ),
               ),
               child: const Text('LOGIN',
-                  style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white)),
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600, color: Colors.white)),
               onPressed: () => loginUser()))
     ]))));
   }
 
   loginUser() async {
     try {
-      await _state!
-          .connectUnraid(token: _myToken.value.text, ip: _myServer.value.text, prot: _protocol);
+      await _state!.connectUnraid(
+          token: _myToken.value.text,
+          ip: _myServer.value.text,
+          prot: _protocol);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Login successful'),
+        duration: const Duration(seconds: 3),
+      ));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Failed to login'),

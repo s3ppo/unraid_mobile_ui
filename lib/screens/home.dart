@@ -47,7 +47,7 @@ class _MyHomePageState extends State<HomePage> {
         onTap: () {
           Navigator.of(context).pushNamed(Routes.system);
         },
-      ),          
+      ),
       ListTile(
         leading: const FaIcon(FontAwesomeIcons.hardDrive),
         title: const Text('Array'),

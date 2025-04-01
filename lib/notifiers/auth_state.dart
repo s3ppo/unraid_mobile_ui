@@ -1,8 +1,8 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthException implements Exception {
   String msg;
@@ -10,7 +10,8 @@ class AuthException implements Exception {
 }
 
 class AuthState extends ChangeNotifier {
-  final storage = const FlutterSecureStorage();
+  
+  late SharedPreferences storage;
   ValueNotifier<GraphQLClient>? _client;
   bool _initialized = false;
   String appName = "";
@@ -26,10 +27,11 @@ class AuthState extends ChangeNotifier {
   }
 
   init() async {
+    storage = await SharedPreferences.getInstance();
     await getPackageInfos();
-    String? token = await storage.read(key: 'token');
-    String? ip = await storage.read(key: 'ip');
-    String? prot = await storage.read(key: 'prot');
+    String? token = await storage.getString('token');
+    String? ip = await storage.getString('ip');
+    String? prot = await storage.getString('prot');
     if (token != null && ip != null && prot != null) {
       await connectUnraid(token: token, ip: ip, prot: prot);
     }
@@ -69,17 +71,17 @@ class AuthState extends ChangeNotifier {
       throw AuthException('Connection failed');
     }
 
-    await storage.write(key: 'token', value: token);
-    await storage.write(key: 'ip', value: ip);
-    await storage.write(key: 'https', value: prot);
+    await storage.setString('token', token);
+    await storage.setString('ip', ip);
+    await storage.setString('prot', prot);
 
     notifyListeners();
   }
 
   logout() async {
-    await storage.delete(key: 'token');
-    await storage.delete(key: 'ip');
-    await storage.delete(key: 'https');
+    await storage.remove('token');
+    await storage.remove('ip');
+    await storage.remove('prot');
     _client = null;
     notifyListeners();
   }

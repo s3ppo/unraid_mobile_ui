@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: providers,
         child: MaterialApp(
-          title: 'Unraid UI',
+          title: 'Unraid Mobile',
           debugShowCheckedModeBanner: false,
             theme: ThemeData(
                 tabBarTheme: TabBarTheme(
