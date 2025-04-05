@@ -114,15 +114,16 @@ class _MyLoginPageState extends State<LoginPage> {
           token: _myToken.value.text,
           ip: _myServer.value.text,
           prot: _protocol);
+
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.green,        
         content: Align( alignment: Alignment.center, child: Text('Login successful')),
         duration: const Duration(seconds: 3),
       ));
-    } catch (e) {
+    } on AuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.red,
-        content: Align( alignment: Alignment.center, child: Text('Login failed')),
+        content: Align( alignment: Alignment.center, child: Text(e.msg)),
         duration: const Duration(seconds: 3),
       ));
     }

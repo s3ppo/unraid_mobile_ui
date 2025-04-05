@@ -35,6 +35,6 @@ class _MyPluginsPageState extends State<PluginsPage> {
   }
 
   Widget showPluginsContent() {
-    return const Text('Sorry no plugin query available yet!');
+    return const Center( child: Text('Sorry no plugin query available yet!'));
   }
 }

@@ -121,14 +121,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.1"
-  fan_floating_menu:
-    dependency: "direct main"
-    description:
-      name: fan_floating_menu
-      sha256: "1987a8de88bb89a398ee49e9c2c096e80bdf368c7128375476f470a50533a3b3"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.3"
   ffi:
     dependency: transitive
     description:
@@ -512,6 +504,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.2"
+  pub_semver:
+    dependency: "direct main"
+    description:
+      name: pub_semver
+      sha256: "5bfcf68ca79ef689f8990d1160781b4bad40a3bd5e5218ad4076ddb7f4081585"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.0"
   rxdart:
     dependency: transitive
     description:

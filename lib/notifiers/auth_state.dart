@@ -2,7 +2,9 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:pub_semver/pub_semver.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:unraid_ui/global/globals.dart';
 import 'package:unraid_ui/global/queries.dart';
 
 class AuthException implements Exception {
@@ -69,6 +71,10 @@ class AuthState extends ChangeNotifier {
           _connectVersion = service['version'];
         }
         break;
+      }
+
+      if (Version.parse(_connectVersion) < Version.parse(Globals.minConnectVersion) ) {
+        throw AuthException('Backend version is too old, please update "Unraid Connect" Plugin');
       }
 
     } catch (e) {

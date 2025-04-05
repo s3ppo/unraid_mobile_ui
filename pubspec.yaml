@@ -19,10 +19,10 @@ dependencies:
   font_awesome_flutter: ^10.8.0
   package_info_plus: ^8.3.0
   file: ^7.0.1
-  fan_floating_menu: ^0.0.3
   flutter_launcher_icons: ^0.14.3
   connectivity_plus: ^6.1.3
   loading_overlay: ^0.4.2
+  pub_semver: ^2.2.0
 
 dev_dependencies:
   flutter_test:

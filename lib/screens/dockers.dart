@@ -29,22 +29,23 @@ class _MyDockersPageState extends State<DockersPage> {
 
     _allDockers = _state!.client!.query(QueryOptions(
       document: gql(Queries.getDockers),
+      queryRequestTimeout: const Duration(seconds: 30),
     ));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            appBar: AppBar(
-              title: const Text('Dockers'),
-              actions: <Widget>[
-                IconButton(
-                    icon: const Icon(Icons.logout),
-                    onPressed: () => _state!.logout())
-              ],
-              elevation: 0,
-            ),
-            body: showDockersContent());
+        appBar: AppBar(
+          title: const Text('Dockers'),
+          actions: <Widget>[
+            IconButton(
+                icon: const Icon(Icons.logout),
+                onPressed: () => _state!.logout())
+          ],
+          elevation: 0,
+        ),
+        body: showDockersContent());
   }
 
   Widget showDockersContent() {
@@ -65,7 +66,30 @@ class _MyDockersPageState extends State<DockersPage> {
 
                   return ListTile(
                       onTap: () {
-                        startStopDocker(running, docker);
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                                title: const Text('Confirm Action'),
+                                content: Text(
+                                    'Are you sure you want to ${running ? 'stop' : 'start'} this container?'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('Cancel'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  TextButton(
+                                      child: const Text('Confirm'),
+                                      onPressed: () async {
+                                        Navigator.of(context).pop();
+                                        await startStopDocker(running, docker);
+                                      }),
+                                ]);
+                          },
+                        );
+                        //startStopDocker(running, docker);
                       },
                       leading: running
                           ? Icon(FontAwesomeIcons.play,
@@ -81,16 +105,28 @@ class _MyDockersPageState extends State<DockersPage> {
   }
 
   startStopDocker(bool running, Map docker) async {
-    if (running) {
-      await _state!.client!
-          .query(QueryOptions(document: gql(Mutations.stopDocker), variables: {
-        "containerId": "${docker['id']}",
-      }));
-    } else {
-      await _state!.client!
-          .query(QueryOptions(document: gql(Mutations.startDocker), variables: {
-        "containerId": "${docker['id']}",
-      }));
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
+
+    try {
+      if (running) {
+        await _state!.client!.query(
+            QueryOptions(document: gql(Mutations.stopDocker), variables: {
+          "containerId": "${docker['id']}",
+        }));
+      } else {
+        await _state!.client!.query(
+            QueryOptions(document: gql(Mutations.startDocker), variables: {
+          "containerId": "${docker['id']}",
+        }));
+      }
+    } finally {
+      Navigator.of(context).pop(); // Remove the spinner
     }
 
     getAllDockers();

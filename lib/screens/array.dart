@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:unraid_ui/global/mutations.dart';
 import 'package:unraid_ui/global/queries.dart';
 import 'package:unraid_ui/notifiers/auth_state.dart';
-import 'package:fan_floating_menu/fan_floating_menu.dart';
 
 class ArrayPage extends StatefulWidget {
   const ArrayPage({Key? key}) : super(key: key);
@@ -43,26 +43,7 @@ class _MyArrayPageState extends State<ArrayPage> {
         ],
         elevation: 0,
       ),
-      body: showArrayContent(),
-      floatingActionButton: FanFloatingMenu(
-        toggleButtonColor:
-            Theme.of(context).floatingActionButtonTheme.backgroundColor!,
-        fanMenuDirection: FanMenuDirection.rtl,
-        menuItems: [
-          FanMenuItem(
-              onTap: () => doStartArray(),
-              icon: Icons.play_arrow,
-              title: 'Start Array',
-              menuItemIconColor:
-                  Theme.of(context).floatingActionButtonTheme.backgroundColor!),
-          FanMenuItem(
-              onTap: () => doStopArray(),
-              icon: Icons.stop,
-              title: 'Stop Array',
-              menuItemIconColor:
-                  Theme.of(context).floatingActionButtonTheme.backgroundColor!)
-        ],
-      ),
+      body: showArrayContent()
     );
   }
 
@@ -116,7 +97,15 @@ class _MyArrayPageState extends State<ArrayPage> {
     );
   }
 
-  doStartArray() {}
+  doSetArrayState(String state) async {
 
-  doStopArray() {}
+    var result = await _state!.client!.mutate(
+        MutationOptions(document: gql(Mutations.setArrayState), variables: {
+      "input": {"desiredState": "${state}"}
+    }));
+
+    getArray();
+    setState(() {});
+
+  }
 }
