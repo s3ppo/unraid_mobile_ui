@@ -115,12 +115,14 @@ class _MyLoginPageState extends State<LoginPage> {
           ip: _myServer.value.text,
           prot: _protocol);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Login successful'),
+        backgroundColor: Colors.green,        
+        content: Align( alignment: Alignment.center, child: Text('Login successful')),
         duration: const Duration(seconds: 3),
       ));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Failed to login'),
+        backgroundColor: Colors.red,
+        content: Align( alignment: Alignment.center, child: Text('Login failed')),
         duration: const Duration(seconds: 3),
       ));
     }

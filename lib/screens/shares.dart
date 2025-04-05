@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:unraid_ui/global/queries.dart';
 import 'package:unraid_ui/notifiers/auth_state.dart';
 
 class SharesPage extends StatefulWidget {
@@ -13,98 +14,81 @@ class SharesPage extends StatefulWidget {
 
 class _MySharesPageState extends State<SharesPage> {
   AuthState? _state;
+  Future<QueryResult>? _shares;
 
   @override
   void initState() {
     super.initState();
     _state = Provider.of<AuthState>(context, listen: false);
+    getShares();
+  }
+
+  getShares() {
+    _state!.client!.resetStore();
+
+    _shares = _state!.client!.query(QueryOptions(
+      document: gql(Queries.getShares),
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
-    return GraphQLProvider(
-        client: _state!.client,
-        child: Scaffold(
-            appBar: AppBar(
-              title: const Text('Shares'),
-              actions: <Widget>[
-                IconButton(
-                    icon: const Icon(Icons.logout),
-                    onPressed: () => _state!.logout())
-              ],
-              elevation: 0,
-            ),
-            body: showSharesContent()));
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Shares'),
+          actions: <Widget>[
+            IconButton(
+                icon: const Icon(Icons.logout),
+                onPressed: () => _state!.logout())
+          ],
+          elevation: 0,
+        ),
+        body: showSharesContent());
   }
 
   Widget showSharesContent() {
-    String readAllShares = """
-      query Query {
-        shares {
-          name
-          free
-          used
-          size
-          include
-          exclude
-          cache
-          nameOrig
-          comment
-          allocator
-          splitLevel
-          floor
-          cow
-          color
-          luksStatus
-        }
-      }
-     """;
+    return FutureBuilder<QueryResult>(
+        future: _shares,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (snapshot.hasData && snapshot.data!.data != null) {
+            final result = snapshot.data!;
 
-    return Query(
-      options: QueryOptions(
-        document: gql(readAllShares),
-        queryRequestTimeout: Duration(seconds: 30),
-      ),
-      builder: (QueryResult? result,
-          {VoidCallback? refetch, FetchMore? fetchMore}) {
-        if (result!.hasException) {
-          return Text(result.exception.toString());
-        }
+            List shares = result.data!['shares'];
+            shares.sort((a, b) => a['name']
+                .toString()
+                .toLowerCase()
+                .compareTo(b['name'].toString().toLowerCase()));
 
-        if (result.isLoading) {
-          return Center( child: Container(
-              padding: const EdgeInsets.all(10),
-              child: const CircularProgressIndicator()));
-        }
+            return ListView.builder(
+                itemCount: shares.length,
+                itemBuilder: (context, index) {
+                  final share = shares[index];
 
-        List shares = result.data!['shares'];
-        shares.sort((a, b) => a['name'].toString().toLowerCase().compareTo(b['name'].toString().toLowerCase()));
+                  double size = share['free'] / 1024 / 1024;
+                  int sizeGB = size.round();
 
-        return ListView.builder(
-            itemCount: shares.length,
-            itemBuilder: (context, index) {
-              final share = shares[index];
+                  Color iconColor = Colors.red;
+                  if (share['color'] == 'green-on') {
+                    iconColor = Colors.green;
+                  } else if (share['color'] == 'yellow-on') {
+                    iconColor = Colors.yellow;
+                  } else if (share['color'] == 'red-on') {
+                    iconColor = Colors.red;
+                  }
 
-              double size = share['free'] / 1024 / 1024;
-              int sizeGB = size.round();
-
-              Color iconColor = Colors.red;
-              if (share['color'] == 'green-on') {
-                iconColor = Colors.green;
-              } else if (share['color'] == 'yellow-on') {
-                iconColor = Colors.yellow;
-              } else if (share['color'] == 'red-on') {
-                iconColor = Colors.red;
-              }
-
-              return ListTile(
-                  title: Text(share['name']), trailing: Text('Free: $sizeGB GB'),
-                  leading: Icon(FontAwesomeIcons.solidCircle, size: 15, color: iconColor)
-                  );
-
-            });
-      },
-    );
+                  return ListTile(
+                      title: Text(share['name']),
+                      trailing: Text('Free: $sizeGB GB'),
+                      leading: Icon(FontAwesomeIcons.solidCircle,
+                          size: 15, color: iconColor));
+                });
+          } else {
+            return const Center(child: Text('No data available'));
+          }
+        });
   }
-
 }

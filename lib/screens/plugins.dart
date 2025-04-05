@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:unraid_ui/notifiers/auth_state.dart';
 
@@ -21,21 +20,18 @@ class _MyPluginsPageState extends State<PluginsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return GraphQLProvider(
-        client: _state!.client,
-        child: Scaffold(
-            appBar: AppBar(
-              title: const Text('Plugins'),
-              actions: <Widget>[
-                IconButton(
-                    icon: const Icon(Icons.logout),
-                    onPressed: () => _state!.logout())
-              ],
-              elevation: 0,
-            ),
-            body: Container(
-                padding: const EdgeInsets.all(10),
-                child: showPluginsContent())));
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Plugins'),
+          actions: <Widget>[
+            IconButton(
+                icon: const Icon(Icons.logout),
+                onPressed: () => _state!.logout())
+          ],
+          elevation: 0,
+        ),
+        body: Container(
+            padding: const EdgeInsets.all(10), child: showPluginsContent()));
   }
 
   Widget showPluginsContent() {

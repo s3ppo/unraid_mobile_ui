@@ -344,6 +344,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.1"
+  loading_overlay:
+    dependency: "direct main"
+    description:
+      name: loading_overlay
+      sha256: c51341550b297e048ac95549bd7ecbe746754130102ea1e36da2a5fdb09f5fab
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.2"
   matcher:
     dependency: transitive
     description:

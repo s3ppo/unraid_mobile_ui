@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:unraid_ui/global/queries.dart';
 
 class AuthException implements Exception {
   String msg;
@@ -12,14 +13,18 @@ class AuthException implements Exception {
 class AuthState extends ChangeNotifier {
   
   late SharedPreferences storage;
-  ValueNotifier<GraphQLClient>? _client;
+  //ValueNotifier<GraphQLClient>? _client;
+  GraphQLClient? _client;
   bool _initialized = false;
   String appName = "";
   String packageName = "";
   String version = "";
   String buildNumber = "";
+  String _connectVersion = "";
 
-  ValueNotifier<GraphQLClient>? get client => _client;
+  //ValueNotifier<GraphQLClient>? get client => _client;
+  GraphQLClient? get client => _client;
+  String get connectVersion => _connectVersion;
   bool get initialized => _initialized;
 
   AuthState() {
@@ -29,9 +34,9 @@ class AuthState extends ChangeNotifier {
   init() async {
     storage = await SharedPreferences.getInstance();
     await getPackageInfos();
-    String? token = await storage.getString('token');
-    String? ip = await storage.getString('ip');
-    String? prot = await storage.getString('prot');
+    String? token = storage.getString('token');
+    String? ip = storage.getString('ip');
+    String? prot = storage.getString('prot');
     if (token != null && ip != null && prot != null) {
       await connectUnraid(token: token, ip: ip, prot: prot);
     }
@@ -48,29 +53,29 @@ class AuthState extends ChangeNotifier {
     }
     var link = HttpLink(endPoint, defaultHeaders: {
       'Origin': packageName,
-      'Authorization': 'bearer $token',
       'x-api-key': token
     });
     try {
-      _client = ValueNotifier(GraphQLClient(link: link, cache: GraphQLCache()));
+      _client = GraphQLClient(link: link, cache: GraphQLCache());
       // Test the connection by making a simple query
-      final result = await _client!.value.query(
-      QueryOptions(document: gql("""
-        query Me {
-          me {
-            id
-          }
-        }
-      """)),
-      );
+      final result = await _client!.query(
+      QueryOptions(document: gql(Queries.getServices)));
       if (result.hasException) {
         throw AuthException('Connection failed');
       }
+
+      for (var service in result.data!['services']) {
+        if (service['name'] == 'unraid-api') {
+          _connectVersion = service['version'];
+        }
+        break;
+      }
+
     } catch (e) {
       _client = null;
       throw AuthException('Connection failed');
     }
-
+    
     await storage.setString('token', token);
     await storage.setString('ip', ip);
     await storage.setString('prot', prot);
@@ -82,6 +87,7 @@ class AuthState extends ChangeNotifier {
     await storage.remove('token');
     await storage.remove('ip');
     await storage.remove('prot');
+    _connectVersion = "";
     _client = null;
     notifyListeners();
   }

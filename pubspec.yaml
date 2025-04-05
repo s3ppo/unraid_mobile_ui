@@ -22,6 +22,7 @@ dependencies:
   fan_floating_menu: ^0.0.3
   flutter_launcher_icons: ^0.14.3
   connectivity_plus: ^6.1.3
+  loading_overlay: ^0.4.2
 
 dev_dependencies:
   flutter_test:

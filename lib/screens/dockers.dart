@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:unraid_ui/global/mutations.dart';
 import 'package:unraid_ui/notifiers/auth_state.dart';
+import 'package:unraid_ui/global/queries.dart';
 
 class DockersPage extends StatefulWidget {
   const DockersPage({Key? key}) : super(key: key);
@@ -13,18 +15,26 @@ class DockersPage extends StatefulWidget {
 
 class _MyDockersPageState extends State<DockersPage> {
   AuthState? _state;
+  Future<QueryResult>? _allDockers;
 
   @override
   void initState() {
     super.initState();
     _state = Provider.of<AuthState>(context, listen: false);
+    getAllDockers();
+  }
+
+  getAllDockers() async {
+    _state!.client!.resetStore();
+
+    _allDockers = _state!.client!.query(QueryOptions(
+      document: gql(Queries.getDockers),
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
-    return GraphQLProvider(
-        client: _state!.client,
-        child: Scaffold(
+    return Scaffold(
             appBar: AppBar(
               title: const Text('Dockers'),
               actions: <Widget>[
@@ -34,63 +44,56 @@ class _MyDockersPageState extends State<DockersPage> {
               ],
               elevation: 0,
             ),
-            body: showDockersContent()));
+            body: showDockersContent());
   }
 
   Widget showDockersContent() {
-    String readAllDockers = """
-      query Query{
-        docker { containers { id,names,image,state,status } } 
-      }
-     """;
+    return FutureBuilder<QueryResult>(
+        future: _allDockers,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (snapshot.hasData && snapshot.data!.data != null) {
+            final result = snapshot.data!;
+            return ListView.builder(
+                itemCount: result.data!['docker']['containers'].length,
+                itemBuilder: (context, index) {
+                  Map docker = result.data!['docker']['containers'][index];
+                  bool running = docker['state'] == 'RUNNING';
 
-    return Query(
-      options: QueryOptions(
-        document: gql(readAllDockers),
-        queryRequestTimeout: const Duration(seconds: 30),
-      ),
-      builder: (QueryResult? result,
-          {VoidCallback? refetch, FetchMore? fetchMore}) {
-        if (result!.hasException) {
-          return Text(result.exception.toString());
-        }
-
-        if (result.isLoading) {
-          return Center(
-              child: Container(
-                  padding: const EdgeInsets.all(10),
-                  child: const CircularProgressIndicator()));
-        }
-
-        List dockers = result.data!['docker']['containers'];
-
-        return ListView.builder(
-            itemCount: dockers.length,
-            itemBuilder: (context, index) {
-              final docker = dockers[index];
-              bool running = false;
-              if (docker['state'] == 'RUNNING') {
-                running = true;
-              }
-
-              return ListTile(
-                  leading: running
-                      ? Icon(FontAwesomeIcons.play,
-                          size: 15, color: Colors.green)
-                      : Icon(FontAwesomeIcons.stop,
-                          size: 15, color: Colors.red),
-                  title: Text(docker['image']));
-            });
-      },
-    );
+                  return ListTile(
+                      onTap: () {
+                        startStopDocker(running, docker);
+                      },
+                      leading: running
+                          ? Icon(FontAwesomeIcons.play,
+                              size: 15, color: Colors.green)
+                          : Icon(FontAwesomeIcons.stop,
+                              size: 15, color: Colors.red),
+                      title: Text(docker['image']));
+                });
+          } else {
+            return const Center(child: Text('No data available'));
+          }
+        });
   }
 
-  startStopDocker(bool value, bool running, Map docker) {
-    if (value) {
-      running = true;
+  startStopDocker(bool running, Map docker) async {
+    if (running) {
+      await _state!.client!
+          .query(QueryOptions(document: gql(Mutations.stopDocker), variables: {
+        "containerId": "${docker['id']}",
+      }));
     } else {
-      running = false;
+      await _state!.client!
+          .query(QueryOptions(document: gql(Mutations.startDocker), variables: {
+        "containerId": "${docker['id']}",
+      }));
     }
+
+    getAllDockers();
     setState(() {});
   }
 }
