@@ -12,34 +12,21 @@ class Queries {
   ''';
 
   static const String getArray = r'''
-    query Query { array { 
+    query Query { array {
       state
-        boot {
-          id
-          name
-          status
-          size
-        }
-        disks {
-          id
-          name
-          status
-          size
-        }
-        parities {
-          id
-          name
-          status
-          size
-        }
-        caches {
-          id
-          name
-          status
-          size
-        }
+      boot {
+        id, name, status, size
       }
-    }
+      disks {
+        id, name, status, size
+      }
+      parities {
+        id, name, status, size
+      }
+      caches {
+        id, name, status, size
+      }
+    } }
   ''';
 
   static const String getShares = r'''

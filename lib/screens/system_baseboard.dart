@@ -25,9 +25,6 @@ class _MyBaseboardPageState extends State<BaseboardPage> {
         appBar: AppBar(
           title: const Text('Baseboard'),
           actions: <Widget>[
-            IconButton(
-                icon: const Icon(Icons.logout),
-                onPressed: () => _state!.logout())
           ],
           elevation: 0,
         ),

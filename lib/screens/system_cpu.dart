@@ -25,9 +25,6 @@ class _MyCpuPageState extends State<CpuPage> {
         appBar: AppBar(
           title: const Text('CPU'),
           actions: <Widget>[
-            IconButton(
-                icon: const Icon(Icons.logout),
-                onPressed: () => _state!.logout())
           ],
           elevation: 0,
         ),

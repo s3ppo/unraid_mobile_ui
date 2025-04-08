@@ -25,9 +25,6 @@ class _MyOsPageState extends State<OsPage> {
         appBar: AppBar(
           title: const Text('OS'),
           actions: <Widget>[
-            IconButton(
-                icon: const Icon(Icons.logout),
-                onPressed: () => _state!.logout())
           ],
           elevation: 0,
         ),

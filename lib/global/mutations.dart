@@ -1,31 +1,19 @@
 class Mutations {
   static const String stopDocker = r'''
-    query StopContainer($containerId: ID!) {
+    mutation StopContainer($dockerId: ID!) {
       docker {
-        mutations {
-          stopContainer(id: $containerId) {
-            id
-            names
-            image
-            state
-            status
-          }
+        stop(id: $dockerId) {
+          id, names, image, imageId, command, created, sizeRootFs, labels, state, status, networkSettings, mounts, autoStart
         }
       }
     }
   ''';
 
   static const String startDocker = r'''
-    query StartContainer($containerId: ID!) {
+    mutation StartContainer($dockerId: ID!) {
       docker {
-        mutations {
-          startContainer(id: $containerId) {
-            id
-            names
-            image
-            state
-            status
-          }
+        start(id: $dockerId) {
+          id, names, image, imageId, command, created, sizeRootFs, labels, state, status, networkSettings, mounts, autoStart
         }
       }
     }

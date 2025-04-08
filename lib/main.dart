@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:unraid_ui/global/globals.dart';
 import 'package:unraid_ui/global/notifiers.dart';
 import 'package:unraid_ui/global/routes.dart';
 import 'package:unraid_ui/screens/home.dart';
 import 'package:unraid_ui/screens/login.dart';
 import 'notifiers/auth_state.dart';
-import 'package:pub_semver/pub_semver.dart';
 
 void main() {
   runApp(const MyApp());

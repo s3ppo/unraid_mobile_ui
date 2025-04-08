@@ -16,6 +16,7 @@ class ArrayPage extends StatefulWidget {
 class _MyArrayPageState extends State<ArrayPage> {
   AuthState? _state;
   Future<QueryResult>? _array;
+  String _arrayState = "";
 
   @override
   void initState() {
@@ -35,16 +36,12 @@ class _MyArrayPageState extends State<ArrayPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Array'),
-        actions: <Widget>[
-          IconButton(
-              icon: const Icon(Icons.logout), onPressed: () => _state!.logout())
-        ],
-        elevation: 0,
-      ),
-      body: showArrayContent()
-    );
+        appBar: AppBar(
+          title: const Text('Array'),
+          actions: <Widget>[showMore()],
+          elevation: 0,
+        ),
+        body: showArrayContent());
   }
 
   Widget showArrayContent() {
@@ -68,6 +65,7 @@ class _MyArrayPageState extends State<ArrayPage> {
           array.addAll(parities);
           array.addAll(caches);
           array.add(boots);
+          _arrayState = result.data!['array']['state'];
 
           return ListView.builder(
               itemCount: array.length,
@@ -98,14 +96,42 @@ class _MyArrayPageState extends State<ArrayPage> {
   }
 
   doSetArrayState(String state) async {
-
-    var result = await _state!.client!.mutate(
+    await _state!.client!.mutate(
         MutationOptions(document: gql(Mutations.setArrayState), variables: {
       "input": {"desiredState": "${state}"}
     }));
+  }
 
-    getArray();
-    setState(() {});
-
+  Widget showMore() {
+    return PopupMenuButton(
+      icon: const Icon(Icons.more_vert),
+      onSelected: (value) {
+        setState(() {
+          if (value == 'start') {
+            doSetArrayState('START');
+          } else if (value == 'stop') {
+            doSetArrayState('STOP');
+          } else if (value == 'refresh') {
+            getArray();
+          }
+        });
+      },
+      itemBuilder: (BuildContext bc) {
+        return const [
+          PopupMenuItem(
+            value: 'start',
+            child: Text("Start Array"),
+          ),
+          PopupMenuItem(
+            value: 'stop',
+            child: Text("Stop Array"),
+          ),
+          PopupMenuItem(
+            value: 'refresh',
+            child: Text("Refresh"),
+          ),
+        ];
+      },
+    );
   }
 }

@@ -37,9 +37,6 @@ class _MySharesPageState extends State<SharesPage> {
         appBar: AppBar(
           title: const Text('Shares'),
           actions: <Widget>[
-            IconButton(
-                icon: const Icon(Icons.logout),
-                onPressed: () => _state!.logout())
           ],
           elevation: 0,
         ),

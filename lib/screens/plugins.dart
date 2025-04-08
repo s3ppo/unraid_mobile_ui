@@ -24,9 +24,6 @@ class _MyPluginsPageState extends State<PluginsPage> {
         appBar: AppBar(
           title: const Text('Plugins'),
           actions: <Widget>[
-            IconButton(
-                icon: const Icon(Icons.logout),
-                onPressed: () => _state!.logout())
           ],
           elevation: 0,
         ),

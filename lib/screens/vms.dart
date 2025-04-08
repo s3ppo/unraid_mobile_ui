@@ -37,9 +37,6 @@ class _MyVmsPageState extends State<VmsPage> {
         appBar: AppBar(
           title: const Text('Virtual machines'),
           actions: <Widget>[
-            IconButton(
-                icon: const Icon(Icons.logout),
-                onPressed: () => _state!.logout())
           ],
           elevation: 0,
         ),

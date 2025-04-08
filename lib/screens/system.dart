@@ -37,9 +37,6 @@ class _MySystemPageState extends State<SystemPage> {
         appBar: AppBar(
           title: const Text('System'),
           actions: <Widget>[
-            IconButton(
-                icon: const Icon(Icons.logout),
-                onPressed: () => _state!.logout())
           ],
           elevation: 0,
         ),
