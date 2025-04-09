@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:json_theme/json_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:unraid_ui/global/notifiers.dart';
 import 'package:unraid_ui/global/routes.dart';
@@ -6,12 +10,19 @@ import 'package:unraid_ui/screens/home.dart';
 import 'package:unraid_ui/screens/login.dart';
 import 'notifiers/auth_state.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final themeStr = await rootBundle.loadString('assets/themes/default.json');
+  final themeJson = jsonDecode(themeStr);
+  final theme = ThemeDecoder.decodeThemeData(themeJson)!;
+
+  runApp(MyApp(theme: theme));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({Key? key, required this.theme}) : super(key: key);
+  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
@@ -20,34 +31,7 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'Unraid Mobile',
           debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-                tabBarTheme: TabBarTheme(
-                    indicatorColor: Colors.white, labelColor: Colors.white),
-                    indicatorColor: Colors.orange,
-                    switchTheme: SwitchThemeData(
-                      thumbColor: WidgetStateProperty.all(Colors.orange),
-                      trackColor: WidgetStateProperty.all(Colors.white),
-                      trackOutlineColor: WidgetStateProperty.all(Colors.black),
-                      overlayColor: WidgetStateProperty.all(Colors.black),
-                    ),
-                inputDecorationTheme: InputDecorationTheme(
-                  floatingLabelStyle: TextStyle(color: Colors.deepOrange),
-                  border: OutlineInputBorder(),
-                  focusColor: Colors.orange,
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.orange),
-                  ),
-                ),
-                progressIndicatorTheme:
-                    ProgressIndicatorThemeData(color: Colors.orange),
-                appBarTheme: AppBarTheme(
-                    backgroundColor: Colors.orange,
-                    foregroundColor: Colors.black),
-                primarySwatch: Colors.orange,
-                primaryColor: Colors.orange,
-                floatingActionButtonTheme: FloatingActionButtonThemeData(
-                    backgroundColor: Colors.amber,
-                    foregroundColor: Colors.white)),
+          theme: theme,
           onGenerateRoute: Routes.onGenerateRoute,
           home: Consumer<AuthState>(builder: (context, state, child) {
             if (state.initialized) {
@@ -64,7 +48,7 @@ class MyApp extends StatelessWidget {
                               color: Theme.of(context).scaffoldBackgroundColor,
                               child: const CircularProgressIndicator()))));
             }
-          }),
+          })
         ));
   }
 }

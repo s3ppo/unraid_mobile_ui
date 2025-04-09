@@ -3,7 +3,7 @@ description: Unraid Mobile
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+12
+version: 1.0.0+14
 
 environment:
   sdk: ">=2.15.1 <3.0.0"
@@ -21,6 +21,7 @@ dependencies:
   flutter_launcher_icons: ^0.14.3
   connectivity_plus: ^6.1.3
   pub_semver: ^2.2.0
+  json_theme: ^8.0.0+2
 
 dev_dependencies:
   flutter_test:
@@ -32,7 +33,8 @@ flutter:
 
   uses-material-design: true
   assets:
-    - assets/icon/ 
+    - assets/icon/
+    - assets/themes/default.json
 
 flutter_launcher_icons:
   android: "launcher_icon"

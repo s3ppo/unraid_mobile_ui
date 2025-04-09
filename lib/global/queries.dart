@@ -1,52 +1,44 @@
 class Queries {
   static const String getDockers = r'''
-    query Query{
-      docker { containers { id, names, image, imageId, command, created, sizeRootFs, labels, state, status, networkSettings, mounts, autoStart } } 
+    query {
+      docker { 
+        containers { 
+          id, names, image, imageId, command, created, sizeRootFs, labels, state, status, networkSettings, mounts, autoStart 
+        } 
+      } 
     }
   ''';
 
   static const String getVms = r'''
     query Query {
-      vms { domain { uuid, name, state } }
+      vms { id, domain { uuid, name, state } }
     }
   ''';
 
   static const String getArray = r'''
-    query Query { array {
-      state
-      boot {
-        id, name, status, size
-      }
-      disks {
-        id, name, status, size
-      }
-      parities {
-        id, name, status, size
-      }
-      caches {
-        id, name, status, size
-      }
-    } }
+    query { 
+      array {
+        state
+        boot {
+          id, name, status, size, device
+        }
+        disks {
+          id, name, status, size, device
+        }
+        parities {
+          id, name, status, size, device
+        }
+        caches {
+          id, name, status, size, device
+        }
+      } 
+    }
   ''';
 
   static const String getShares = r'''
-    query Query {
+    query {
       shares {
-        name
-        free
-        used
-        size
-        include
-        exclude
-        cache
-        nameOrig
-        comment
-        allocator
-        splitLevel
-        floor
-        cow
-        color
-        luksStatus
+        name, free, used, size, include, exclude, cache, nameOrig, comment, allocator, splitLevel, floor, cow, color, luksStatus
       }
     }
   ''';
@@ -54,9 +46,7 @@ class Queries {
   static const String getServices = r'''
     query {
       services {
-        id
-        name
-        version
+        id, name, version
       }
     }
   ''';

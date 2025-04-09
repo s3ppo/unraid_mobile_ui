@@ -37,7 +37,7 @@ class _MyDockersPageState extends State<DockersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Dockers'),
+          title: const Text('Docker'),
           actions: <Widget>[],
           elevation: 0,
         ),
@@ -58,6 +58,7 @@ class _MyDockersPageState extends State<DockersPage> {
                 itemCount: result.data!['docker']['containers'].length,
                 itemBuilder: (context, index) {
                   Map docker = result.data!['docker']['containers'][index];
+                  bool running = docker['state'] == 'RUNNING';
                   String name = docker['names'][0];
                   if (name.startsWith('/')) {
                     name = name.substring(1);
@@ -69,9 +70,9 @@ class _MyDockersPageState extends State<DockersPage> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                                title: const Text('Confirm Action'),
+                                title: Text(name),
                                 content: Text(
-                                    'Are you sure you want to ${docker['state'] == 'RUNNING' ? 'stop' : 'start'} this container?'),
+                                    'Are you sure you want to ${running ? 'stop' : 'start'} this container?'),
                                 actions: <Widget>[
                                   TextButton(
                                     child: const Text('Cancel'),
@@ -84,17 +85,14 @@ class _MyDockersPageState extends State<DockersPage> {
                                       onPressed: () async {
                                         Navigator.of(context).pop();
                                         docker = await startStopDocker(
-                                            docker['state'] == 'RUNNING'
-                                                ? true
-                                                : false,
-                                            docker);
+                                            running, docker);
                                         setState(() {});
                                       }),
                                 ]);
                           },
                         );
                       },
-                      leading: docker['state'] == 'RUNNING'
+                      leading: running
                           ? Icon(FontAwesomeIcons.play,
                               size: 15, color: Colors.green)
                           : Icon(FontAwesomeIcons.stop,
@@ -115,12 +113,12 @@ class _MyDockersPageState extends State<DockersPage> {
         return const Center(child: CircularProgressIndicator());
       },
     );
-    var result;
-
+    
     if (docker['id'].contains(':')) {
       docker['id'] = docker['id'].split(':')[1];
     }
 
+    QueryResult result;
     try {
       if (running) {
         result = await _state!.client!.mutate(MutationOptions(
@@ -129,13 +127,7 @@ class _MyDockersPageState extends State<DockersPage> {
             variables: {
               "dockerId": "${docker['id']}",
             }));
-        docker['state'] = 'EXITED';
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: Colors.green,
-          content:
-              Align(alignment: Alignment.center, child: Text('Docker stopped')),
-          duration: const Duration(seconds: 3),
-        ));
+        docker['state'] = result.data!['docker']['stop']['state'];
       } else {
         result = await _state!.client!.mutate(MutationOptions(
             document: gql(Mutations.startDocker),
@@ -143,15 +135,17 @@ class _MyDockersPageState extends State<DockersPage> {
             variables: {
               "dockerId": "${docker['id']}",
             }));
-        docker['state'] = 'RUNNING';
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: Colors.green,
-          content:
-              Align(alignment: Alignment.center, child: Text('Docker started')),
-          duration: const Duration(seconds: 3),
-        ));
+        docker['state'] = result.data!['docker']['start']['state'];
       }
+      // Success message
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.green,
+          content: Align(
+              alignment: Alignment.center,
+              child: running ? Text('Docker stopped') : Text('Docker started')),
+          duration: const Duration(seconds: 3)));
     } catch (e) {
+      // Error message
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.red,
         content: Align(alignment: Alignment.center, child: Text('Failed')),
