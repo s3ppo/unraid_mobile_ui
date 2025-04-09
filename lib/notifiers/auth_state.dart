@@ -13,7 +13,6 @@ class AuthException implements Exception {
 }
 
 class AuthState extends ChangeNotifier {
-  
   late SharedPreferences storage;
   //ValueNotifier<GraphQLClient>? _client;
   GraphQLClient? _client;
@@ -49,44 +48,40 @@ class AuthState extends ChangeNotifier {
     notifyListeners();
   }
 
-  connectUnraid({ required String token, required String ip, required String prot }) async {
+  connectUnraid(
+      {required String token, required String ip, required String prot}) async {
     String endPoint;
     if (prot == 'https') {
       endPoint = 'https://$ip/graphql';
     } else {
       endPoint = 'http://$ip/graphql';
     }
-    var link = HttpLink(endPoint, defaultHeaders: {
-      'Origin': packageName,
-      'x-api-key': token
-    });
-    try {
-      _client = GraphQLClient(link: link, cache: GraphQLCache());
-      // Test the connection by making a simple query
-      final result = await _client!.query(
-      QueryOptions(document: gql(Queries.getServices)));
-      if (result.hasException) {
-        _client = null;
-        throw AuthException('Connection failed');
-      }
+    var link = HttpLink(endPoint,
+        defaultHeaders: {'Origin': packageName, 'x-api-key': token});
 
-      for (var service in result.data!['services']) {
-        if (service['name'] == 'unraid-api') {
-          _connectVersion = service['version'];
-        }
-        break;
-      }
-
-      if (Version.parse(_connectVersion) < Version.parse(Globals.minConnectVersion) ) {
-        _client = null;
-        throw AuthException('Backend version is too old, please update "Unraid Connect" Plugin');
-      }
-
-    } catch (e) {
+    _client = GraphQLClient(link: link, cache: GraphQLCache());
+    // Test the connection by making a simple query
+    final result =
+        await _client!.query(QueryOptions(document: gql(Queries.getServices)));
+    if (result.hasException) {
       _client = null;
       throw AuthException('Connection failed');
     }
-    
+
+    for (var service in result.data!['services']) {
+      if (service['name'] == 'unraid-api') {
+        _connectVersion = service['version'];
+      }
+      break;
+    }
+
+    if (Version.parse(_connectVersion) <
+        Version.parse(Globals.minConnectVersion)) {
+      _client = null;
+      throw AuthException(
+          'Backend version is too old, please update "Unraid Connect" plugin on your Unraid server');
+    }
+
     await storage.setString('token', token);
     await storage.setString('ip', ip);
     await storage.setString('prot', prot);
