@@ -1,7 +1,7 @@
 # Unraid Mobile UI
 
 GraphQL client app using flutter to show data from your unraid server.
-Once there are more features included in my-servers-plugin it will be published on Google Play and IOS Appstore.
+Once there are more features included in unraid connect plugin it will be published on Google Play and IOS Appstore.
 
 # API Key
 
@@ -13,7 +13,11 @@ unraid-api apikey --create
 
 # Beta / Testflight
 Want to help me testing? Here is my testflight link :-)
+iOS:
 https://testflight.apple.com/join/P1XCE1ym
+
+Android:
+https://play.google.com/apps/testing/com.hw.unraidui
 
 # Screenshots
 <table>
