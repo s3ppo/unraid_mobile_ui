@@ -64,7 +64,7 @@ class AuthState extends ChangeNotifier {
     final result =
         await _client!.query(QueryOptions(document: gql(Queries.getServices)));
     if (result.hasException) {
-      _client = null;
+      logout();
       throw AuthException('Connection failed');
     }
 
@@ -77,7 +77,7 @@ class AuthState extends ChangeNotifier {
 
     if (Version.parse(_connectVersion) <
         Version.parse(Globals.minConnectVersion)) {
-      _client = null;
+      logout();
       throw AuthException(
           'Backend version is too old, please update "Unraid Connect" plugin on your Unraid server');
     }

@@ -19,6 +19,22 @@ class Mutations {
     }
   ''';
 
+  static const String stopVM = r'''
+    mutation Vms($vmId: ID!) {
+      vms {
+        stopVm(id: $vmId)
+      }
+    }
+  ''';
+
+  static const String startVM = r'''
+    mutation Vms($vmId: ID!) {
+      vms {
+        startVm(id: $vmId)
+      }
+    }
+  ''';
+
   static const String setArrayState = r'''
     mutation SetState($input: ArrayStateInput) {
       array {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:unraid_ui/global/mutations.dart';
 import 'package:unraid_ui/global/queries.dart';
 import 'package:unraid_ui/notifiers/auth_state.dart';
 
@@ -36,8 +37,7 @@ class _MyVmsPageState extends State<VmsPage> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Virtual machines'),
-          actions: <Widget>[
-          ],
+          actions: <Widget>[],
           elevation: 0,
         ),
         body: Container(child: showVmsContent()));
@@ -64,8 +64,33 @@ class _MyVmsPageState extends State<VmsPage> {
                   if (vm['state'] == 'RUNNING') {
                     running = true;
                   }
-
                   return ListTile(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                              title: Text(vm['name']),
+                              content: Text(
+                                  'Are you sure you want to ${running ? 'stop' : 'start'} this container?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text('Cancel'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                TextButton(
+                                    child: const Text('Confirm'),
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                      await startStopVM(running, vm);
+                                      setState(() {});
+                                    }),
+                              ]);
+                        },
+                      );
+                    },
                     leading: running
                         ? Icon(FontAwesomeIcons.play,
                             size: 15, color: Colors.green)
@@ -80,12 +105,52 @@ class _MyVmsPageState extends State<VmsPage> {
         });
   }
 
-  startStopVM(bool value, bool running, Map vm) {
-    if (value) {
-      running = true;
-    } else {
-      running = false;
+  Future<Map> startStopVM(bool running, Map vm) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
+
+    QueryResult result;
+    try {
+      if (running) {
+        result = await _state!.client!.mutate(MutationOptions(
+            document: gql(Mutations.stopVM),
+            queryRequestTimeout: Duration(seconds: 30),
+            variables: {
+              "vmId": "${vm['id']}",
+            }));
+        vm['state'] = result.data!['vms']['stop']['state'];
+      } else {
+        result = await _state!.client!.mutate(MutationOptions(
+            document: gql(Mutations.startVM),
+            queryRequestTimeout: Duration(seconds: 30),
+            variables: {
+              "vmId": "${vm['id']}",
+            }));
+        vm['state'] = result.data!['vms']['start']['state'];
+      }
+      // Success message
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.green,
+          content: Align(
+              alignment: Alignment.center,
+              child: running ? Text('VM stopped') : Text('VM started')),
+          duration: const Duration(seconds: 3)));
+    } catch (e) {
+      // Error message
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.red,
+        content: Align(alignment: Alignment.center, child: Text('Failed')),
+        duration: const Duration(seconds: 3),
+      ));
     }
-    setState(() {});
+
+    Navigator.of(context).pop();
+
+    return vm;
   }
 }
