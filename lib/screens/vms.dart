@@ -1,3 +1,4 @@
+import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -59,45 +60,36 @@ class _MyVmsPageState extends State<VmsPage> {
             return ListView.builder(
                 itemCount: vms.length,
                 itemBuilder: (context, index) {
-                  final vm = vms[index];
+                  Map vm = vms[index];
                   bool running = false;
                   if (vm['state'] == 'RUNNING') {
                     running = true;
                   }
                   return ListTile(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                              title: Text(vm['name']),
-                              content: Text(
-                                  'Are you sure you want to ${running ? 'stop' : 'start'} this container?'),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: const Text('Cancel'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                                TextButton(
-                                    child: const Text('Confirm'),
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
-                                      await startStopVM(running, vm);
-                                      setState(() {});
-                                    }),
-                              ]);
-                        },
-                      );
-                    },
-                    leading: running
-                        ? Icon(FontAwesomeIcons.play,
-                            size: 15, color: Colors.green)
-                        : Icon(FontAwesomeIcons.stop,
-                            size: 15, color: Colors.red),
-                    title: Text(vm['name']),
-                  );
+                      onTap: () {
+                        showAdaptiveActionSheet(
+                          context: context,
+                          title: Text(vm['name']),
+                          actions: <BottomSheetAction>[
+                            BottomSheetAction(
+                              title: const Text('Start/Stop'),
+                              onPressed: (_) async {
+                                Navigator.of(context).pop();
+                                vm = await startStopVM(running, vm);
+                                setState(() {});
+                              },
+                            )
+                          ],
+                          cancelAction:
+                              CancelAction(title: const Text('Cancel')),
+                        );
+                      },
+                      leading: running
+                          ? Icon(FontAwesomeIcons.play,
+                              size: 15, color: Colors.green)
+                          : Icon(FontAwesomeIcons.stop,
+                              size: 15, color: Colors.red),
+                      title: Text(vm['name']));
                 });
           } else {
             return const Center(child: Text('No data available'));
@@ -121,17 +113,21 @@ class _MyVmsPageState extends State<VmsPage> {
             document: gql(Mutations.stopVM),
             queryRequestTimeout: Duration(seconds: 30),
             variables: {
-              "vmId": "${vm['id']}",
+              "vmId": "${vm['uuid']}",
             }));
-        vm['state'] = result.data!['vms']['stop']['state'];
+        if ( result.data!['vm']['stop'] ) {
+          vm['state'] = 'SHUTOFF';
+        }
       } else {
         result = await _state!.client!.mutate(MutationOptions(
             document: gql(Mutations.startVM),
             queryRequestTimeout: Duration(seconds: 30),
             variables: {
-              "vmId": "${vm['id']}",
+              "vmId": "${vm['uuid']}",
             }));
-        vm['state'] = result.data!['vms']['start']['state'];
+        if ( result.data!['vm']['start'] ) {
+          vm['state'] = 'RUNNING';
+        }
       }
       // Success message
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

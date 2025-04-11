@@ -41,7 +41,13 @@ class AuthState extends ChangeNotifier {
     String? prot = storage.getString('prot');
 
     if (token != null && ip != null && prot != null) {
-      await connectUnraid(token: token, ip: ip, prot: prot);
+      try {
+        await connectUnraid(token: token, ip: ip, prot: prot);
+      } on AuthException catch (e) {
+        _initialized = true;
+        logout();
+        throw AuthException(e.msg);
+      }
     }
 
     _initialized = true;

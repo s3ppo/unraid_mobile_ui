@@ -38,15 +38,51 @@ class _MyArrayPageState extends State<ArrayPage> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Array'),
-          actions: <Widget>[showMore()],
           elevation: 0,
         ),
         body: showArrayContent());
   }
 
   Widget showArrayContent() {
-    return Column(children: [
-      Container(padding: EdgeInsets.all(8), child: Text('Array $_arrayState')),
+    return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+      Container(
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.all(8),
+        child: Row(children: [
+          OutlinedButton(
+            style: OutlinedButton.styleFrom(
+              side: BorderSide(color: Colors.grey),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+              ),
+            ),
+            onPressed: null,
+            child: Text(_arrayState == 'STARTED' ? 'Stop' : ''),
+          ),
+          Container(width: 10),
+            OutlinedButton(
+            style: OutlinedButton.styleFrom(
+              side: BorderSide(color: Colors.grey),
+              shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              ),
+            ),
+            onPressed: null,
+            child: Text('Check', style: TextStyle(color: Colors.grey)),
+            ),
+          Container(width: 10),
+            OutlinedButton(
+            style: OutlinedButton.styleFrom(
+              side: BorderSide(color: Colors.grey),
+              shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              ),
+            ),
+            onPressed: null,
+            child: Text('History', style: TextStyle(color: Colors.grey)),
+            ),
+        ]),
+      ),
       Expanded(
           child: FutureBuilder<QueryResult>(
         future: _array,
@@ -105,7 +141,8 @@ class _MyArrayPageState extends State<ArrayPage> {
     ]);
   }
 
-  doSetArrayState(String targetState) async {
+  doSetArrayState() async {
+    String targetState = _arrayState == 'STARTED' ? 'STOP' : 'START';
     String state = "";
 
     showDialog(
@@ -145,32 +182,5 @@ class _MyArrayPageState extends State<ArrayPage> {
     }
 
     Navigator.of(context).pop();
-  }
-
-  Widget showMore() {
-    return PopupMenuButton(
-      icon: const Icon(Icons.more_vert),
-      onSelected: (value) async {
-        setState(() {
-          if (value == 'start') {
-            doSetArrayState('START');
-          } else if (value == 'stop') {
-            doSetArrayState('STOP');
-          }
-        });
-      },
-      itemBuilder: (BuildContext bc) {
-        return const [
-          PopupMenuItem(
-            value: 'start',
-            child: Text("Start Array"),
-          ),
-          PopupMenuItem(
-            value: 'stop',
-            child: Text("Stop Array"),
-          )
-        ];
-      },
-    );
   }
 }

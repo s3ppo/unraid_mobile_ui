@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:unraid_ui/global/mutations.dart';
 import 'package:unraid_ui/notifiers/auth_state.dart';
 import 'package:unraid_ui/global/queries.dart';
+import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 
 class DockersPage extends StatefulWidget {
   const DockersPage({Key? key}) : super(key: key);
@@ -54,42 +55,35 @@ class _MyDockersPageState extends State<DockersPage> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData && snapshot.data!.data != null) {
             final result = snapshot.data!;
+
             return ListView.builder(
                 itemCount: result.data!['docker']['containers'].length,
                 itemBuilder: (context, index) {
                   Map docker = result.data!['docker']['containers'][index];
                   bool running = docker['state'] == 'RUNNING';
                   String name = docker['names'][0];
+
                   if (name.startsWith('/')) {
                     name = name.substring(1);
                   }
 
                   return ListTile(
                       onTap: () {
-                        showDialog(
+                        showAdaptiveActionSheet(
                           context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                                title: Text(name),
-                                content: Text(
-                                    'Are you sure you want to ${running ? 'stop' : 'start'} this container?'),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: const Text('Cancel'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                  TextButton(
-                                      child: const Text('Confirm'),
-                                      onPressed: () async {
-                                        Navigator.of(context).pop();
-                                        docker = await startStopDocker(
-                                            running, docker);
-                                        setState(() {});
-                                      }),
-                                ]);
-                          },
+                          title: Text(name),
+                          actions: <BottomSheetAction>[
+                            BottomSheetAction(
+                              title: const Text('Start/Stop'),
+                              onPressed: (_) async {
+                                Navigator.of(context).pop();
+                                docker = await startStopDocker(running, docker);
+                                setState(() {});
+                              },
+                            )
+                          ],
+                          cancelAction:
+                              CancelAction(title: const Text('Cancel')),
                         );
                       },
                       leading: running
@@ -113,7 +107,7 @@ class _MyDockersPageState extends State<DockersPage> {
         return const Center(child: CircularProgressIndicator());
       },
     );
-    
+
     if (docker['id'].contains(':')) {
       docker['id'] = docker['id'].split(':')[1];
     }

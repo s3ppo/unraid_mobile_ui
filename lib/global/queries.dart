@@ -94,16 +94,6 @@ class Queries {
             uptime
           }
           memory {
-            max
-            total
-            free
-            used
-            active
-            available
-            buffcache
-            swaptotal
-            swapused
-            swapfree
           }
         }
       }
