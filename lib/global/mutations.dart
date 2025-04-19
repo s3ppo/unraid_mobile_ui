@@ -35,6 +35,46 @@ class Mutations {
     }
   ''';
 
+  static const String pauseVM = r'''
+    mutation Pause($vmId: String!) {
+      vm {
+        pause(id: $vmId)
+      }
+    }
+  ''';
+
+  static const String resumeVM = r'''
+    mutation Resume($vmId: String!) {
+      vm {
+        resume(id: $vmId)
+      }
+    }
+  ''';
+
+  static const String forceStopVM = r'''
+    mutation ForceStop($vmId: String!) {
+      vm {
+        forceStop(id: $vmId)
+      }
+    }
+  ''';
+
+  static const String rebootVM = r'''
+    mutation Reboot($vmId: String!) {
+      vm {
+        reboot(id: $vmId)
+      }
+    }
+  ''';
+
+  static const String resetVM = r'''
+    mutation Reset($vmId: String!) {
+      vm {
+        reset(id: $vmId)
+      }
+    }
+  ''';  
+
   static const String setArrayState = r'''
     mutation SetState($input: ArrayStateInput) {
       array {

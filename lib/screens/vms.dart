@@ -60,10 +60,26 @@ class _MyVmsPageState extends State<VmsPage> {
             return ListView.builder(
                 itemCount: vms.length,
                 itemBuilder: (context, index) {
+                  Icon iconVm = Icon(FontAwesomeIcons.question,
+                      size: 15, color: Colors.grey);
                   Map vm = vms[index];
                   bool running = false;
+                  bool paused = false;
+                  bool shutoff = false;
                   if (vm['state'] == 'RUNNING') {
                     running = true;
+                    iconVm = Icon(FontAwesomeIcons.play,
+                        size: 15, color: Colors.green);
+                  }
+                  if (vm['state'] == 'PAUSED') {
+                    paused = true;
+                    iconVm = Icon(FontAwesomeIcons.pause,
+                        size: 15, color: Colors.red);
+                  }
+                  if (vm['state'] == 'SHUTOFF') {
+                    shutoff = true;
+                    iconVm = Icon(FontAwesomeIcons.stop,
+                        size: 15, color: Colors.red);
                   }
                   return ListTile(
                       onTap: () {
@@ -71,24 +87,72 @@ class _MyVmsPageState extends State<VmsPage> {
                           context: context,
                           title: Text(vm['name']),
                           actions: <BottomSheetAction>[
-                            BottomSheetAction(
-                              title: const Text('Start/Stop'),
-                              onPressed: (_) async {
-                                Navigator.of(context).pop();
-                                vm = await startStopVM(running, vm);
-                                setState(() {});
-                              },
-                            )
+                            if (running) ...[
+                              BottomSheetAction(
+                                title: const Text('Stop'),
+                                onPressed: (_) async {
+                                  Navigator.of(context).pop();
+                                  vm = await commandVM('stop', vm);
+                                  setState(() {});
+                                },
+                              ),
+                              BottomSheetAction(
+                                title: const Text('Force Stop'),
+                                onPressed: (_) async {
+                                  Navigator.of(context).pop();
+                                  vm = await commandVM('forceStop', vm);
+                                  setState(() {});
+                                },
+                              ),
+                              BottomSheetAction(
+                                  title: const Text('Pause'),
+                                  onPressed: (_) async {
+                                    Navigator.of(context).pop();
+                                    vm = await commandVM('pause', vm);
+                                    setState(() {});
+                                  }),
+                              BottomSheetAction(
+                                title: const Text('Reboot'),
+                                onPressed: (_) async {
+                                  Navigator.of(context).pop();
+                                  vm = await commandVM('reboot', vm);
+                                  setState(() {});
+                                },
+                              ),
+                            ] else if (shutoff) ...[
+                              BottomSheetAction(
+                                title: const Text('Start'),
+                                onPressed: (_) async {
+                                  Navigator.of(context).pop();
+                                  vm = await commandVM('start', vm);
+                                  setState(() {});
+                                },
+                              ),
+                              /*BottomSheetAction(
+                                title: const Text('Reset'),
+                                onPressed: (_) async {
+                                  Navigator.of(context).pop();
+                                  vm = await commandVM('reset', vm);
+                                  setState(() {});
+                                },
+                              )*/
+                            ],
+                            if (paused) ...[
+                              BottomSheetAction(
+                                title: const Text('Resume'),
+                                onPressed: (_) async {
+                                  Navigator.of(context).pop();
+                                  vm = await commandVM('resume', vm);
+                                  setState(() {});
+                                },
+                              )
+                            ]
                           ],
                           cancelAction:
                               CancelAction(title: const Text('Cancel')),
                         );
                       },
-                      leading: running
-                          ? Icon(FontAwesomeIcons.play,
-                              size: 15, color: Colors.green)
-                          : Icon(FontAwesomeIcons.stop,
-                              size: 15, color: Colors.red),
+                      leading: iconVm,
                       title: Text(vm['name']));
                 });
           } else {
@@ -97,7 +161,7 @@ class _MyVmsPageState extends State<VmsPage> {
         });
   }
 
-  Future<Map> startStopVM(bool running, Map vm) async {
+  Future<Map> commandVM(String targetCommand, Map vm) async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -108,33 +172,82 @@ class _MyVmsPageState extends State<VmsPage> {
 
     QueryResult result;
     try {
-      if (running) {
+      if (targetCommand == 'stop') {
         result = await _state!.client!.mutate(MutationOptions(
             document: gql(Mutations.stopVM),
             queryRequestTimeout: Duration(seconds: 30),
             variables: {
               "vmId": "${vm['uuid']}",
             }));
-        if ( result.data!['vm']['stop'] ) {
+        if (result.data!['vm']['stop']) {
           vm['state'] = 'SHUTOFF';
         }
-      } else {
+      } else if (targetCommand == 'start') {
         result = await _state!.client!.mutate(MutationOptions(
             document: gql(Mutations.startVM),
             queryRequestTimeout: Duration(seconds: 30),
             variables: {
               "vmId": "${vm['uuid']}",
             }));
-        if ( result.data!['vm']['start'] ) {
+        if (result.data!['vm']['start']) {
+          vm['state'] = 'RUNNING';
+        }
+      } else if (targetCommand == 'pause') {
+        result = await _state!.client!.mutate(MutationOptions(
+            document: gql(Mutations.pauseVM),
+            queryRequestTimeout: Duration(seconds: 30),
+            variables: {
+              "vmId": "${vm['uuid']}",
+            }));
+        if (result.data!['vm']['pause']) {
+          vm['state'] = 'PAUSED';
+        }
+      } else if (targetCommand == 'forceStop') {
+        result = await _state!.client!.mutate(MutationOptions(
+            document: gql(Mutations.forceStopVM),
+            queryRequestTimeout: Duration(seconds: 30),
+            variables: {
+              "vmId": "${vm['uuid']}",
+            }));
+        if (result.data!['vm']['forceStop']) {
+          vm['state'] = 'SHUTOFF';
+        }
+      } else if (targetCommand == 'reboot') {
+        result = await _state!.client!.mutate(MutationOptions(
+            document: gql(Mutations.rebootVM),
+            queryRequestTimeout: Duration(seconds: 30),
+            variables: {
+              "vmId": "${vm['uuid']}",
+            }));
+        if (result.data!['vm']['reboot']) {
+          vm['state'] = 'RUNNING';
+        }
+      } else if (targetCommand == 'reset') {
+        result = await _state!.client!.mutate(MutationOptions(
+            document: gql(Mutations.resetVM),
+            queryRequestTimeout: Duration(seconds: 30),
+            variables: {
+              "vmId": "${vm['uuid']}",
+            }));
+        if (result.data!['vm']['reset']) {
+          vm['state'] = 'RUNNING';
+        }
+      } else if (targetCommand == 'resume') {
+        result = await _state!.client!.mutate(MutationOptions(
+            document: gql(Mutations.resumeVM),
+            queryRequestTimeout: Duration(seconds: 30),
+            variables: {
+              "vmId": "${vm['uuid']}",
+            }));
+        if (result.data!['vm']['resume']) {
           vm['state'] = 'RUNNING';
         }
       }
+
       // Success message
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: Colors.green,
-          content: Align(
-              alignment: Alignment.center,
-              child: running ? Text('VM stopped') : Text('VM started')),
+          content: Align(alignment: Alignment.center, child: Text('Success')),
           duration: const Duration(seconds: 3)));
     } catch (e) {
       // Error message
