@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:unraid_ui/notifiers/auth_state.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -89,7 +90,7 @@ class _MyLoginPageState extends State<LoginPage> {
             ],
           )),
       Container(
-          padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
+          padding: const EdgeInsets.fromLTRB(0, 40, 0, 20),
           alignment: Alignment.center,
           child: OutlinedButton(
               style: TextButton.styleFrom(
@@ -104,7 +105,13 @@ class _MyLoginPageState extends State<LoginPage> {
               child: const Text('LOGIN',
                   style: TextStyle(
                       fontWeight: FontWeight.w600, color: Colors.white)),
-              onPressed: () => loginUser()))
+              onPressed: () => loginUser())
+
+              ),
+      TextButton(
+          onPressed: () async => launchUrl(Uri.parse('https://github.com/s3ppo/unraid_mobile_ui')),
+          child: const Text('Need help?'),
+        ), 
     ]))));
   }
 
