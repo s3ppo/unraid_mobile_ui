@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:unraid_ui/screens/array.dart';
-import 'package:unraid_ui/screens/dockers.dart';
-import 'package:unraid_ui/screens/login.dart';
-import 'package:unraid_ui/screens/plugins.dart';
-import 'package:unraid_ui/screens/shares.dart';
-import 'package:unraid_ui/screens/home.dart';
-import 'package:unraid_ui/screens/system_memory.dart';
-import 'package:unraid_ui/screens/vms.dart';
-import 'package:unraid_ui/screens/system.dart';
-import 'package:unraid_ui/screens/system_baseboard.dart';
-import 'package:unraid_ui/screens/system_cpu.dart';
-import 'package:unraid_ui/screens/system_os.dart';
+import 'package:unmobile/screens/array.dart';
+import 'package:unmobile/screens/dockers.dart';
+import 'package:unmobile/screens/login.dart';
+import 'package:unmobile/screens/plugins.dart';
+import 'package:unmobile/screens/shares.dart';
+import 'package:unmobile/screens/home.dart';
+import 'package:unmobile/screens/system_memory.dart';
+import 'package:unmobile/screens/vms.dart';
+import 'package:unmobile/screens/system.dart';
+import 'package:unmobile/screens/system_baseboard.dart';
+import 'package:unmobile/screens/system_cpu.dart';
+import 'package:unmobile/screens/system_os.dart';
 
 class Routes {
   static const String login = "login";

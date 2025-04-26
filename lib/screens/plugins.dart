@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:unraid_ui/notifiers/auth_state.dart';
+import 'package:unmobile/notifiers/auth_state.dart';
 
 class PluginsPage extends StatefulWidget {
   const PluginsPage({Key? key}) : super(key: key);

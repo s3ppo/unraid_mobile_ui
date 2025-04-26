@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:unraid_ui/global/queries.dart';
-import 'package:unraid_ui/notifiers/auth_state.dart';
-import 'package:unraid_ui/global/routes.dart';
+import 'package:unmobile/global/queries.dart';
+import 'package:unmobile/notifiers/auth_state.dart';
+import 'package:unmobile/global/routes.dart';
 
 class SystemPage extends StatefulWidget {
   const SystemPage({Key? key}) : super(key: key);

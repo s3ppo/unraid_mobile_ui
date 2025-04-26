@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:unraid_ui/global/mutations.dart';
-import 'package:unraid_ui/global/queries.dart';
-import 'package:unraid_ui/notifiers/auth_state.dart';
+import 'package:unmobile/global/mutations.dart';
+import 'package:unmobile/global/queries.dart';
+import 'package:unmobile/notifiers/auth_state.dart';
 
 class VmsPage extends StatefulWidget {
   const VmsPage({Key? key}) : super(key: key);

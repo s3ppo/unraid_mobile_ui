@@ -4,8 +4,8 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:unraid_ui/global/globals.dart';
-import 'package:unraid_ui/global/queries.dart';
+import 'package:unmobile/global/globals.dart';
+import 'package:unmobile/global/queries.dart';
 
 class AuthException implements Exception {
   String msg;

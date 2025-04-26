@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:json_theme/json_theme.dart';
 import 'package:provider/provider.dart';
-import 'package:unraid_ui/global/notifiers.dart';
-import 'package:unraid_ui/global/routes.dart';
-import 'package:unraid_ui/screens/home.dart';
-import 'package:unraid_ui/screens/login.dart';
+import 'package:unmobile/global/notifiers.dart';
+import 'package:unmobile/global/routes.dart';
+import 'package:unmobile/screens/home.dart';
+import 'package:unmobile/screens/login.dart';
 import 'notifiers/auth_state.dart';
 
 void main() async {
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: providers,
         child: MaterialApp(
-          title: 'Unraid Mobile',
+          title: 'Mobile UI',
           debugShowCheckedModeBanner: false,
           theme: theme,
           onGenerateRoute: Routes.onGenerateRoute,

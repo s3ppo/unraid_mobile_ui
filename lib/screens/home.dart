@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:unraid_ui/notifiers/auth_state.dart';
+import 'package:unmobile/notifiers/auth_state.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:unraid_ui/global/routes.dart';
+import 'package:unmobile/global/routes.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -24,7 +24,7 @@ class _MyHomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Unraid mobile'),
+          title: const Text('unMobile'),
           actions: <Widget>[
             IconButton(
                 icon: const Icon(Icons.logout),
