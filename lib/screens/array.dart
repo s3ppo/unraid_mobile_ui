@@ -141,9 +141,7 @@ class _MyArrayPageState extends State<ArrayPage> {
     ]);
   }
 
-  doSetArrayState() async {
-    String targetState = _arrayState == 'STARTED' ? 'STOP' : 'START';
-    String state = "";
+  doSetArrayState( String targetState ) async {
 
     showDialog(
       context: context,
@@ -158,7 +156,7 @@ class _MyArrayPageState extends State<ArrayPage> {
           document: gql(Mutations.setArrayState),
           queryRequestTimeout: Duration(seconds: 30),
           variables: {
-            "input": {"desiredState": "${state}"}
+            "input": {"desiredState": "${targetState}"}
           }));
 
       _arrayState = result.data!['array']['setState']['state'];
@@ -168,9 +166,7 @@ class _MyArrayPageState extends State<ArrayPage> {
           backgroundColor: Colors.green,
           content: Align(
               alignment: Alignment.center,
-              child: targetState == 'START'
-                  ? Text('Array started')
-                  : Text('Array stopped')),
+              child: Text('Success')),
           duration: const Duration(seconds: 3)));
     } catch (e) {
       // Error message

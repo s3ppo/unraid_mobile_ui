@@ -61,36 +61,55 @@ class _MyLoginPageState extends State<LoginPage> {
             children: [
               Row(
                 children: [
-                  Expanded(
+                    Flexible(
                     child: RadioListTile<String>(
-                      title: const Text('http'),
+                      dense: true,
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('http', style: TextStyle(fontSize: 14)),
                       value: 'http',
                       groupValue: _protocol,
                       onChanged: (String? value) {
-                        setState(() {
-                          _protocol = value!;
-                        });
+                      setState(() {
+                        _protocol = value!;
+                      });
                       },
                     ),
-                  ),
-                  Expanded(
+                    ),
+                    Flexible(
                     child: RadioListTile<String>(
-                      title: const Text('https'),
+                      dense: true,
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('https', style: TextStyle(fontSize: 14)),
                       value: 'https',
                       groupValue: _protocol,
                       onChanged: (String? value) {
-                        setState(() {
-                          _protocol = value!;
-                        });
+                      setState(() {
+                        _protocol = value!;
+                      });
                       },
                     ),
-                  ),
+                    ),
+                    Flexible(
+                    child: RadioListTile<String>(
+                      dense: true,
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('https (insecure)', style: TextStyle(fontSize: 14)),
+                      value: 'https_insecure',
+                      groupValue: _protocol,
+                      onChanged: (String? value) {
+                      setState(() {
+                        _protocol = value!;
+                      });
+                      },
+                    ),
+                    ),
+            
                 ],
               ),
-            ],
+            ]
           )),
       Container(
-          padding: const EdgeInsets.fromLTRB(0, 40, 0, 20),
+          padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
           alignment: Alignment.center,
           child: OutlinedButton(
               style: TextButton.styleFrom(

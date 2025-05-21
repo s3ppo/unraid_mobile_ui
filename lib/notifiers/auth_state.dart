@@ -1,5 +1,7 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:http/io_client.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:pub_semver/pub_semver.dart';
@@ -57,13 +59,26 @@ class AuthState extends ChangeNotifier {
   connectUnraid(
       {required String token, required String ip, required String prot}) async {
     String endPoint;
-    if (prot == 'https') {
+    if (prot == 'https' || prot == 'https_insecure') {
       endPoint = 'https://$ip/graphql';
     } else {
       endPoint = 'http://$ip/graphql';
     }
-    var link = HttpLink(endPoint,
-        defaultHeaders: {'Origin': packageName, 'x-api-key': token});
+
+    IOClient getInsecureIOClient() {
+      var httpClient = HttpClient();
+      if (prot == 'https_insecure') {
+        httpClient.badCertificateCallback =
+            (X509Certificate cert, String ip, int port) => true;
+      }
+      return IOClient(httpClient);
+    }
+
+    var link = HttpLink(
+      endPoint,
+      defaultHeaders: {'Origin': packageName, 'x-api-key': token},
+      httpClient: getInsecureIOClient(),
+    );
 
     _client = GraphQLClient(link: link, cache: GraphQLCache());
     // Test the connection by making a simple query
