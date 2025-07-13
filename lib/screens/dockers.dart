@@ -87,9 +87,9 @@ class _MyDockersPageState extends State<DockersPage> {
                         );
                       },
                       leading: running
-                          ? Icon(FontAwesomeIcons.play,
+                          ? const Icon(FontAwesomeIcons.play,
                               size: 15, color: Colors.green)
-                          : Icon(FontAwesomeIcons.stop,
+                          : const Icon(FontAwesomeIcons.stop,
                               size: 15, color: Colors.red),
                       title: Text(name));
                 });

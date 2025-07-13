@@ -1,5 +1,5 @@
 class Globals {
 
-  static const minConnectVersion = '4.6.7';
+  static const minConnectVersion = '4.9.5';
 
 }

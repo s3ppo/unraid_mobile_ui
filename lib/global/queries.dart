@@ -98,4 +98,16 @@ class Queries {
         }
       }
   ''';
+
+  static const getPlugins = r'''
+    query {
+      plugins {
+        name
+        version
+        hasApiModule
+        hasCliModule
+      }
+    }
+  ''';
+
 }

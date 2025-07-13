@@ -51,12 +51,12 @@ class _MyArrayPageState extends State<ArrayPage> {
         child: Row(children: [
           OutlinedButton(
             style: OutlinedButton.styleFrom(
-              side: BorderSide(color: Colors.grey),
+              side: BorderSide(color: Colors.grey), //Theme.of(context).primaryColor),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(8)),
               ),
             ),
-            onPressed: null,
+            onPressed: null, //() => doSetArrayState(_arrayState == 'STARTED' ? 'STOP' : 'START'),
             child: Text(_arrayState == 'STARTED' ? 'Stop' : ''),
           ),
           Container(width: 10),

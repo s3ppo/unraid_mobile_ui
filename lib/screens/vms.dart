@@ -60,7 +60,7 @@ class _MyVmsPageState extends State<VmsPage> {
             return ListView.builder(
                 itemCount: vms.length,
                 itemBuilder: (context, index) {
-                  Icon iconVm = Icon(FontAwesomeIcons.question,
+                  Icon iconVm = const Icon(FontAwesomeIcons.question,
                       size: 15, color: Colors.grey);
                   Map vm = vms[index];
                   bool running = false;
@@ -68,17 +68,17 @@ class _MyVmsPageState extends State<VmsPage> {
                   bool shutoff = false;
                   if (vm['state'] == 'RUNNING') {
                     running = true;
-                    iconVm = Icon(FontAwesomeIcons.play,
+                    iconVm = const Icon(FontAwesomeIcons.play,
                         size: 15, color: Colors.green);
                   }
                   if (vm['state'] == 'PAUSED') {
                     paused = true;
-                    iconVm = Icon(FontAwesomeIcons.pause,
+                    iconVm = const Icon(FontAwesomeIcons.pause,
                         size: 15, color: Colors.red);
                   }
                   if (vm['state'] == 'SHUTOFF') {
                     shutoff = true;
-                    iconVm = Icon(FontAwesomeIcons.stop,
+                    iconVm = const Icon(FontAwesomeIcons.stop,
                         size: 15, color: Colors.red);
                   }
                   return ListTile(
