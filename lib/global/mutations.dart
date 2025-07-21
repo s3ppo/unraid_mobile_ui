@@ -1,6 +1,6 @@
 class Mutations {
   static const String stopDocker = r'''
-    mutation Stop($dockerId: String!) {
+    mutation Stop($dockerId: PrefixedID!) {
       docker {
         stop(id: $dockerId) {
           id, names, image, imageId, command, created, sizeRootFs, labels, state, status, networkSettings, mounts, autoStart
@@ -10,7 +10,7 @@ class Mutations {
   ''';
 
   static const String startDocker = r'''
-    mutation Start($dockerId: String!) {
+    mutation Start($dockerId: PrefixedID!) {
       docker {
         start(id: $dockerId) {
           id, names, image, imageId, command, created, sizeRootFs, labels, state, status, networkSettings, mounts, autoStart
@@ -20,7 +20,7 @@ class Mutations {
   ''';
 
   static const String stopVM = r'''
-    mutation Stop($vmId: String!) {
+    mutation Stop($vmId: PrefixedID!) {
       vm {
         stop(id: $vmId)
       }
@@ -28,7 +28,7 @@ class Mutations {
   ''';
 
   static const String startVM = r'''
-    mutation Start($vmId: String!) {
+    mutation Start($vmId: PrefixedID!) {
       vm {
         start(id: $vmId)
       }
@@ -36,7 +36,7 @@ class Mutations {
   ''';
 
   static const String pauseVM = r'''
-    mutation Pause($vmId: String!) {
+    mutation Pause($vmId: PrefixedID!) {
       vm {
         pause(id: $vmId)
       }
@@ -44,7 +44,7 @@ class Mutations {
   ''';
 
   static const String resumeVM = r'''
-    mutation Resume($vmId: String!) {
+    mutation Resume($vmId: PrefixedID!) {
       vm {
         resume(id: $vmId)
       }
@@ -52,7 +52,7 @@ class Mutations {
   ''';
 
   static const String forceStopVM = r'''
-    mutation ForceStop($vmId: String!) {
+    mutation ForceStop($vmId: PrefixedID!) {
       vm {
         forceStop(id: $vmId)
       }
@@ -60,7 +60,7 @@ class Mutations {
   ''';
 
   static const String rebootVM = r'''
-    mutation Reboot($vmId: String!) {
+    mutation Reboot($vmId: PrefixedID!) {
       vm {
         reboot(id: $vmId)
       }
@@ -68,7 +68,7 @@ class Mutations {
   ''';
 
   static const String resetVM = r'''
-    mutation Reset($vmId: String!) {
+    mutation Reset($vmId: PrefixedID!) {
       vm {
         reset(id: $vmId)
       }

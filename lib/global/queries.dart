@@ -11,7 +11,7 @@ class Queries {
 
   static const String getVms = r'''
     query Query {
-      vms { id, domain { uuid, name, state } }
+      vms { id, domain { id, uuid, name, state } }
     }
   ''';
 

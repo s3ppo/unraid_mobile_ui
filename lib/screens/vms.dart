@@ -177,7 +177,7 @@ class _MyVmsPageState extends State<VmsPage> {
             document: gql(Mutations.stopVM),
             queryRequestTimeout: Duration(seconds: 30),
             variables: {
-              "vmId": "${vm['uuid']}",
+              "vmId": "${vm['id']}",
             }));
         if (result.data!['vm']['stop']) {
           vm['state'] = 'SHUTOFF';
@@ -187,7 +187,7 @@ class _MyVmsPageState extends State<VmsPage> {
             document: gql(Mutations.startVM),
             queryRequestTimeout: Duration(seconds: 30),
             variables: {
-              "vmId": "${vm['uuid']}",
+              "vmId": "${vm['id']}",
             }));
         if (result.data!['vm']['start']) {
           vm['state'] = 'RUNNING';
@@ -197,7 +197,7 @@ class _MyVmsPageState extends State<VmsPage> {
             document: gql(Mutations.pauseVM),
             queryRequestTimeout: Duration(seconds: 30),
             variables: {
-              "vmId": "${vm['uuid']}",
+              "vmId": "${vm['id']}",
             }));
         if (result.data!['vm']['pause']) {
           vm['state'] = 'PAUSED';
@@ -207,7 +207,7 @@ class _MyVmsPageState extends State<VmsPage> {
             document: gql(Mutations.forceStopVM),
             queryRequestTimeout: Duration(seconds: 30),
             variables: {
-              "vmId": "${vm['uuid']}",
+              "vmId": "${vm['id']}",
             }));
         if (result.data!['vm']['forceStop']) {
           vm['state'] = 'SHUTOFF';
@@ -217,7 +217,7 @@ class _MyVmsPageState extends State<VmsPage> {
             document: gql(Mutations.rebootVM),
             queryRequestTimeout: Duration(seconds: 30),
             variables: {
-              "vmId": "${vm['uuid']}",
+              "vmId": "${vm['id']}",
             }));
         if (result.data!['vm']['reboot']) {
           vm['state'] = 'RUNNING';
@@ -227,7 +227,7 @@ class _MyVmsPageState extends State<VmsPage> {
             document: gql(Mutations.resetVM),
             queryRequestTimeout: Duration(seconds: 30),
             variables: {
-              "vmId": "${vm['uuid']}",
+              "vmId": "${vm['id']}",
             }));
         if (result.data!['vm']['reset']) {
           vm['state'] = 'RUNNING';
@@ -237,7 +237,7 @@ class _MyVmsPageState extends State<VmsPage> {
             document: gql(Mutations.resumeVM),
             queryRequestTimeout: Duration(seconds: 30),
             variables: {
-              "vmId": "${vm['uuid']}",
+              "vmId": "${vm['id']}",
             }));
         if (result.data!['vm']['resume']) {
           vm['state'] = 'RUNNING';
