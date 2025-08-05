@@ -23,7 +23,7 @@ class _MySystemPageState extends State<SystemPage> {
     getInfo();
   }
 
-  getInfo() {
+  void getInfo() {
     _state!.client!.resetStore();
 
     _info = _state!.client!.query(QueryOptions(

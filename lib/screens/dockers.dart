@@ -25,7 +25,7 @@ class _MyDockersPageState extends State<DockersPage> {
     getAllDockers();
   }
 
-  getAllDockers() async {
+  void getAllDockers() async {
     _state!.client!.resetStore();
 
     _allDockers = _state!.client!.query(QueryOptions(

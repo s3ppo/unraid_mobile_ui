@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:unmobile/notifiers/auth_state.dart';
 
 class OsPage extends StatefulWidget {
   final Map os;
@@ -11,12 +9,10 @@ class OsPage extends StatefulWidget {
 }
 
 class _MyOsPageState extends State<OsPage> {
-  AuthState? _state;
 
   @override
   void initState() {
     super.initState();
-    _state = Provider.of<AuthState>(context, listen: false);
   }
 
   @override

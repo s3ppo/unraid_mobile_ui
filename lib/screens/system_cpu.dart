@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:unmobile/notifiers/auth_state.dart';
 
 class CpuPage extends StatefulWidget {
   final Map cpu;
@@ -11,12 +9,10 @@ class CpuPage extends StatefulWidget {
 }
 
 class _MyCpuPageState extends State<CpuPage> {
-  AuthState? _state;
 
   @override
   void initState() {
     super.initState();
-    _state = Provider.of<AuthState>(context, listen: false);
   }
 
   @override

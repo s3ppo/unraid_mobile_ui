@@ -110,4 +110,53 @@ class Queries {
     }
   ''';
 
+  static const getNotificationsUnread = r'''
+    query Query {
+      notifications {
+        id
+        overview {
+          unread {
+            info
+            warning
+            alert
+            total
+          }
+        }
+      }
+    }
+  ''';
+
+  static const getNotifications = r'''
+    query Notifications($filter: NotificationFilter!) {
+      notifications {
+        id
+        overview {
+          unread {
+            info
+            warning
+            alert
+            total
+          }
+          archive {
+            info
+            warning
+            alert
+            total
+          }
+        }
+        list(filter: $filter) {
+          id
+          title
+          subject
+          description
+          importance
+          link
+          type
+          timestamp
+          formattedTimestamp
+        }
+      }
+    }
+  ''';
+
 }

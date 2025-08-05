@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:unmobile/notifiers/auth_state.dart';
 
 class BaseboardPage extends StatefulWidget {
   final Map baseboard;
@@ -11,12 +9,10 @@ class BaseboardPage extends StatefulWidget {
 }
 
 class _MyBaseboardPageState extends State<BaseboardPage> {
-  AuthState? _state;
 
   @override
   void initState() {
     super.initState();
-    _state = Provider.of<AuthState>(context, listen: false);
   }
 
   @override

@@ -25,7 +25,7 @@ class _MyArrayPageState extends State<ArrayPage> {
     getArray();
   }
 
-  getArray() {
+  void getArray() {
     _state!.client!.resetStore();
 
     _array = _state!.client!.query(QueryOptions(

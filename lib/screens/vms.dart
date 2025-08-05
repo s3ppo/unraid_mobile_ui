@@ -25,7 +25,7 @@ class _MyVmsPageState extends State<VmsPage> {
     getVms();
   }
 
-  getVms() {
+  void getVms() {
     _state!.client!.resetStore();
 
     _vms = _state!.client!.query(QueryOptions(

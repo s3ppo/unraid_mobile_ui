@@ -23,7 +23,7 @@ class _MySharesPageState extends State<SharesPage> {
     getShares();
   }
 
-  getShares() {
+  void getShares() {
     _state!.client!.resetStore();
 
     _shares = _state!.client!.query(QueryOptions(

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:unmobile/notifiers/auth_state.dart';
 
 class MemoryPage extends StatefulWidget {
   final Map memory;
@@ -11,12 +9,10 @@ class MemoryPage extends StatefulWidget {
 }
 
 class _MyMemoryPageState extends State<MemoryPage> {
-  AuthState? _state;
 
   @override
   void initState() {
     super.initState();
-    _state = Provider.of<AuthState>(context, listen: false);
   }
 
   @override
