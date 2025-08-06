@@ -30,7 +30,7 @@ class _MyDockersPageState extends State<DockersPage> {
 
     _allDockers = _state!.client!.query(QueryOptions(
       document: gql(Queries.getDockers),
-      queryRequestTimeout: const Duration(seconds: 30),
+      queryRequestTimeout: const Duration(seconds: 60),
     ));
   }
 

@@ -11,6 +11,7 @@ import 'package:unmobile/screens/system.dart';
 import 'package:unmobile/screens/system_baseboard.dart';
 import 'package:unmobile/screens/system_cpu.dart';
 import 'package:unmobile/screens/system_os.dart';
+import 'package:unmobile/screens/notifications.dart';
 
 class Routes {
   static const String login = "login";
@@ -24,7 +25,8 @@ class Routes {
   static const String systemBaseboard = "system_baseboard";
   static const String systemCpu = "system_cpu";
   static const String systemOs = "system_os";
-  static const String systemMemory = "system_memory";  
+  static const String systemMemory = "system_memory";
+  static const String notifications = "notifications";
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     return MaterialPageRoute(
@@ -45,6 +47,8 @@ class Routes {
               return const PluginsPage();
             case shares:
               return const SharesPage();
+            case notifications:
+              return const NotificationPage();
             case system:
               return const SystemPage();
             case systemBaseboard:

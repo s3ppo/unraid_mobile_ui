@@ -111,11 +111,10 @@ class _MyHomePageState extends State<HomePage> {
             return IconButton(
                 onPressed: () => navigateNotifications(),
                 icon: unreadTotalCount > 0
-                    ? const Badge(
+                    ? Badge(
                         smallSize: 10,
                         largeSize: 10,
                         backgroundColor: Colors.green,
-                        alignment: AlignmentDirectional.bottomStart,
                         child: Icon(Icons.notifications),
                       )
                     : Icon(Icons.notifications));
@@ -128,7 +127,7 @@ class _MyHomePageState extends State<HomePage> {
   }
 
   void navigateNotifications() {
-    //Navigator.of(context).pushNamed(Routes.notifications);
+    Navigator.of(context).pushNamed(Routes.notifications);
   }
 
   void doLogout() {
@@ -150,11 +149,11 @@ class _MyHomePageState extends State<HomePage> {
               onPressed: () {
                 Navigator.of(context).pop();
                 _state!.logout();
-              },
-            ),
-          ],
+              }
+            )
+          ]
         );
-      },
+      }
     );
   }
 }
