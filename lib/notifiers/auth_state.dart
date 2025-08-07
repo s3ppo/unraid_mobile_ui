@@ -34,7 +34,7 @@ class AuthState extends ChangeNotifier {
     init();
   }
 
-  init() async {
+  void init() async {
     storage = await SharedPreferences.getInstance();
     await getPackageInfos();
 
@@ -56,7 +56,7 @@ class AuthState extends ChangeNotifier {
     notifyListeners();
   }
 
-  connectUnraid(
+  Future<void> connectUnraid(
       {required String token, required String ip, required String prot}) async {
     String endPoint;
     if (prot == 'https' || prot == 'https_insecure') {
@@ -81,7 +81,8 @@ class AuthState extends ChangeNotifier {
     );
 
     _client = GraphQLClient(link: link, cache: GraphQLCache());
-    // Test the connection by making a simple query
+
+    // Test connection by making a simple query
     final result =
         await _client!.query(QueryOptions(document: gql(Queries.getServices)));
     if (result.hasException) {
@@ -89,6 +90,7 @@ class AuthState extends ChangeNotifier {
       throw AuthException('Connection failed');
     }
 
+    // Check if the Unraid Connect version is compatible
     for (var service in result.data!['services']) {
       if (service['name'] == 'unraid-api') {
         _connectVersion = service['version'];
@@ -110,7 +112,7 @@ class AuthState extends ChangeNotifier {
     notifyListeners();
   }
 
-  logout() async {
+  void logout() async {
     await storage.remove('token');
     await storage.remove('ip');
     await storage.remove('prot');
@@ -119,11 +121,12 @@ class AuthState extends ChangeNotifier {
     notifyListeners();
   }
 
-  getPackageInfos() async {
+  Future<void> getPackageInfos() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     appName = packageInfo.appName;
     packageName = packageInfo.packageName;
     version = packageInfo.version;
     buildNumber = packageInfo.buildNumber;
   }
+
 }

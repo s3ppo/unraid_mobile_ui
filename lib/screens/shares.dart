@@ -36,8 +36,7 @@ class _MySharesPageState extends State<SharesPage> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Shares'),
-          actions: <Widget>[
-          ],
+          actions: <Widget>[],
           elevation: 0,
         ),
         body: showSharesContent());

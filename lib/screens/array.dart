@@ -45,7 +45,7 @@ class _MyArrayPageState extends State<ArrayPage> {
 
   Widget showArrayContent() {
     return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-      Container(
+      /*Container(
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.all(8),
         child: Row(children: [
@@ -81,8 +81,8 @@ class _MyArrayPageState extends State<ArrayPage> {
             onPressed: null,
             child: Text('History', style: TextStyle(color: Colors.grey)),
             ),
-        ]),
-      ),
+        ])
+      ),*/
       Expanded(
           child: FutureBuilder<QueryResult>(
         future: _array,
@@ -105,34 +105,69 @@ class _MyArrayPageState extends State<ArrayPage> {
             array.addAll(caches);
             array.add(boots);
 
-            WidgetsBinding.instance.addPostFrameCallback((_) {
+            /*WidgetsBinding.instance.addPostFrameCallback((_) {
               setState(() {
                 _arrayState = result.data!['array']['state'];
               });
-            });
+            });*/
 
             return ListView.builder(
-                itemCount: array.length,
-                itemBuilder: (context, index) {
-                  final arr = array[index];
-                  Icon icon;
-                  if (arr['status'] == 'DISK_OK') {
-                    icon = const Icon(FontAwesomeIcons.solidCircle,
-                        size: 15, color: Colors.green);
-                  } else {
-                    icon = const Icon(FontAwesomeIcons.solidCircle,
-                        size: 15, color: Colors.red);
-                  }
+              itemCount: array.length,
+              itemBuilder: (context, index) {
+                final arr = array[index];
+                Icon icon;
+                if (arr['status'] == 'DISK_OK') {
+                icon = const Icon(FontAwesomeIcons.solidCircle,
+                  size: 15, color: Colors.green);
+                } else {
+                icon = const Icon(FontAwesomeIcons.solidCircle,
+                  size: 15, color: Colors.red);
+                }
 
-                  double size = arr['size'] / 1024 / 1024;
-                  int sizeGB = size.round();
+                if (arr['fsSize'] == null) {
+                  arr['fsSize'] = 0;
+                }
+                if (arr['fsUsed'] == null) {
+                  arr['fsUsed'] = 0;
+                }
+                if (arr['fsFree'] == null) {
+                  arr['fsFree'] = 0;
+                }
 
-                  return ListTile(
-                      leading: icon,
-                      title: Text(arr['name']),
-                      subtitle: Text(arr['device']),
-                      trailing: Text('Size: $sizeGB GB'));
-                });
+                //Total size in GB
+                double size = arr['fsSize'] / 1024 / 1024;
+                int sizeGB = size.round();
+                //Used size in GB
+                double used = arr['fsUsed'] != null ? arr['fsUsed'] / 1024 / 1024 : 0;
+                double fillPercent = size > 0 ? (used / size) : 0;
+
+                return ListTile(
+                leading: icon,
+                title: Text(arr['name']),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                  Text(arr['device']),
+                  SizedBox(height: 4),
+                  LinearProgressIndicator(
+                    value: fillPercent.clamp(0.0, 1.0),
+                    minHeight: 8,
+                    backgroundColor: Colors.grey[300],
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                    fillPercent > 0.9
+                      ? Colors.red
+                      : (fillPercent > 0.7 ? Colors.orange : Colors.green),
+                    ),
+                  ),
+                  SizedBox(height: 2),
+                  Text(
+                    'Belegt: ${used.round()} GB / $sizeGB GB (${(fillPercent * 100).toStringAsFixed(1)}%)',
+                    style: TextStyle(fontSize: 12, color: Colors.grey[700]),
+                  ),
+                  ],
+                )
+                );
+              });
           } else {
             return const Center(child: Text('No data available'));
           }

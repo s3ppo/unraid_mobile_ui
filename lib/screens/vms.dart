@@ -37,7 +37,7 @@ class _MyVmsPageState extends State<VmsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Virtual machines'),
+          title: const Text('Virtual Machines'),
           actions: <Widget>[],
           elevation: 0,
         ),

@@ -73,14 +73,14 @@ class _MyHomePageState extends State<HomePage> {
       ),
       ListTile(
         leading: const FaIcon(FontAwesomeIcons.docker),
-        title: const Text('Dockers'),
+        title: const Text('Docker Containers'),
         onTap: () {
           Navigator.of(context).pushNamed(Routes.dockers);
         },
       ),
       ListTile(
         leading: const FaIcon(FontAwesomeIcons.desktop),
-        title: const Text('Virtual machines'),
+        title: const Text('Virtual Machines'),
         onTap: () {
           Navigator.of(context).pushNamed(Routes.vms);
         },

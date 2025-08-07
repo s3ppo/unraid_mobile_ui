@@ -38,7 +38,7 @@ class _MyDockersPageState extends State<DockersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Dockers'),
+          title: const Text('Docker Containers'),
           actions: <Widget>[],
           elevation: 0,
         ),

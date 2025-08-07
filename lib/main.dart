@@ -32,6 +32,9 @@ class MyApp extends StatelessWidget {
           title: 'Mobile UI',
           debugShowCheckedModeBanner: false,
           theme: theme,
+          darkTheme: theme.copyWith(
+            brightness: Brightness.dark,
+          ),
           onGenerateRoute: Routes.onGenerateRoute,
           home: Consumer<AuthState>(builder: (context, state, child) {
             if (state.initialized) {

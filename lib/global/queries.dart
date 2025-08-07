@@ -20,16 +20,16 @@ class Queries {
       array {
         state
         boot {
-          id, name, status, size, device
+          id, name, status, size, device, fsSize, fsFree, fsUsed
         }
         disks {
-          id, name, status, size, device
+          id, name, status, size, device, fsSize, fsFree, fsUsed
         }
         parities {
-          id, name, status, size, device
+          id, name, status, size, device, fsSize, fsFree, fsUsed
         }
         caches {
-          id, name, status, size, device
+          id, name, status, size, device, fsSize, fsFree, fsUsed
         }
       } 
     }
