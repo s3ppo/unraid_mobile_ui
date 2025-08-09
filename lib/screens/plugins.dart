@@ -22,7 +22,7 @@ class _MyPluginsPageState extends State<PluginsPage> {
     getPlugins();
   }
 
-  getPlugins() {
+  void getPlugins() {
     _state!.client!.resetStore();
 
     _plugins = _state!.client!.query(QueryOptions(

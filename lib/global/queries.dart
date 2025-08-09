@@ -159,4 +159,49 @@ class Queries {
     }
   ''';
 
+  static const getMe = r'''
+    query {
+      me {
+        id
+        name
+        description
+        roles
+        permissions {
+          resource
+          actions
+        }
+      }
+    }
+  ''';
+
+  static const getServerCard = r'''
+    query {
+      server {
+        id
+        owner {
+          id
+          username
+          url
+          avatar
+        }
+        guid
+        apikey
+        name
+        status
+        wanip
+        lanip
+        localurl
+        remoteurl
+      }
+      vars {
+        version
+      }
+      info {
+        os {
+          uptime
+        }
+      }
+    }
+  ''';
+
 }

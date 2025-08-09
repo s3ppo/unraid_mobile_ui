@@ -6,7 +6,7 @@ import 'package:json_theme/json_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:unmobile/global/notifiers.dart';
 import 'package:unmobile/global/routes.dart';
-import 'package:unmobile/screens/home.dart';
+import 'package:unmobile/screens/dashboard.dart';
 import 'package:unmobile/screens/login.dart';
 import 'notifiers/auth_state.dart';
 
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
           home: Consumer<AuthState>(builder: (context, state, child) {
             if (state.initialized) {
               if (state.client != null) {
-                return const HomePage();
+                return const DashboardPage();
               } else {
                 return const LoginPage();
               }

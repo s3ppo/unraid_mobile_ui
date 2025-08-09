@@ -4,7 +4,7 @@ import 'package:unmobile/screens/dockers.dart';
 import 'package:unmobile/screens/login.dart';
 import 'package:unmobile/screens/plugins.dart';
 import 'package:unmobile/screens/shares.dart';
-import 'package:unmobile/screens/home.dart';
+import 'package:unmobile/screens/dashboard.dart';
 import 'package:unmobile/screens/system_memory.dart';
 import 'package:unmobile/screens/vms.dart';
 import 'package:unmobile/screens/system.dart';
@@ -15,7 +15,7 @@ import 'package:unmobile/screens/notifications.dart';
 
 class Routes {
   static const String login = "login";
-  static const String home = "home";
+  static const String dashboard = "dashboard";
   static const String array = "array";
   static const String dockers = "dockers";
   static const String plugins = "plugins";
@@ -35,8 +35,8 @@ class Routes {
           switch (settings.name) {
             case login:
               return const LoginPage();
-            case home:
-              return const HomePage();
+            case dashboard:
+              return const DashboardPage();
             case array:
               return const ArrayPage();
             case dockers:

@@ -19,6 +19,7 @@ class AuthState extends ChangeNotifier {
   //ValueNotifier<GraphQLClient>? _client;
   GraphQLClient? _client;
   bool _initialized = false;
+  dynamic _userData;
   String appName = "";
   String packageName = "";
   String version = "";
@@ -29,6 +30,7 @@ class AuthState extends ChangeNotifier {
   GraphQLClient? get client => _client;
   String get connectVersion => _connectVersion;
   bool get initialized => _initialized;
+  dynamic get userData => _userData;
 
   AuthState() {
     init();
@@ -82,28 +84,8 @@ class AuthState extends ChangeNotifier {
 
     _client = GraphQLClient(link: link, cache: GraphQLCache());
 
-    // Test connection by making a simple query
-    final result =
-        await _client!.query(QueryOptions(document: gql(Queries.getServices)));
-    if (result.hasException) {
-      logout();
-      throw AuthException('Connection failed');
-    }
-
-    // Check if the Unraid Connect version is compatible
-    for (var service in result.data!['services']) {
-      if (service['name'] == 'unraid-api') {
-        _connectVersion = service['version'];
-      }
-      break;
-    }
-
-    if (Version.parse(_connectVersion) <
-        Version.parse(Globals.minConnectVersion)) {
-      logout();
-      throw AuthException(
-          'Backend version is too old, please update "Unraid Connect" plugin on your Unraid server');
-    }
+    await testConnection();
+    await getMe();
 
     await storage.setString('token', token);
     await storage.setString('ip', ip);
@@ -127,6 +109,40 @@ class AuthState extends ChangeNotifier {
     packageName = packageInfo.packageName;
     version = packageInfo.version;
     buildNumber = packageInfo.buildNumber;
+  }
+
+  Future<void> testConnection() async {
+    final result =
+        await _client!.query(QueryOptions(document: gql(Queries.getServices)));
+    if (result.hasException) {
+      logout();
+      throw AuthException('Connection failed');
+    }
+
+    // Check if the Unraid Connect version is compatible
+    for (var service in result.data!['services']) {
+      if (service['name'] == 'unraid-api') {
+        _connectVersion = service['version'];
+      }
+      break;
+    }
+
+    if (Version.parse(_connectVersion) <
+        Version.parse(Globals.minConnectVersion)) {
+      logout();
+      throw AuthException(
+          'Backend version is too old, please update "Unraid Connect" plugin on your Unraid server');
+    }
+  }
+
+  Future<void> getMe() async {
+    final result = await _client!.query(QueryOptions(document: gql(Queries.getMe)));
+    if (result.hasException) {
+      logout();
+      throw AuthException('Failed to fetch user data');
+    }
+
+    _userData = result.data!['me'];
   }
 
 }

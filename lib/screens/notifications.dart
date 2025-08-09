@@ -56,7 +56,8 @@ class _MyNotificationPageState extends State<NotificationPage> {
 
             return ListView.separated(
                 itemCount: notifications.length,
-                separatorBuilder: (context, index) => const Divider(thickness: 0.5),
+                separatorBuilder: (context, index) =>
+                    const Divider(thickness: 0.5),
                 itemBuilder: (context, index) {
                   final notification = notifications[index];
                   return ListTile(
@@ -75,15 +76,18 @@ class _MyNotificationPageState extends State<NotificationPage> {
                             maxLines: null,
                             softWrap: true,
                           ),
+                          const SizedBox(height: 10),
+                          Text(
+                            notification['timestamp'] != null
+                                ? DateTime.tryParse(
+                                            notification['timestamp']) !=
+                                        null
+                                    ? "${MaterialLocalizations.of(context).formatMediumDate(DateTime.parse(notification['timestamp']))} "
+                                        "${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(DateTime.parse(notification['timestamp'])), alwaysUse24HourFormat: false)}"
+                                    : notification['timestamp']
+                                : '<empty>',
+                          )
                         ],
-                      ),
-                      trailing: Text(
-                        notification['timestamp'] != null
-                            ? DateTime.tryParse(notification['timestamp']) != null
-                                ? "${MaterialLocalizations.of(context).formatMediumDate(DateTime.parse(notification['timestamp']))} "
-                                    "${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(DateTime.parse(notification['timestamp'])), alwaysUse24HourFormat: false)}"
-                                : notification['timestamp']
-                            : '<empty>',
                       ));
                 });
           } else {

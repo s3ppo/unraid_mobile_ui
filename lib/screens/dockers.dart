@@ -74,7 +74,9 @@ class _MyDockersPageState extends State<DockersPage> {
                           title: Text(name),
                           actions: <BottomSheetAction>[
                             BottomSheetAction(
-                              title: const Text('Start/Stop'),
+                              title: running
+                                  ? const Text('Stop')
+                                  : const Text('Start'),
                               onPressed: (_) async {
                                 Navigator.of(context).pop();
                                 docker = await startStopDocker(running, docker);
@@ -86,12 +88,32 @@ class _MyDockersPageState extends State<DockersPage> {
                               CancelAction(title: const Text('Cancel')),
                         );
                       },
-                      leading: running
-                          ? const Icon(FontAwesomeIcons.play,
-                              size: 15, color: Colors.green)
-                          : const Icon(FontAwesomeIcons.stop,
-                              size: 15, color: Colors.red),
-                      title: Text(name));
+                      leading:
+                          docker['labels']['net.unraid.docker.icon'] != null &&
+                                  docker['labels']['net.unraid.docker.icon']
+                                      .toString()
+                                      .startsWith('http')
+                              ? Image.network(
+                                  docker['labels']['net.unraid.docker.icon'],
+                                  width: 24,
+                                  height: 24,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Icon(Icons.image_not_supported),
+                                )
+                              : const Icon(Icons.image_not_supported),
+                      title: Text(name),
+                      subtitle: Row(children: [
+                        Icon(
+                            running
+                                ? FontAwesomeIcons.play
+                                : FontAwesomeIcons.stop,
+                            color: running ? Colors.green : Colors.red,
+                            size: 16),
+                        const SizedBox(width: 4),
+                        Text(docker['state'] == 'RUNNING'
+                            ? 'Running'
+                            : 'Stopped')
+                      ]));
                 });
           } else {
             return const Center(child: Text('No data available'));

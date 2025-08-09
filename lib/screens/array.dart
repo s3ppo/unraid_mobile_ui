@@ -105,12 +105,6 @@ class _MyArrayPageState extends State<ArrayPage> {
             array.addAll(caches);
             array.add(boots);
 
-            /*WidgetsBinding.instance.addPostFrameCallback((_) {
-              setState(() {
-                _arrayState = result.data!['array']['state'];
-              });
-            });*/
-
             return ListView.builder(
               itemCount: array.length,
               itemBuilder: (context, index) {
@@ -125,7 +119,7 @@ class _MyArrayPageState extends State<ArrayPage> {
                 }
 
                 if (arr['fsSize'] == null) {
-                  arr['fsSize'] = 0;
+                  arr['fsSize'] = arr['size'];
                 }
                 if (arr['fsUsed'] == null) {
                   arr['fsUsed'] = 0;
@@ -176,7 +170,7 @@ class _MyArrayPageState extends State<ArrayPage> {
     ]);
   }
 
-  doSetArrayState( String targetState ) async {
+  Future<void> doSetArrayState(String targetState) async {
 
     showDialog(
       context: context,

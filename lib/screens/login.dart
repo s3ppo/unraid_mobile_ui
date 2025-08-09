@@ -134,7 +134,7 @@ class _MyLoginPageState extends State<LoginPage> {
     ]))));
   }
 
-  loginUser() async {
+  void loginUser() async {
     try {
       await _state!.connectUnraid(
           token: _myToken.value.text,
