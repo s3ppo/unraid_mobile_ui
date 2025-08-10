@@ -204,4 +204,25 @@ class Queries {
     }
   ''';
 
+  static const getArrayCard = r'''
+    query {
+      array {
+        state
+        id
+        capacity {
+          kilobytes {
+            free
+            used
+            total
+          }
+          disks {
+            free
+            used
+            total
+          }
+        }
+      }
+    }
+  ''';
+
 }

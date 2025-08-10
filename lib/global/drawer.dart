@@ -46,49 +46,76 @@ class MyDrawer extends StatelessWidget {
             ),
           )),
       ListTile(
-          leading: const FaIcon(FontAwesomeIcons.gauge),
+          leading: SizedBox(
+            width: 30,
+            child: Center(
+              child: FaIcon(FontAwesomeIcons.gauge),
+            ),
+          ),
           title: const Text('Dashboard'),
           onTap: () {
             Navigator.of(context).pushNamed(Routes.dashboard);
           }),
       ListTile(
-          leading: const FaIcon(FontAwesomeIcons.server),
-          title: const Text('System'),
-          onTap: () {
-            Navigator.of(context).pushNamed(Routes.system);
-          }),
-      ListTile(
-          leading: const FaIcon(FontAwesomeIcons.hardDrive),
+          leading: SizedBox(
+            width: 30,
+            child: Center(child: FaIcon(FontAwesomeIcons.hardDrive)),
+          ),
           title: const Text('Array'),
           onTap: () {
             Navigator.of(context).pushNamed(Routes.array);
           }),
       ListTile(
-          leading: const FaIcon(FontAwesomeIcons.folder),
+          leading: SizedBox(
+            width: 30,
+            child: Center(child: FaIcon(FontAwesomeIcons.folder)),
+          ),
           title: const Text('Shares'),
           onTap: () {
             Navigator.of(context).pushNamed(Routes.shares);
           }),
       ListTile(
-          leading: const FaIcon(FontAwesomeIcons.docker),
+          leading: SizedBox(
+            width: 30,
+            child: Center(child: FaIcon(FontAwesomeIcons.docker)),
+          ),
           title: const Text('Docker Containers'),
           onTap: () {
             Navigator.of(context).pushNamed(Routes.dockers);
           }),
       ListTile(
-          leading: const FaIcon(FontAwesomeIcons.desktop),
+          leading: SizedBox(
+            width: 30,
+            child: Center(child: FaIcon(FontAwesomeIcons.desktop)),
+          ),
           title: const Text('Virtual Machines'),
           onTap: () {
             Navigator.of(context).pushNamed(Routes.vms);
           }),
       ListTile(
-          leading: const FaIcon(FontAwesomeIcons.puzzlePiece),
+          leading: SizedBox(
+            width: 30,
+            child: Center(child: FaIcon(FontAwesomeIcons.server)),
+          ),
+          title: const Text('System Info'),
+          onTap: () {
+            Navigator.of(context).pushNamed(Routes.system);
+          }),          
+      ListTile(
+          leading: SizedBox(
+            width: 30,
+            child: Center(child: FaIcon(FontAwesomeIcons.puzzlePiece)),
+          ),
           title: const Text('Plugins'),
           onTap: () {
             Navigator.of(context).pushNamed(Routes.plugins);
           }),
       ListTile(
-          leading: const FaIcon(FontAwesomeIcons.arrowRightFromBracket),
+          leading: SizedBox(
+            width: 30,
+            child:
+                Center(child: FaIcon(FontAwesomeIcons.arrowRightFromBracket)),
+          ),
           title: const Text('Logout'),
           onTap: () {
             showDialog(

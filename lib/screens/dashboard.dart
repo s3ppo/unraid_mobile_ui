@@ -17,14 +17,16 @@ class DashboardPage extends StatefulWidget {
 class _MyDashboardPageState extends State<DashboardPage> {
   AuthState? _state;
   Future<QueryResult>? _unreadNotifications;
-  Future<QueryResult>? _servercard;
+  Future<QueryResult>? _serverCard;
+  Future<QueryResult>? _arrayCard;
 
   @override
   void initState() {
     super.initState();
     _state = Provider.of<AuthState>(context, listen: false);
     getNotifications();
-    getServer();
+    getServerCard();
+    getArrayCard();
   }
 
   void getNotifications() {
@@ -33,9 +35,15 @@ class _MyDashboardPageState extends State<DashboardPage> {
     ));
   }
 
-  void getServer() {
-    _servercard = _state!.client!.query(QueryOptions(
+  void getServerCard() {
+    _serverCard = _state!.client!.query(QueryOptions(
       document: gql(Queries.getServerCard),
+    ));
+  }
+
+  void getArrayCard() {
+    _arrayCard = _state!.client!.query(QueryOptions(
+      document: gql(Queries.getArrayCard),
     ));
   }
 
@@ -44,88 +52,112 @@ class _MyDashboardPageState extends State<DashboardPage> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('unMobile'),
-          actions: <Widget>[Padding(padding: const EdgeInsets.only(right: 8.0), child: showNotificationsButton())],
+          actions: <Widget>[
+            Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: showNotificationsButton())
+          ],
           elevation: 0,
         ),
-        body: Column(children: [showListContent()]),
+        body: RefreshIndicator(
+          onRefresh: () async {
+            getNotifications();
+            getServerCard();
+            getArrayCard();
+            setState(() {});
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListView(
+              children: [
+          showServerCard(),
+          const SizedBox(height: 8),
+          showArrayCard(),
+              ],
+            ),
+          ),
+        ),
         drawer: MyDrawer());
   }
 
-  Widget showListContent() {
-    return Padding(
-        padding: const EdgeInsets.all(8),
-        child: FutureBuilder<QueryResult>(
-          future: _servercard,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return const SizedBox.shrink();
-            } else if (snapshot.hasData && snapshot.data!.data != null) {
-              final server = snapshot.data!.data!['server'];
-              final vars = snapshot.data!.data!['vars'];
-              final info = snapshot.data!.data!['info'];
+  void navigateNotifications() {
+    Navigator.of(context).pushNamed(Routes.notifications);
+  }
 
-              return Card(
-                elevation: 4,
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const FaIcon(FontAwesomeIcons.server),
-                          const SizedBox(width: 16),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(server['name'],
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 1.1,
-                                    fontSize: 16,
-                                  )),
-                              Text('Version: ${vars['version']}'),
-                            ],
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: 6),
-                      Divider(),
-                      const SizedBox(height: 6),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 24,
-                            child: Center(
-                                child: const FaIcon(FontAwesomeIcons.plug,
-                                    size: 16)),
-                          ),
-                          const SizedBox(width: 8),
-                          Text('Status: '),
-                          Text( server['status'],
-                            style: TextStyle(
-                              color: server['status'] == 'ONLINE'
-                                  ? Colors.green
-                                  : Colors.red,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 3),
-                        Row(children: [
+  Widget showServerCard() {
+    return FutureBuilder<QueryResult>(
+        future: _serverCard,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return const SizedBox.shrink();
+          } else if (snapshot.hasData && snapshot.data!.data != null) {
+            final server = snapshot.data!.data!['server'];
+            final vars = snapshot.data!.data!['vars'];
+            final info = snapshot.data!.data!['info'];
+
+            return Card(
+              elevation: 4,
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const FaIcon(FontAwesomeIcons.server),
+                        const SizedBox(width: 16),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(server['name'],
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.1,
+                                  fontSize: 16,
+                                )),
+                            Text('Version: ${vars['version']}'),
+                          ],
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Divider(),
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
                         SizedBox(
                           width: 24,
                           child: Center(
-                            child: const FaIcon(FontAwesomeIcons.clock,
-                              size: 16)),
+                              child: const FaIcon(FontAwesomeIcons.plug,
+                                  size: 16)),
                         ),
                         const SizedBox(width: 8),
-                        Text('Uptime: '),
-                        Builder(
-                          builder: (context) {
+                        Text('Status: '),
+                        Text(
+                          server['status'],
+                          style: TextStyle(
+                            color: server['status'] == 'ONLINE'
+                                ? Colors.green
+                                : Colors.red,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 3),
+                    Row(children: [
+                      SizedBox(
+                        width: 24,
+                        child: Center(
+                            child:
+                                const FaIcon(FontAwesomeIcons.clock, size: 16)),
+                      ),
+                      const SizedBox(width: 8),
+                      Text('Uptime: '),
+                      Builder(
+                        builder: (context) {
                           final isoTimestamp = info['os']['uptime'];
                           final dateTime = DateTime.tryParse(isoTimestamp);
                           if (dateTime == null) {
@@ -134,38 +166,144 @@ class _MyDashboardPageState extends State<DashboardPage> {
                           final duration = DateTime.now().difference(dateTime);
                           String formatted;
                           if (duration.inDays > 0) {
-                            formatted = '${duration.inDays} days ${duration.inHours % 24} hours';
+                            formatted =
+                                '${duration.inDays} days ${duration.inHours % 24} hours';
                           } else if (duration.inHours > 0) {
-                            formatted = '${duration.inHours} hours ${duration.inMinutes % 60} minutes';
+                            formatted =
+                                '${duration.inHours} hours ${duration.inMinutes % 60} minutes';
                           } else {
                             formatted = '${duration.inMinutes} minutes';
                           }
                           return Text(formatted);
-                          },
+                        },
+                      ),
+                    ]),
+                    const SizedBox(height: 3),
+                    Row(children: [
+                      SizedBox(
+                        width: 24,
+                        child: Center(
+                          child:
+                              FaIcon(FontAwesomeIcons.networkWired, size: 16),
                         ),
-                        ]),
-                      const SizedBox(height: 3),
-                      Row(children: [
-                        SizedBox(
-                          width: 24,
-                          child: Center(
-                            child:
-                                FaIcon(FontAwesomeIcons.networkWired, size: 16),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Text('Lan IP: '),
-                        Text(server['lanip']),
-                      ]),
-                    ],
-                  ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text('Lan IP: '),
+                      Text(server['lanip']),
+                    ]),
+                  ],
                 ),
-              );
-            } else {
-              return const SizedBox.shrink();
-            }
-          },
-        ));
+              ),
+            );
+          } else {
+            return const SizedBox.shrink();
+          }
+        });
+  }
+
+  Widget showArrayCard() {
+    return FutureBuilder<QueryResult>(
+        future: _arrayCard,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const SizedBox.shrink();
+          } else if (snapshot.hasData && snapshot.data!.data != null) {
+            final array = snapshot.data!.data!['array'];
+
+            //Total size in GB
+            double size = array['capacity']['kilobytes']['total'] != null
+                ? double.tryParse(array['capacity']['kilobytes']['total']
+                            .toString()) !=
+                        null
+                    ? double.parse(array['capacity']['kilobytes']['total']
+                            .toString()) /
+                        1024 /
+                        1024
+                    : 0
+                : 0;
+            int sizeGB = size.round();
+            //Used size in GB
+            double used = array['capacity']['kilobytes']['used'] != null
+                ? double.tryParse(array['capacity']['kilobytes']['used']
+                            .toString()) !=
+                        null
+                    ? double.parse(
+                            array['capacity']['kilobytes']['used'].toString()) /
+                        1024 /
+                        1024
+                    : 0
+                : 0;
+            double fillPercent = size > 0 ? (used / size) : 0;
+            int sizeUsedGB = used.round();
+
+            return Card(
+              elevation: 4,
+              child: Container(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(children: [
+                          const FaIcon(FontAwesomeIcons.hardDrive),
+                          const SizedBox(width: 16),
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Array',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 1.1,
+                                      fontSize: 16,
+                                    )),
+                                Row(children: [
+                                  Text('State: '),
+                                  Text('${array['state']}',
+                                      style: TextStyle(
+                                        color: array['state'] == 'STARTED'
+                                            ? Colors.green
+                                            : Colors.red,
+                                        fontWeight: FontWeight.bold,
+                                      )),
+                                ]),
+                              ]),
+                        ]),
+                        const SizedBox(height: 6),
+                        const Divider(),
+                        const SizedBox(height: 6),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: LinearProgressIndicator(
+                                value: fillPercent,
+                                minHeight: 8,
+                                backgroundColor: Colors.grey[300],
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  fillPercent > 0.85
+                                      ? Colors.red
+                                      : fillPercent > 0.65
+                                          ? Colors.orange
+                                          : Colors.green,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              '${(fillPercent * 100).toStringAsFixed(1)}%',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '$sizeUsedGB GB / $sizeGB GB',
+                          style: TextStyle(color: Colors.grey[700]),
+                        ),
+                      ])),
+            );
+          } else {
+            return const SizedBox.shrink();
+          }
+        });
   }
 
   Widget showNotificationsButton() {
@@ -197,9 +335,5 @@ class _MyDashboardPageState extends State<DashboardPage> {
                 onPressed: () => getNotifications());
           }
         });
-  }
-
-  void navigateNotifications() {
-    Navigator.of(context).pushNamed(Routes.notifications);
   }
 }
