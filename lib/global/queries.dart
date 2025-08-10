@@ -94,6 +94,17 @@ class Queries {
             uptime
           }
           memory {
+            id
+            max
+            total
+            free
+            used
+            active
+            available
+            buffcache
+            swaptotal
+            swapused
+            swapfree
           }
         }
       }
@@ -220,6 +231,39 @@ class Queries {
             used
             total
           }
+        }
+      }
+    }
+  ''';
+
+  static const getInfoCard = r'''
+    query {
+      info {
+        memory {
+          id
+          max
+          total
+          free
+          used
+          active
+          available
+          buffcache
+          swaptotal
+          swapused
+          swapfree
+        }
+        cpu {
+          id
+          manufacturer
+          brand
+          threads
+          cores
+          socket
+        }
+        baseboard {
+          id
+          manufacturer
+          model
         }
       }
     }

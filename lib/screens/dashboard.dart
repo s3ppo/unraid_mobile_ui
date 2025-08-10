@@ -19,6 +19,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
   Future<QueryResult>? _unreadNotifications;
   Future<QueryResult>? _serverCard;
   Future<QueryResult>? _arrayCard;
+  Future<QueryResult>? _infoCard;
 
   @override
   void initState() {
@@ -27,6 +28,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
     getNotifications();
     getServerCard();
     getArrayCard();
+    getInfoCard();
   }
 
   void getNotifications() {
@@ -34,16 +36,19 @@ class _MyDashboardPageState extends State<DashboardPage> {
       document: gql(Queries.getNotificationsUnread),
     ));
   }
-
   void getServerCard() {
     _serverCard = _state!.client!.query(QueryOptions(
       document: gql(Queries.getServerCard),
     ));
   }
-
   void getArrayCard() {
     _arrayCard = _state!.client!.query(QueryOptions(
       document: gql(Queries.getArrayCard),
+    ));
+  }
+  void getInfoCard() {
+    _infoCard = _state!.client!.query(QueryOptions(
+      document: gql(Queries.getInfoCard),
     ));
   }
 
@@ -64,15 +69,18 @@ class _MyDashboardPageState extends State<DashboardPage> {
             getNotifications();
             getServerCard();
             getArrayCard();
+            getInfoCard();
             setState(() {});
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: ListView(
               children: [
-          showServerCard(),
-          const SizedBox(height: 8),
-          showArrayCard(),
+                showServerCard(),
+                const SizedBox(height: 4),
+                showArrayCard(),
+                const SizedBox(height: 4),
+                showInfoCard(),
               ],
             ),
           ),
@@ -300,6 +308,102 @@ class _MyDashboardPageState extends State<DashboardPage> {
                         ),
                       ])),
             );
+          } else {
+            return const SizedBox.shrink();
+          }
+        });
+  }
+
+  Widget showInfoCard() {
+    return FutureBuilder<QueryResult>(
+        future: _infoCard,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const SizedBox.shrink();
+          } else if (snapshot.hasData && snapshot.data!.data != null) {
+            final info = snapshot.data!.data!['info'];
+
+            return Card(
+              elevation: 4,
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const FaIcon(FontAwesomeIcons.microchip),
+                        const SizedBox(width: 16),
+                        Text('System',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.1,
+                              fontSize: 16,
+                            )),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Divider(),
+                    const SizedBox(height: 6),
+                    Text(
+                        'CPU: ${info['cpu']['manufacturer']}, ${info['cpu']['brand']}'),
+                    Text(
+                        'Cores: ${info['cpu']['cores']}, Threads: ${info['cpu']['threads']}'),
+                    const SizedBox(height: 8),
+                    Text(
+                        'Baseboard: ${info['baseboard']['manufacturer']}, ${info['baseboard']['model']}'),
+                    const SizedBox(height: 8),
+
+                    Text('Memory'),
+                    Builder(
+                      builder: (context) {
+                        double total =
+                            double.tryParse(info['memory']['total'].toString())
+                                    ?.roundToDouble() ??
+                                0;
+                        double totalGB = (total / 1024 / 1024 / 1024).roundToDouble();
+                        double available =
+                            double.tryParse(info['memory']['available'].toString())
+                                    ?.roundToDouble() ??
+                                0;
+                        double used = (total - available).roundToDouble();
+                        double usedGB = (used / 1024 / 1024 / 1024).roundToDouble();
+                        double percent = total > 0 ? used / total : 0;
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                              Expanded(
+                                child: LinearProgressIndicator(
+                                value: percent,
+                                minHeight: 8,
+                                backgroundColor: Colors.grey[300],
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  percent > 0.85
+                                    ? Colors.red
+                                    : percent > 0.65
+                                      ? Colors.orange
+                                      : Colors.green,
+                                ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Text(
+                                '${(percent * 100).toStringAsFixed(1)}%',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '$usedGB GB / $totalGB GB',
+                              style: TextStyle(color: Colors.grey[700]),
+                            ),
+                          ]);
+                      }),
+                  ])));
           } else {
             return const SizedBox.shrink();
           }

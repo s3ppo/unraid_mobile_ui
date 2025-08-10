@@ -16,7 +16,7 @@ class AuthException implements Exception {
 
 class AuthState extends ChangeNotifier {
   late SharedPreferences storage;
-  //ValueNotifier<GraphQLClient>? _client;
+
   GraphQLClient? _client;
   bool _initialized = false;
   dynamic _userData;
@@ -26,7 +26,6 @@ class AuthState extends ChangeNotifier {
   String buildNumber = "";
   String _connectVersion = "";
 
-  //ValueNotifier<GraphQLClient>? get client => _client;
   GraphQLClient? get client => _client;
   String get connectVersion => _connectVersion;
   bool get initialized => _initialized;
@@ -47,10 +46,9 @@ class AuthState extends ChangeNotifier {
     if (token != null && ip != null && prot != null) {
       try {
         await connectUnraid(token: token, ip: ip, prot: prot);
-      } on AuthException catch (e) {
+      } on AuthException {
         _initialized = true;
         logout();
-        throw AuthException(e.msg);
       }
     }
 

@@ -9,7 +9,6 @@ class MemoryPage extends StatefulWidget {
 }
 
 class _MyMemoryPageState extends State<MemoryPage> {
-
   @override
   void initState() {
     super.initState();
@@ -20,8 +19,7 @@ class _MyMemoryPageState extends State<MemoryPage> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Memory'),
-          actions: <Widget>[
-          ],
+          actions: <Widget>[],
           elevation: 0,
         ),
         body: Container(child: showListContent()));
@@ -30,7 +28,9 @@ class _MyMemoryPageState extends State<MemoryPage> {
   Widget showListContent() {
     return ListView(
       children: widget.memory.entries.map((entry) {
-        double size = entry.value / 1024 / 1024 / 1024;
+        double size = double.tryParse(entry.value.toString()) != null
+            ? double.parse(entry.value.toString()) / 1024 / 1024 / 1024
+            : 0.0;
         int sizeGB = size.round();
 
         return ListTile(

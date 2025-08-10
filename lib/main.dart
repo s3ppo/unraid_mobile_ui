@@ -44,12 +44,12 @@ class MyApp extends StatelessWidget {
                 return const LoginPage();
               }
             } else {
-              return Scaffold(
+                return Scaffold(
                   body: Center(
-                      child: SingleChildScrollView(
-                          child: Container(
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                              child: const CircularProgressIndicator()))));
+                    child: SingleChildScrollView(
+                      child: Container(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        child: const CircularProgressIndicator()))));
             }
           })
         ));
