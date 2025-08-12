@@ -24,18 +24,26 @@ https://play.google.com/apps/testing/com.hw.unraidui
 <table>
     <tr>
         <td>
-            <img src="https://github.com/s3ppo/unraid_mobile_ui/blob/main/assets/main.png" width="300">
+            <img src="https://github.com/s3ppo/unraid_mobile_ui/blob/main/assets/dashboard.png" width="300">
+        </td>
+        <td>
+            <img src="https://github.com/s3ppo/unraid_mobile_ui/blob/main/assets/menu.png" width="300">
+        </td>
+    <tr>
+    <tr>
+        <td>
+            <img src="https://github.com/s3ppo/unraid_mobile_ui/blob/main/assets/array.png" width="300">
         </td>
         <td>
             <img src="https://github.com/s3ppo/unraid_mobile_ui/blob/main/assets/dockers.png" width="300">
         </td>
-    <tr>
+    </tr>
     <tr>
         <td>
-            <img src="https://github.com/s3ppo/unraid_mobile_ui/blob/main/assets/vms.png" width="300">
+            <img src="https://github.com/s3ppo/unraid_mobile_ui/blob/main/assets/vm.png" width="300">
         </td>
         <td>
-            <img src="https://github.com/s3ppo/unraid_mobile_ui/blob/main/assets/array.png" width="300">
+            &nbsp;
         </td>
     </tr>
 </table>
