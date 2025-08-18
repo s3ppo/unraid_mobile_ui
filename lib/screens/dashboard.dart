@@ -20,6 +20,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
   Future<QueryResult>? _serverCard;
   Future<QueryResult>? _arrayCard;
   Future<QueryResult>? _infoCard;
+  Future<QueryResult>? _parityCard;
 
   @override
   void initState() {
@@ -29,6 +30,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
     getServerCard();
     getArrayCard();
     getInfoCard();
+    getParityCard();
   }
 
   void getNotifications() {
@@ -36,19 +38,28 @@ class _MyDashboardPageState extends State<DashboardPage> {
       document: gql(Queries.getNotificationsUnread),
     ));
   }
+
   void getServerCard() {
     _serverCard = _state!.client!.query(QueryOptions(
       document: gql(Queries.getServerCard),
     ));
   }
+
   void getArrayCard() {
     _arrayCard = _state!.client!.query(QueryOptions(
       document: gql(Queries.getArrayCard),
     ));
   }
+
   void getInfoCard() {
     _infoCard = _state!.client!.query(QueryOptions(
       document: gql(Queries.getInfoCard),
+    ));
+  }
+
+  void getParityCard() {
+    _parityCard = _state!.client!.query(QueryOptions(
+      document: gql(Queries.getParityCard),
     ));
   }
 
@@ -70,17 +81,21 @@ class _MyDashboardPageState extends State<DashboardPage> {
             getServerCard();
             getArrayCard();
             getInfoCard();
+            getParityCard();
             setState(() {});
           },
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
             child: ListView(
               children: [
+                const SizedBox(height: 4),
                 showServerCard(),
-                const SizedBox(height: 4),
+                const SizedBox(height: 0),
                 showArrayCard(),
-                const SizedBox(height: 4),
+                const SizedBox(height: 0),
                 showInfoCard(),
+                const SizedBox(height: 0),
+                showParityCard(),
               ],
             ),
           ),
@@ -106,7 +121,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
             final info = snapshot.data!.data!['info'];
 
             return Card(
-              elevation: 4,
+              elevation: 2,
               child: Container(
                 padding: const EdgeInsets.all(8),
                 child: Column(
@@ -169,7 +184,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                           final isoTimestamp = info['os']['uptime'];
                           final dateTime = DateTime.tryParse(isoTimestamp);
                           if (dateTime == null) {
-                            return Text('Unbekannt');
+                            return Text('Unknown');
                           }
                           final duration = DateTime.now().difference(dateTime);
                           String formatted;
@@ -245,7 +260,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
             int sizeUsedGB = used.round();
 
             return Card(
-              elevation: 4,
+              elevation: 2,
               child: Container(
                   padding: const EdgeInsets.all(8),
                   child: Column(
@@ -324,86 +339,229 @@ class _MyDashboardPageState extends State<DashboardPage> {
             final info = snapshot.data!.data!['info'];
 
             return Card(
-              elevation: 4,
+                elevation: 2,
+                child: Container(
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const FaIcon(FontAwesomeIcons.microchip),
+                              const SizedBox(width: 16),
+                              Text('System',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.1,
+                                    fontSize: 16,
+                                  )),
+                            ],
+                          ),
+                          const SizedBox(height: 6),
+                          Divider(),
+                          const SizedBox(height: 6),
+                          Text(
+                              'CPU: ${info['cpu']['manufacturer']}, ${info['cpu']['brand']}'),
+                          Text(
+                              'Cores: ${info['cpu']['cores']}, Threads: ${info['cpu']['threads']}'),
+                          const SizedBox(height: 8),
+                          Text(
+                              'Baseboard: ${info['baseboard']['manufacturer']}, ${info['baseboard']['model']}'),
+                          const SizedBox(height: 8),
+                          Text('Memory'),
+                          Builder(builder: (context) {
+                            double total = double.tryParse(
+                                        info['memory']['total'].toString())
+                                    ?.roundToDouble() ??
+                                0;
+                            double totalGB =
+                                (total / 1024 / 1024 / 1024).roundToDouble();
+                            double available = double.tryParse(
+                                        info['memory']['available'].toString())
+                                    ?.roundToDouble() ??
+                                0;
+                            double used = (total - available).roundToDouble();
+                            double usedGB =
+                                (used / 1024 / 1024 / 1024).roundToDouble();
+                            double percent = total > 0 ? used / total : 0;
+
+                            return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: LinearProgressIndicator(
+                                          value: percent,
+                                          minHeight: 8,
+                                          backgroundColor: Colors.grey[300],
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                            percent > 0.85
+                                                ? Colors.red
+                                                : percent > 0.65
+                                                    ? Colors.orange
+                                                    : Colors.green,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Text(
+                                        '${(percent * 100).toStringAsFixed(1)}%',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '$usedGB GB / $totalGB GB',
+                                    style: TextStyle(color: Colors.grey[700]),
+                                  ),
+                                ]);
+                          }),
+                        ])));
+          } else {
+            return const SizedBox.shrink();
+          }
+        });
+  }
+
+  Widget showParityCard() {
+    return FutureBuilder<QueryResult>(
+        future: _parityCard,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const SizedBox.shrink();
+          } else if (snapshot.hasData && snapshot.data!.data != null) {
+            final parityHistories = snapshot.data!.data!['parityHistory'];
+            final parityHistory =
+                parityHistories.isNotEmpty ? parityHistories[0] : null;
+            if (parityHistory == null) {
+              return const SizedBox.shrink();
+            }
+
+            return Card(
+              elevation: 2,
               child: Container(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const FaIcon(FontAwesomeIcons.microchip),
-                        const SizedBox(width: 16),
-                        Text('System',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1.1,
-                              fontSize: 16,
-                            )),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    Divider(),
-                    const SizedBox(height: 6),
-                    Text(
-                        'CPU: ${info['cpu']['manufacturer']}, ${info['cpu']['brand']}'),
-                    Text(
-                        'Cores: ${info['cpu']['cores']}, Threads: ${info['cpu']['threads']}'),
-                    const SizedBox(height: 8),
-                    Text(
-                        'Baseboard: ${info['baseboard']['manufacturer']}, ${info['baseboard']['model']}'),
-                    const SizedBox(height: 8),
-
-                    Text('Memory'),
-                    Builder(
-                      builder: (context) {
-                        double total =
-                            double.tryParse(info['memory']['total'].toString())
-                                    ?.roundToDouble() ??
-                                0;
-                        double totalGB = (total / 1024 / 1024 / 1024).roundToDouble();
-                        double available =
-                            double.tryParse(info['memory']['available'].toString())
-                                    ?.roundToDouble() ??
-                                0;
-                        double used = (total - available).roundToDouble();
-                        double usedGB = (used / 1024 / 1024 / 1024).roundToDouble();
-                        double percent = total > 0 ? used / total : 0;
-
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Row(
                           children: [
-                            Row(
+                            const FaIcon(FontAwesomeIcons.heartPulse),
+                            const SizedBox(width: 16),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                              Expanded(
-                                child: LinearProgressIndicator(
-                                value: percent,
-                                minHeight: 8,
-                                backgroundColor: Colors.grey[300],
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  percent > 0.85
-                                    ? Colors.red
-                                    : percent > 0.65
-                                      ? Colors.orange
-                                      : Colors.green,
-                                ),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Text(
-                                '${(percent * 100).toStringAsFixed(1)}%',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
+                                Text('Parity',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 1.1,
+                                      fontSize: 16,
+                                    )),
+                                Row(children: [
+                                  Text('Status: '),
+                                  Text('${parityHistory['status']}',
+                                      style: TextStyle(
+                                        color: parityHistory['status'] == 'OK'
+                                            ? Colors.green
+                                            : Colors.red,
+                                        fontWeight: FontWeight.bold,
+                                      )),
+                                ]),
                               ],
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              '$usedGB GB / $totalGB GB',
-                              style: TextStyle(color: Colors.grey[700]),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        Divider(),
+                        Row(children: [
+                          SizedBox(
+                            width: 24,
+                            child: Center(
+                                child: const FaIcon(FontAwesomeIcons.calendar,
+                                    size: 16)),
+                          ),
+                          const SizedBox(width: 8),
+                          Text('Last check: '),
+                          Builder(
+                            builder: (context) {
+                              final isoTimestamp = parityHistory?['date'];
+                              final dateTime = DateTime.tryParse(isoTimestamp);
+                              if (dateTime == null) {
+                                return Text('Unknown');
+                              }
+                              final formattedDate =
+                                  '${dateTime.day.toString().padLeft(2, '0')}.${dateTime.month.toString().padLeft(2, '0')}.${dateTime.year} - '
+                                  '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+                              return Text(formattedDate);
+                            },
+                          )
+                        ]),
+                        const SizedBox(height: 3),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 24,
+                              child: Center(
+                                  child: const FaIcon(FontAwesomeIcons.clock,
+                                      size: 16)),
                             ),
-                          ]);
-                      }),
-                  ])));
+                            const SizedBox(width: 8),
+                            Text('Duration: '),
+                            Builder(
+                              builder: (context) {
+                                final duration = Duration(
+                                    seconds: parityHistory?['duration']);
+                                return Text(duration.inHours > 0
+                                    ? '${duration.inHours}h ${duration.inMinutes % 60}m'
+                                    : '${duration.inMinutes}m ${duration.inSeconds % 60}s');
+                              },
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 3),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 24,
+                              child: Center(
+                                  child: const FaIcon(
+                                      FontAwesomeIcons.triangleExclamation,
+                                      size: 16)),
+                            ),
+                            const SizedBox(width: 8),
+                            Text('Errors: '),
+                            Text(parityHistory?['errors'].toString() ?? '0')
+                          ],
+                        ),
+                        const SizedBox(height: 3),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 24,
+                              child: Center(
+                                  child: const FaIcon(
+                                      FontAwesomeIcons.gaugeHigh,
+                                      size: 16)),
+                            ),
+                            const SizedBox(width: 8),
+                            Text('Speed: '),
+                            Text(
+                              (double.tryParse(
+                                          parityHistory?['speed']?.toString() ??
+                                              '0')! /
+                                      1024 /
+                                      1024)
+                                  .toStringAsFixed(2),
+                            ),
+                            Text(' MB/s')
+                          ],
+                        ),
+                      ])),
+            );
           } else {
             return const SizedBox.shrink();
           }

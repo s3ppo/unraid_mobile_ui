@@ -269,4 +269,20 @@ class Queries {
     }
   ''';
 
+  static const getParityCard = r'''
+    query {
+      parityHistory {
+        date
+        duration
+        speed
+        status
+        errors
+        progress
+        correcting
+        paused
+        running
+      }
+    }
+  ''';
 }
+
