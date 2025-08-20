@@ -5,12 +5,14 @@ import 'package:unmobile/screens/login.dart';
 import 'package:unmobile/screens/plugins.dart';
 import 'package:unmobile/screens/shares.dart';
 import 'package:unmobile/screens/dashboard.dart';
-import 'package:unmobile/screens/system_memory.dart';
+import 'package:unmobile/screens/system/system_memory.dart';
 import 'package:unmobile/screens/vms.dart';
 import 'package:unmobile/screens/system.dart';
-import 'package:unmobile/screens/system_baseboard.dart';
-import 'package:unmobile/screens/system_cpu.dart';
-import 'package:unmobile/screens/system_os.dart';
+import 'package:unmobile/screens/system/system_baseboard.dart';
+import 'package:unmobile/screens/system/system_cpu.dart';
+import 'package:unmobile/screens/system/system_os.dart';
+import 'package:unmobile/screens/settings.dart';
+import 'package:unmobile/screens/settings/settings_multiserver.dart';
 import 'package:unmobile/screens/notifications.dart';
 
 class Routes {
@@ -27,12 +29,14 @@ class Routes {
   static const String systemOs = "system_os";
   static const String systemMemory = "system_memory";
   static const String notifications = "notifications";
+  static const String settingsMultiserver = "settings_multiserver";
+  static const String settings = "settings";
 
-  static Route<dynamic> onGenerateRoute(RouteSettings settings) {
+  static Route<dynamic> onGenerateRoute(RouteSettings rSettings) {
     return MaterialPageRoute(
-        settings: settings,
+        settings: rSettings,
         builder: (context) {
-          switch (settings.name) {
+          switch (rSettings.name) {
             case login:
               return const LoginPage();
             case dashboard:
@@ -52,17 +56,21 @@ class Routes {
             case system:
               return const SystemPage();
             case systemBaseboard:
-              final args = settings.arguments as Map;
+              final args = rSettings.arguments as Map;
               return BaseboardPage(baseboard: args);
             case systemCpu:
-              final args = settings.arguments as Map;
+              final args = rSettings.arguments as Map;
               return CpuPage(cpu: args);
             case systemOs:
-              final args = settings.arguments as Map;
+              final args = rSettings.arguments as Map;
               return OsPage(os: args);
             case systemMemory:
-              final args = settings.arguments as Map;
-              return MemoryPage(memory: args);                          
+              final args = rSettings.arguments as Map;
+              return MemoryPage(memory: args);
+            case settings:
+              return const SettingsPage();
+            case settingsMultiserver:
+              return SettingsMultiserver();
             default:
               return const LoginPage();
           }

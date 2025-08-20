@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -25,11 +26,13 @@ class AuthState extends ChangeNotifier {
   String version = "";
   String buildNumber = "";
   String _connectVersion = "";
+  bool _loginError = false;
 
   GraphQLClient? get client => _client;
   String get connectVersion => _connectVersion;
   bool get initialized => _initialized;
   dynamic get userData => _userData;
+  bool get loginError => _loginError;
 
   AuthState() {
     init();
@@ -47,8 +50,8 @@ class AuthState extends ChangeNotifier {
       try {
         await connectUnraid(token: token, ip: ip, prot: prot);
       } on AuthException {
+        _loginError = true;
         _initialized = true;
-        logout();
       }
     }
 
@@ -82,12 +85,17 @@ class AuthState extends ChangeNotifier {
 
     _client = GraphQLClient(link: link, cache: GraphQLCache());
 
-    await testConnection();
-    await getMe();
+    try {
+      await testConnection();
+      await getMe();
+    } on AuthException {
+      rethrow;
+    }
 
     await storage.setString('token', token);
     await storage.setString('ip', ip);
     await storage.setString('prot', prot);
+    checkAndSetMultiserversStorage();
 
     notifyListeners();
   }
@@ -96,6 +104,7 @@ class AuthState extends ChangeNotifier {
     await storage.remove('token');
     await storage.remove('ip');
     await storage.remove('prot');
+    await storage.remove('multiservers');
     _connectVersion = "";
     _client = null;
     notifyListeners();
@@ -113,7 +122,6 @@ class AuthState extends ChangeNotifier {
     final result =
         await _client!.query(QueryOptions(document: gql(Queries.getServices)));
     if (result.hasException) {
-      logout();
       throw AuthException('Connection failed');
     }
 
@@ -127,20 +135,90 @@ class AuthState extends ChangeNotifier {
 
     if (Version.parse(_connectVersion) <
         Version.parse(Globals.minConnectVersion)) {
-      logout();
       throw AuthException(
           'Backend version is too old, please update "Unraid Connect" plugin on your Unraid server');
     }
   }
 
   Future<void> getMe() async {
-    final result = await _client!.query(QueryOptions(document: gql(Queries.getMe)));
+    final result =
+        await _client!.query(QueryOptions(document: gql(Queries.getMe)));
     if (result.hasException) {
-      logout();
       throw AuthException('Failed to fetch user data');
     }
 
     _userData = result.data!['me'];
   }
 
+  String? getSelectedServerIp() {
+    return storage.getString('ip');
+  }
+
+  void checkAndSetMultiserversStorage() async {
+    String? multiserver = storage.getString('multiservers');
+    if (multiserver != null && multiserver.isNotEmpty) {
+      List<Map<String, dynamic>> ret =
+          List<Map<String, dynamic>>.from(jsonDecode(multiserver));
+      for (var server in ret) {
+        if (!server.containsKey('ip')) {
+          await storage.setString(
+              'multiservers',
+              jsonEncode([
+                {
+                  'ip': storage.getString('ip'),
+                  'prot': storage.getString('prot'),
+                  'token': storage.getString('token'),
+                }
+              ]));
+        }
+      }
+    } else {
+      await storage.setString(
+          'multiservers',
+          jsonEncode([
+            {
+              'ip': storage.getString('ip'),
+              'prot': storage.getString('prot'),
+              'token': storage.getString('token'),
+            }
+          ]));
+    }
+  }
+
+  List<Map<String, dynamic>> getMultiservers() {
+    String? multiserver = storage.getString('multiservers');
+    if (multiserver != null && multiserver.isNotEmpty) {
+      List<Map<String, dynamic>> ret =
+          List<Map<String, dynamic>>.from(jsonDecode(multiserver));
+      return ret;
+    }
+    return [];
+  }
+
+  Future<void> setMultiservers(String ip, String prot, String token) async {
+    List<Map<String, dynamic>> servers = getMultiservers();
+    servers.add({'ip': ip, 'prot': prot, 'token': token});
+    await storage.setString('multiservers', jsonEncode(servers));
+    notifyListeners();
+  }
+
+  Future<void> switchMultiserver(String ip) async {
+    GraphQLClient? oldclient = _client;
+    try {
+      final server = getMultiservers().firstWhere((s) => s['ip'] == ip);
+      await connectUnraid(
+          token: server['token'], ip: server['ip'], prot: server['prot']);
+      notifyListeners();
+    } catch (e) {
+      _client = oldclient;
+      throw AuthException('Failed to switch server');
+    }
+  }
+
+  Future<void> removeMultiserver(String ip) async {
+    List<Map<String, dynamic>> servers = getMultiservers();
+    servers.removeWhere((server) => server['ip'] == ip);
+    await storage.setString('multiservers', jsonEncode(servers));
+    notifyListeners();
+  }
 }

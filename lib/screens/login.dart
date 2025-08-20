@@ -53,7 +53,6 @@ class _MyLoginPageState extends State<LoginPage> {
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.person)),
           )),
-//    Radio buttons for http/https
       Container(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
           child: Column(

@@ -43,6 +43,8 @@ class MyApp extends StatelessWidget {
               } else {
                 return const LoginPage();
               }
+            } else if (state.loginError) {
+              return const LoginPage();
             } else {
                 return Scaffold(
                   body: Center(

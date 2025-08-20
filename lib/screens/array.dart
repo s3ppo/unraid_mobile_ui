@@ -190,7 +190,6 @@ class _MyArrayPageState extends State<ArrayPage> {
 
       _arrayState = result.data!['array']['setState']['state'];
 
-      // Success message
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: Colors.green,
           content: Align(
@@ -198,7 +197,6 @@ class _MyArrayPageState extends State<ArrayPage> {
               child: Text('Success')),
           duration: const Duration(seconds: 3)));
     } catch (e) {
-      // Error message
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.red,
         content: Align(alignment: Alignment.center, child: Text('Failed')),

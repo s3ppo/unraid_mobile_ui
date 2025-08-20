@@ -4,8 +4,22 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:unmobile/global/routes.dart';
 import 'package:unmobile/notifiers/auth_state.dart';
 
-class MyDrawer extends StatelessWidget {
+class MyDrawer extends StatefulWidget {
   const MyDrawer({Key? key}) : super(key: key);
+
+  @override
+  State<MyDrawer> createState() => _MyDrawerState();
+}
+
+class _MyDrawerState extends State<MyDrawer> {
+  late String _selectedServer;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedServer = Provider.of<AuthState>(context, listen: false).getSelectedServerIp() ?? '';
+  }
+
   @override
   Widget build(BuildContext context) {
     AuthState state = Provider.of<AuthState>(context, listen: false);
@@ -17,34 +31,91 @@ class MyDrawer extends StatelessWidget {
             color: Theme.of(context).primaryColor,
           ),
           child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  FontAwesomeIcons.userAstronaut,
-                  size: 48,
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                FontAwesomeIcons.userAstronaut,
+                size: 48,
+                color: Colors.white,
+              ),
+              SizedBox(height: 8),
+              Text(
+                state.userData["name"],
+                style: TextStyle(
                   color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
-                SizedBox(height: 12),
-                Text(
-                  state.userData["name"],
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+              Text(
+                '(${state.userData["roles"][0]})',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
                 ),
-                Text(
-                  '(${state.userData["roles"][0]})',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          )),
+              ),
+              SizedBox(height: 8),
+              Consumer<AuthState>(builder: (context, authState, child) {
+                final servers = authState.getMultiservers();
+                if (servers.isEmpty) {
+                  return SizedBox.shrink();
+                }
+                return DropdownButton<String>(
+                  isDense: true,
+                  value: _selectedServer,
+                  dropdownColor: Theme.of(context).primaryColor,
+                  icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                  underline: Container(height: 0),
+                  items: [
+                    for (var server in servers)
+                      DropdownMenuItem<String>(
+                        value: server['ip'],
+                        child: Text(server['ip']),
+                      )
+                  ],
+                  onChanged: (String? newValue) async {
+                    if (newValue != null && newValue != _selectedServer) {
+                      try {
+                        await state.switchMultiserver(newValue);
+                        _selectedServer = newValue;
+                        Navigator.of(context).pop();
+                        setState(() {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              backgroundColor: Colors.green,
+                              content: Align(
+                                  child: Text('Server switched to $newValue')),
+                              duration: const Duration(seconds: 3)));
+                          Navigator.of(context)
+                              .pushReplacementNamed(Routes.dashboard);
+                        });
+                      } on AuthException catch (e) {
+                        Navigator.of(context).pop();
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          backgroundColor: Colors.red,
+                          content: Align(
+                              alignment: Alignment.center, child: Text(e.msg)),
+                          duration: const Duration(seconds: 3),
+                        ));
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          backgroundColor: Colors.red,
+                          content: Align(
+                              alignment: Alignment.center,
+                              child: Text('Failed to switch server')),
+                          duration: const Duration(seconds: 3),
+                        ));
+                      }
+                    }
+                  },
+                );
+              }),
+            ],
+          ))),
       ListTile(
           leading: SizedBox(
             width: 30,
@@ -100,7 +171,7 @@ class MyDrawer extends StatelessWidget {
           title: const Text('System Info'),
           onTap: () {
             Navigator.of(context).pushNamed(Routes.system);
-          }),          
+          }),
       ListTile(
           leading: SizedBox(
             width: 30,
@@ -109,6 +180,15 @@ class MyDrawer extends StatelessWidget {
           title: const Text('Plugins'),
           onTap: () {
             Navigator.of(context).pushNamed(Routes.plugins);
+          }),
+      ListTile(
+          leading: SizedBox(
+            width: 30,
+            child: Center(child: FaIcon(FontAwesomeIcons.gear)),
+          ),
+          title: const Text('Settings'),
+          onTap: () {
+            Navigator.of(context).pushNamed(Routes.settings);
           }),
       ListTile(
           leading: SizedBox(
@@ -142,4 +222,5 @@ class MyDrawer extends StatelessWidget {
           }),
     ]));
   }
+
 }
