@@ -26,6 +26,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
   void initState() {
     super.initState();
     _state = Provider.of<AuthState>(context, listen: false);
+    _state!.client!.resetStore();
     getNotifications();
     getServerCard();
     getArrayCard();
@@ -64,6 +65,11 @@ class _MyDashboardPageState extends State<DashboardPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -77,6 +83,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
         ),
         body: RefreshIndicator(
           onRefresh: () async {
+            _state!.client!.resetStore();
             getNotifications();
             getServerCard();
             getArrayCard();
@@ -337,6 +344,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
             return const SizedBox.shrink();
           } else if (snapshot.hasData && snapshot.data!.data != null) {
             final info = snapshot.data!.data!['info'];
+            final metrics = snapshot.data!.data!['metrics'];
 
             return Card(
                 elevation: 2,
@@ -364,6 +372,8 @@ class _MyDashboardPageState extends State<DashboardPage> {
                               'CPU: ${info['cpu']['manufacturer']}, ${info['cpu']['brand']}'),
                           Text(
                               'Cores: ${info['cpu']['cores']}, Threads: ${info['cpu']['threads']}'),
+                          Text(
+                              'Load: ${double.parse(metrics['cpu']['percentTotal'].toString()).toStringAsFixed(2)} %'),
                           const SizedBox(height: 8),
                           Text(
                               'Baseboard: ${info['baseboard']['manufacturer']}, ${info['baseboard']['model']}'),
@@ -371,13 +381,14 @@ class _MyDashboardPageState extends State<DashboardPage> {
                           Text('Memory'),
                           Builder(builder: (context) {
                             double total = double.tryParse(
-                                        info['memory']['total'].toString())
+                                        metrics['memory']['total'].toString())
                                     ?.roundToDouble() ??
                                 0;
                             double totalGB =
                                 (total / 1024 / 1024 / 1024).roundToDouble();
-                            double available = double.tryParse(
-                                        info['memory']['available'].toString())
+                            double available = double.tryParse(metrics['memory']
+                                            ['available']
+                                        .toString())
                                     ?.roundToDouble() ??
                                 0;
                             double used = (total - available).roundToDouble();

@@ -22,12 +22,11 @@ class _MyDockersPageState extends State<DockersPage> {
   void initState() {
     super.initState();
     _state = Provider.of<AuthState>(context, listen: false);
+    _state!.client!.resetStore();
     getAllDockers();
   }
 
   void getAllDockers() async {
-    _state!.client!.resetStore();
-
     _allDockers = _state!.client!.query(QueryOptions(
       document: gql(Queries.getDockers),
       queryRequestTimeout: const Duration(seconds: 60),

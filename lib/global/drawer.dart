@@ -75,7 +75,14 @@ class _MyDrawerState extends State<MyDrawer> {
                     for (var server in servers)
                       DropdownMenuItem<String>(
                         value: server['ip'],
-                        child: Text(server['ip']),
+                        child: SizedBox(
+                            width: 160,
+                          child: Text(
+                            server['ip'],
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
                       )
                   ],
                   onChanged: (String? newValue) async {
@@ -125,7 +132,7 @@ class _MyDrawerState extends State<MyDrawer> {
           ),
           title: const Text('Dashboard'),
           onTap: () {
-            Navigator.of(context).pushNamed(Routes.dashboard);
+            Navigator.of(context).pushReplacementNamed(Routes.dashboard);
           }),
       ListTile(
           leading: SizedBox(

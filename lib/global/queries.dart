@@ -80,6 +80,7 @@ class Queries {
             assetTag
           }
           os {
+            id
             platform
             distro
             release
@@ -87,24 +88,27 @@ class Queries {
             kernel
             arch
             hostname
-            codepage
+            fqdn
+            build
+            servicepack
+            uptime
             logofile
             serial
-            build
-            uptime
+            uefi
           }
           memory {
             id
-            max
-            total
-            free
-            used
-            active
-            available
-            buffcache
-            swaptotal
-            swapused
-            swapfree
+            layout {
+              id
+              size
+              bank
+              type
+              clockSpeed
+              partNum
+              serialNum
+              manufacturer
+              formFactor
+            }
           }
         }
       }
@@ -239,19 +243,6 @@ class Queries {
   static const getInfoCard = r'''
     query {
       info {
-        memory {
-          id
-          max
-          total
-          free
-          used
-          active
-          available
-          buffcache
-          swaptotal
-          swapused
-          swapfree
-        }
         cpu {
           id
           manufacturer
@@ -264,6 +255,26 @@ class Queries {
           id
           manufacturer
           model
+        }
+      }
+      metrics {
+        cpu {
+          id
+          percentTotal
+        }
+        memory {
+          id
+          total
+          used
+          free
+          available
+          active
+          buffcache
+          percentTotal
+          swapTotal
+          swapUsed
+          swapFree
+          percentSwapTotal
         }
       }
     }
