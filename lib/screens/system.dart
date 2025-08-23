@@ -20,6 +20,7 @@ class _MySystemPageState extends State<SystemPage> {
   void initState() {
     super.initState();
     _state = Provider.of<AuthState>(context, listen: false);
+    _state!.client!.resetStore();
     getInfo();
   }
 

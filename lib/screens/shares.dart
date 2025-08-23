@@ -20,12 +20,11 @@ class _MySharesPageState extends State<SharesPage> {
   void initState() {
     super.initState();
     _state = Provider.of<AuthState>(context, listen: false);
+    _state!.client!.resetStore();
     getShares();
   }
 
   void getShares() {
-    _state!.client!.resetStore();
-
     _shares = _state!.client!.query(QueryOptions(
       document: gql(Queries.getShares),
     ));

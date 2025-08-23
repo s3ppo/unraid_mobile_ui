@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:unmobile/global/routes.dart';
+import 'package:unmobile/notifiers/auth_state.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -9,10 +11,13 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _MySettingsPageState extends State<SettingsPage> {
+  AuthState? _state;
 
   @override
   void initState() {
     super.initState();
+    _state = Provider.of<AuthState>(context, listen: false);
+    _state!.client!.resetStore();
   }
 
   @override

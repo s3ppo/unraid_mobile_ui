@@ -17,6 +17,7 @@ class _MySettingsMultiserverState extends State<SettingsMultiserver> {
   void initState() {
     super.initState();
     _state = Provider.of<AuthState>(context, listen: false);
+    _state!.client!.resetStore();
     _servers = _state!.getMultiservers();
   }
 

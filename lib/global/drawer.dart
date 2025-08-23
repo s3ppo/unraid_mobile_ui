@@ -13,11 +13,14 @@ class MyDrawer extends StatefulWidget {
 
 class _MyDrawerState extends State<MyDrawer> {
   late String _selectedServer;
+  AuthState? _state;
 
   @override
   void initState() {
     super.initState();
-    _selectedServer = Provider.of<AuthState>(context, listen: false).getSelectedServerIp() ?? '';
+    _state = Provider.of<AuthState>(context, listen: false);
+    _state!.client!.resetStore();
+    _selectedServer = _state!.getSelectedServerIp() ?? '';
   }
 
   @override
@@ -60,10 +63,14 @@ class _MyDrawerState extends State<MyDrawer> {
               ),
               SizedBox(height: 8),
               Consumer<AuthState>(builder: (context, authState, child) {
+                if (authState.client != null) {
+                  return SizedBox.shrink();
+                }
                 final servers = authState.getMultiservers();
                 if (servers.isEmpty) {
                   return SizedBox.shrink();
                 }
+
                 return DropdownButton<String>(
                   isDense: true,
                   value: _selectedServer,
@@ -76,7 +83,7 @@ class _MyDrawerState extends State<MyDrawer> {
                       DropdownMenuItem<String>(
                         value: server['ip'],
                         child: SizedBox(
-                            width: 160,
+                          width: 160,
                           child: Text(
                             server['ip'],
                             overflow: TextOverflow.ellipsis,
@@ -229,5 +236,4 @@ class _MyDrawerState extends State<MyDrawer> {
           }),
     ]));
   }
-
 }
