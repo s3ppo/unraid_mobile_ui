@@ -22,8 +22,10 @@ class _MyDockersPageState extends State<DockersPage> {
   void initState() {
     super.initState();
     _state = Provider.of<AuthState>(context, listen: false);
-    _state!.client!.resetStore();
-    getAllDockers();
+    if(_state!.client != null) {
+      _state!.client!.resetStore();
+      getAllDockers();
+    }
   }
 
   void getAllDockers() async {

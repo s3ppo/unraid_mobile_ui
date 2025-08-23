@@ -26,12 +26,15 @@ class _MyDashboardPageState extends State<DashboardPage> {
   void initState() {
     super.initState();
     _state = Provider.of<AuthState>(context, listen: false);
-    _state!.client!.resetStore();
-    getNotifications();
-    getServerCard();
-    getArrayCard();
-    getInfoCard();
-    getParityCard();
+    if(_state!.client != null) {
+      _state!.client!.resetStore();
+      getNotifications();
+      getServerCard();
+      getArrayCard();
+      getInfoCard();
+      getParityCard();
+    }
+
   }
 
   void getNotifications() {
@@ -83,6 +86,9 @@ class _MyDashboardPageState extends State<DashboardPage> {
         ),
         body: RefreshIndicator(
           onRefresh: () async {
+            if(_state!.client == null) {
+              return;
+            }
             _state!.client!.resetStore();
             getNotifications();
             getServerCard();

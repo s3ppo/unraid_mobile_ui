@@ -12,15 +12,17 @@ class MyDrawer extends StatefulWidget {
 }
 
 class _MyDrawerState extends State<MyDrawer> {
-  late String _selectedServer;
+  String _selectedServer = '';
   AuthState? _state;
 
   @override
   void initState() {
     super.initState();
     _state = Provider.of<AuthState>(context, listen: false);
-    _state!.client!.resetStore();
-    _selectedServer = _state!.getSelectedServerIp() ?? '';
+    if(_state!.client != null) {
+      _state!.client!.resetStore();
+      _selectedServer = _state!.getSelectedServerIp() ?? '';
+    }
   }
 
   @override
@@ -63,7 +65,7 @@ class _MyDrawerState extends State<MyDrawer> {
               ),
               SizedBox(height: 8),
               Consumer<AuthState>(builder: (context, authState, child) {
-                if (authState.client != null) {
+                if (authState.client == null) {
                   return SizedBox.shrink();
                 }
                 final servers = authState.getMultiservers();
@@ -96,17 +98,14 @@ class _MyDrawerState extends State<MyDrawer> {
                     if (newValue != null && newValue != _selectedServer) {
                       try {
                         await state.switchMultiserver(newValue);
-                        _selectedServer = newValue;
-                        Navigator.of(context).pop();
-                        setState(() {
+                        _selectedServer = newValue;                        
+                        Navigator.of(context)
+                              .pushReplacementNamed(Routes.dashboard);
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               backgroundColor: Colors.green,
                               content: Align(
                                   child: Text('Server switched to $newValue')),
                               duration: const Duration(seconds: 3)));
-                          Navigator.of(context)
-                              .pushReplacementNamed(Routes.dashboard);
-                        });
                       } on AuthException catch (e) {
                         Navigator.of(context).pop();
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(

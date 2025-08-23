@@ -11,14 +11,16 @@ class SettingsMultiserver extends StatefulWidget {
 
 class _MySettingsMultiserverState extends State<SettingsMultiserver> {
   AuthState? _state;
-  late List<dynamic> _servers;
+  List<dynamic> _servers = [];
 
   @override
   void initState() {
     super.initState();
     _state = Provider.of<AuthState>(context, listen: false);
-    _state!.client!.resetStore();
-    _servers = _state!.getMultiservers();
+    if(_state!.client != null) {
+      _state!.client!.resetStore();
+      _servers = _state!.getMultiservers();
+    }
   }
 
   @override

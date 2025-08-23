@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: providers,
         child: MaterialApp(
-          title: 'Mobile UI',
+          title: 'unMobile',
           debugShowCheckedModeBanner: false,
           theme: theme,
           darkTheme: theme.copyWith(
