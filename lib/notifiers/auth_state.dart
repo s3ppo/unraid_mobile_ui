@@ -107,6 +107,8 @@ class AuthState extends ChangeNotifier {
     await storage.remove('multiservers');
     _connectVersion = "";
     _client = null;
+    _userData = null;
+    _loginError = false;
     notifyListeners();
   }
 
@@ -221,4 +223,5 @@ class AuthState extends ChangeNotifier {
     await storage.setString('multiservers', jsonEncode(servers));
     notifyListeners();
   }
+
 }

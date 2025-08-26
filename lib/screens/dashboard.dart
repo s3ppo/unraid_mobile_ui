@@ -6,6 +6,7 @@ import 'package:unmobile/global/queries.dart';
 import 'package:unmobile/notifiers/auth_state.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:unmobile/global/routes.dart';
+import 'package:unmobile/notifiers/theme_mode.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -16,6 +17,7 @@ class DashboardPage extends StatefulWidget {
 
 class _MyDashboardPageState extends State<DashboardPage> {
   AuthState? _state;
+  ThemeNotifier? _theme;
   Future<QueryResult>? _unreadNotifications;
   Future<QueryResult>? _serverCard;
   Future<QueryResult>? _arrayCard;
@@ -26,7 +28,8 @@ class _MyDashboardPageState extends State<DashboardPage> {
   void initState() {
     super.initState();
     _state = Provider.of<AuthState>(context, listen: false);
-    if(_state!.client != null) {
+    _theme = Provider.of<ThemeNotifier>(context, listen: false);
+    if (_state!.client != null) {
       _state!.client!.resetStore();
       getNotifications();
       getServerCard();
@@ -34,7 +37,6 @@ class _MyDashboardPageState extends State<DashboardPage> {
       getInfoCard();
       getParityCard();
     }
-
   }
 
   void getNotifications() {
@@ -78,6 +80,16 @@ class _MyDashboardPageState extends State<DashboardPage> {
         appBar: AppBar(
           title: const Text('unMobile'),
           actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                _theme!.isDarkMode ? Icons.dark_mode : Icons.light_mode,
+              ),
+              onPressed: () {
+                setState(() {
+                  _theme!.toggleTheme();
+                });
+              },
+            ),
             Padding(
                 padding: const EdgeInsets.only(right: 8.0),
                 child: showNotificationsButton())
@@ -86,7 +98,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
         ),
         body: RefreshIndicator(
           onRefresh: () async {
-            if(_state!.client == null) {
+            if (_state!.client == null) {
               return;
             }
             _state!.client!.resetStore();
@@ -142,7 +154,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                   children: [
                     Row(
                       children: [
-                        const FaIcon(FontAwesomeIcons.server),
+                        faIcon(FontAwesomeIcons.server),
                         const SizedBox(width: 16),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -166,8 +178,8 @@ class _MyDashboardPageState extends State<DashboardPage> {
                         SizedBox(
                           width: 24,
                           child: Center(
-                              child: const FaIcon(FontAwesomeIcons.plug,
-                                  size: 16)),
+                              child: faIcon(FontAwesomeIcons.plug, size: 16),
+                          ),
                         ),
                         const SizedBox(width: 8),
                         Text('Status: '),
@@ -187,8 +199,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                       SizedBox(
                         width: 24,
                         child: Center(
-                            child:
-                                const FaIcon(FontAwesomeIcons.clock, size: 16)),
+                            child: faIcon(FontAwesomeIcons.clock, size: 16)),
                       ),
                       const SizedBox(width: 8),
                       Text('Uptime: '),
@@ -220,7 +231,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                         width: 24,
                         child: Center(
                           child:
-                              FaIcon(FontAwesomeIcons.networkWired, size: 16),
+                              faIcon(FontAwesomeIcons.networkWired, size: 16),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -280,7 +291,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(children: [
-                          const FaIcon(FontAwesomeIcons.hardDrive),
+                          faIcon(FontAwesomeIcons.hardDrive),
                           const SizedBox(width: 16),
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -361,7 +372,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                         children: [
                           Row(
                             children: [
-                              const FaIcon(FontAwesomeIcons.microchip),
+                              faIcon(FontAwesomeIcons.microchip),
                               const SizedBox(width: 16),
                               Text('System',
                                   style: TextStyle(
@@ -467,7 +478,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                       children: [
                         Row(
                           children: [
-                            const FaIcon(FontAwesomeIcons.heartPulse),
+                            faIcon(FontAwesomeIcons.heartPulse),
                             const SizedBox(width: 16),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -498,7 +509,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                           SizedBox(
                             width: 24,
                             child: Center(
-                                child: const FaIcon(FontAwesomeIcons.calendar,
+                                child: faIcon(FontAwesomeIcons.calendar,
                                     size: 16)),
                           ),
                           const SizedBox(width: 8),
@@ -523,7 +534,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                             SizedBox(
                               width: 24,
                               child: Center(
-                                  child: const FaIcon(FontAwesomeIcons.clock,
+                                  child: faIcon(FontAwesomeIcons.clock,
                                       size: 16)),
                             ),
                             const SizedBox(width: 8),
@@ -545,7 +556,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                             SizedBox(
                               width: 24,
                               child: Center(
-                                  child: const FaIcon(
+                                  child: faIcon(
                                       FontAwesomeIcons.triangleExclamation,
                                       size: 16)),
                             ),
@@ -560,7 +571,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                             SizedBox(
                               width: 24,
                               child: Center(
-                                  child: const FaIcon(
+                                  child: faIcon(
                                       FontAwesomeIcons.gaugeHigh,
                                       size: 16)),
                             ),
@@ -615,4 +626,13 @@ class _MyDashboardPageState extends State<DashboardPage> {
           }
         });
   }
+
+  Widget faIcon(IconData icon, { double? size }) {
+    return FaIcon(
+      icon,
+      color: _theme!.isDarkMode ? Colors.white : Colors.black,
+      size: size,
+    );
+  }
+
 }

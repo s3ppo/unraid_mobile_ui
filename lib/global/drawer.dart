@@ -33,7 +33,7 @@ class _MyDrawerState extends State<MyDrawer> {
         child: Column(children: [
       DrawerHeader(
           decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).appBarTheme.backgroundColor,
           ),
           child: Center(
               child: Column(
@@ -46,7 +46,7 @@ class _MyDrawerState extends State<MyDrawer> {
               ),
               SizedBox(height: 8),
               Text(
-                state.userData["name"],
+                state.userData?["name"] ?? 'Unknown User',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 20,
@@ -56,7 +56,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 maxLines: 1,
               ),
               Text(
-                '(${state.userData["roles"][0]})',
+                '(${(state.userData?["roles"] is List && (state.userData?["roles"]?.isNotEmpty ?? false)) ? state.userData!["roles"][0] : "No Role"})',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 14,
