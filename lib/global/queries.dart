@@ -295,5 +295,26 @@ class Queries {
       }
     }
   ''';
-}
 
+  static const getUpsCard = r'''
+    query {
+      upsDevices {
+        id
+        name
+        model
+        status
+        battery {
+          chargeLevel
+          estimatedRuntime
+          health
+        }
+        power {
+          inputVoltage
+          outputVoltage
+          loadPercentage
+        }
+      }
+    }
+  ''';
+
+}

@@ -23,6 +23,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
   Future<QueryResult>? _arrayCard;
   Future<QueryResult>? _infoCard;
   Future<QueryResult>? _parityCard;
+  Future<QueryResult>? _upsCard;
 
   @override
   void initState() {
@@ -36,6 +37,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
       getArrayCard();
       getInfoCard();
       getParityCard();
+      getUpsCard();
     }
   }
 
@@ -66,6 +68,12 @@ class _MyDashboardPageState extends State<DashboardPage> {
   void getParityCard() {
     _parityCard = _state!.client!.query(QueryOptions(
       document: gql(Queries.getParityCard),
+    ));
+  }
+
+  void getUpsCard() {
+    _upsCard = _state!.client!.query(QueryOptions(
+      document: gql(Queries.getUpsCard),
     ));
   }
 
@@ -107,6 +115,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
             getArrayCard();
             getInfoCard();
             getParityCard();
+            getUpsCard();
             setState(() {});
           },
           child: Padding(
@@ -115,12 +124,10 @@ class _MyDashboardPageState extends State<DashboardPage> {
               children: [
                 const SizedBox(height: 4),
                 showServerCard(),
-                const SizedBox(height: 0),
                 showArrayCard(),
-                const SizedBox(height: 0),
                 showInfoCard(),
-                const SizedBox(height: 0),
                 showParityCard(),
+                showUpsCard()
               ],
             ),
           ),
@@ -178,7 +185,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                         SizedBox(
                           width: 24,
                           child: Center(
-                              child: faIcon(FontAwesomeIcons.plug, size: 16),
+                            child: faIcon(FontAwesomeIcons.plug, size: 16),
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -341,10 +348,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                           ],
                         ),
                         const SizedBox(height: 4),
-                        Text(
-                          '$sizeUsedGB GB / $sizeGB GB',
-                          style: TextStyle(color: Colors.grey[700]),
-                        ),
+                        Text('$sizeUsedGB GB / $sizeGB GB'),
                       ])),
             );
           } else {
@@ -444,7 +448,6 @@ class _MyDashboardPageState extends State<DashboardPage> {
                                   const SizedBox(height: 4),
                                   Text(
                                     '$usedGB GB / $totalGB GB',
-                                    style: TextStyle(color: Colors.grey[700]),
                                   ),
                                 ]);
                           }),
@@ -493,9 +496,12 @@ class _MyDashboardPageState extends State<DashboardPage> {
                                   Text('Status: '),
                                   Text('${parityHistory['status']}',
                                       style: TextStyle(
-                                        color: parityHistory['status'] == 'OK'
-                                            ? Colors.green
-                                            : Colors.red,
+                                        color:
+                                            parityHistory['status'] == 'OK' ||
+                                                    parityHistory['status'] ==
+                                                        'COMPLETED'
+                                                ? Colors.green
+                                                : Colors.red,
                                         fontWeight: FontWeight.bold,
                                       )),
                                 ]),
@@ -534,8 +540,8 @@ class _MyDashboardPageState extends State<DashboardPage> {
                             SizedBox(
                               width: 24,
                               child: Center(
-                                  child: faIcon(FontAwesomeIcons.clock,
-                                      size: 16)),
+                                  child:
+                                      faIcon(FontAwesomeIcons.clock, size: 16)),
                             ),
                             const SizedBox(width: 8),
                             Text('Duration: '),
@@ -571,8 +577,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                             SizedBox(
                               width: 24,
                               child: Center(
-                                  child: faIcon(
-                                      FontAwesomeIcons.gaugeHigh,
+                                  child: faIcon(FontAwesomeIcons.gaugeHigh,
                                       size: 16)),
                             ),
                             const SizedBox(width: 8),
@@ -590,6 +595,141 @@ class _MyDashboardPageState extends State<DashboardPage> {
                         ),
                       ])),
             );
+          } else {
+            return const SizedBox.shrink();
+          }
+        });
+  }
+
+  Widget showUpsCard() {
+    return FutureBuilder<QueryResult>(
+        future: _upsCard,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const SizedBox.shrink();
+          } else if (snapshot.hasData && snapshot.data!.data != null) {
+            final upsDevices = snapshot.data!.data!['upsDevices'];
+            if (upsDevices.isEmpty) {
+              return const SizedBox.shrink();
+            }
+            return Card(
+                elevation: 2,
+                child: Container(
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              faIcon(FontAwesomeIcons.batteryThreeQuarters),
+                              const SizedBox(width: 16),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('UPS Devices',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 1.1,
+                                        fontSize: 16,
+                                      ))
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 6),
+                          Divider(),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: List.generate(upsDevices.length, (index) {
+                              final device = upsDevices[index];
+                              final battery = device['battery'];
+                              final power = device['power'];
+                              return Builder(
+                              builder: (context) => Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (index > 0) ...[
+                                    const SizedBox(height: 4),
+                                  ],
+                                Text(
+                                  device['name'] ??
+                                    device['model'] ??
+                                    'Unknown Model',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15),
+                                ),
+                                const SizedBox(height: 4),
+                                Row(
+                                  children: [
+                                  SizedBox(
+                                    width: 24,
+                                    child: Center(
+                                      child: faIcon(
+                                        FontAwesomeIcons.plug,
+                                        size: 16)),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text('Status: '),
+                                  Text(
+                                    device['status'] ?? 'Unknown',
+                                    style: TextStyle(
+                                    color: device['status'] == 'ONLINE'
+                                      ? Colors.green
+                                      : Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  ],
+                                ),
+                                const SizedBox(height: 3),
+                                Row(
+                                  children: [
+                                  SizedBox(
+                                    width: 24,
+                                    child: Center(
+                                      child: faIcon(
+                                        FontAwesomeIcons.batteryFull,
+                                        size: 16)),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text('Battery: '),
+                                  Text(
+                                    '${battery?['chargeLevel'] ?? '-'}%'),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    'Health: ${battery?['health'] ?? '-'}'),
+                                  ],
+                                ),
+                                const SizedBox(height: 3),
+                                Row(
+                                  children: [
+                                  SizedBox(
+                                    width: 24,
+                                    child: Center(
+                                      child: faIcon(
+                                        FontAwesomeIcons.bolt,
+                                        size: 16)),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text('Voltage '),
+                                  Text(
+                                    'In: ${power?['inputVoltage'] ?? '-'} V'),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    'Out: ${power?['outputVoltage'] ?? '-'} V'),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    'Load: ${power?['loadPercentage'] ?? '-'}%'),
+                                  ],
+                                ),
+                                const SizedBox(height: 3),
+                                ],
+                              ),
+                              );
+                            }),
+                          )
+                        ])));
           } else {
             return const SizedBox.shrink();
           }
@@ -627,12 +767,11 @@ class _MyDashboardPageState extends State<DashboardPage> {
         });
   }
 
-  Widget faIcon(IconData icon, { double? size }) {
+  Widget faIcon(IconData icon, {double? size}) {
     return FaIcon(
       icon,
-      color: _theme!.isDarkMode ? Colors.white : Colors.black,
+      color: _theme!.isDarkMode ? Colors.orange : Colors.black,
       size: size,
     );
   }
-
 }

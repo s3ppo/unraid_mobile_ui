@@ -79,6 +79,7 @@ class _MySharesPageState extends State<SharesPage> {
 
                   return ListTile(
                       title: Text(share['name']),
+                      subtitle: Text(share['comment'] ?? ''),
                       trailing: Text('Free: $sizeGB GB'),
                       leading: Icon(FontAwesomeIcons.solidCircle,
                           size: 15, color: iconColor));
