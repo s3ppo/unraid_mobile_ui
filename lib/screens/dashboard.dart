@@ -153,102 +153,104 @@ class _MyDashboardPageState extends State<DashboardPage> {
             final info = snapshot.data!.data!['info'];
 
             return Card(
-              elevation: 2,
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        faIcon(FontAwesomeIcons.server),
-                        const SizedBox(width: 16),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(server['name'],
+                elevation: 2,
+                child: Container(
+                    padding: const EdgeInsets.only(left: 8, right: 8),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ExpansionTile(
+                            shape: const Border(),
+                            initiallyExpanded: true,
+                            tilePadding: EdgeInsets.zero,
+                            expandedAlignment: Alignment.centerLeft,
+                            expandedCrossAxisAlignment:
+                                CrossAxisAlignment.start,
+                            leading: faIcon(FontAwesomeIcons.server),
+                            title: Text(server['name'],
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: 1.1,
                                   fontSize: 16,
                                 )),
-                            Text('Version: ${vars['version']}'),
-                          ],
-                        )
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    Divider(),
-                    const SizedBox(height: 6),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 24,
-                          child: Center(
-                            child: faIcon(FontAwesomeIcons.plug, size: 16),
+                            subtitle: Text('Version: ${vars['version']}'),
+                            children: [
+                              const Divider(),
+                              const SizedBox(height: 6),
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    width: 24,
+                                    child: Center(
+                                      child: faIcon(FontAwesomeIcons.plug,
+                                          size: 16),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text('Status: '),
+                                  Text(
+                                    server['status'],
+                                    style: TextStyle(
+                                      color: server['status'] == 'ONLINE'
+                                          ? Colors.green
+                                          : Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 3),
+                              Row(children: [
+                                SizedBox(
+                                  width: 24,
+                                  child: Center(
+                                      child: faIcon(FontAwesomeIcons.clock,
+                                          size: 16)),
+                                ),
+                                const SizedBox(width: 8),
+                                Text('Uptime: '),
+                                Builder(
+                                  builder: (context) {
+                                    final isoTimestamp = info['os']['uptime'];
+                                    final dateTime =
+                                        DateTime.tryParse(isoTimestamp);
+                                    if (dateTime == null) {
+                                      return Text('Unknown');
+                                    }
+                                    final duration =
+                                        DateTime.now().difference(dateTime);
+                                    String formatted;
+                                    if (duration.inDays > 0) {
+                                      formatted =
+                                          '${duration.inDays} days ${duration.inHours % 24} hours';
+                                    } else if (duration.inHours > 0) {
+                                      formatted =
+                                          '${duration.inHours} hours ${duration.inMinutes % 60} minutes';
+                                    } else {
+                                      formatted =
+                                          '${duration.inMinutes} minutes';
+                                    }
+                                    return Text(formatted);
+                                  },
+                                ),
+                              ]),
+                              const SizedBox(height: 3),
+                              Row(children: [
+                                SizedBox(
+                                  width: 24,
+                                  child: Center(
+                                    child: faIcon(FontAwesomeIcons.networkWired,
+                                        size: 16),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Text('Lan IP: '),
+                                Text(server['lanip']),
+                              ]),
+                            ],
                           ),
-                        ),
-                        const SizedBox(width: 8),
-                        Text('Status: '),
-                        Text(
-                          server['status'],
-                          style: TextStyle(
-                            color: server['status'] == 'ONLINE'
-                                ? Colors.green
-                                : Colors.red,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 3),
-                    Row(children: [
-                      SizedBox(
-                        width: 24,
-                        child: Center(
-                            child: faIcon(FontAwesomeIcons.clock, size: 16)),
-                      ),
-                      const SizedBox(width: 8),
-                      Text('Uptime: '),
-                      Builder(
-                        builder: (context) {
-                          final isoTimestamp = info['os']['uptime'];
-                          final dateTime = DateTime.tryParse(isoTimestamp);
-                          if (dateTime == null) {
-                            return Text('Unknown');
-                          }
-                          final duration = DateTime.now().difference(dateTime);
-                          String formatted;
-                          if (duration.inDays > 0) {
-                            formatted =
-                                '${duration.inDays} days ${duration.inHours % 24} hours';
-                          } else if (duration.inHours > 0) {
-                            formatted =
-                                '${duration.inHours} hours ${duration.inMinutes % 60} minutes';
-                          } else {
-                            formatted = '${duration.inMinutes} minutes';
-                          }
-                          return Text(formatted);
-                        },
-                      ),
-                    ]),
-                    const SizedBox(height: 3),
-                    Row(children: [
-                      SizedBox(
-                        width: 24,
-                        child: Center(
-                          child:
-                              faIcon(FontAwesomeIcons.networkWired, size: 16),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text('Lan IP: '),
-                      Text(server['lanip']),
-                    ]),
-                  ],
-                ),
-              ),
-            );
+                          const SizedBox(height: 8),
+                        ])));
           } else {
             return const SizedBox.shrink();
           }
@@ -293,62 +295,63 @@ class _MyDashboardPageState extends State<DashboardPage> {
             return Card(
               elevation: 2,
               child: Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.only(left: 8, right: 8),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(children: [
-                          faIcon(FontAwesomeIcons.hardDrive),
-                          const SizedBox(width: 16),
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Array',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 1.1,
-                                      fontSize: 16,
-                                    )),
-                                Row(children: [
-                                  Text('State: '),
-                                  Text('${array['state']}',
-                                      style: TextStyle(
-                                        color: array['state'] == 'STARTED'
-                                            ? Colors.green
-                                            : Colors.red,
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                ]),
-                              ]),
-                        ]),
-                        const SizedBox(height: 6),
-                        const Divider(),
-                        const SizedBox(height: 6),
-                        Row(
+                        ExpansionTile(
+                          shape: const Border(),
+                          initiallyExpanded: true,
+                          tilePadding: EdgeInsets.zero,
+                          expandedAlignment: Alignment.centerLeft,
+                          expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                          leading: faIcon(FontAwesomeIcons.hardDrive),
+                          title: Text('Array',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.1)),
+                          subtitle: Row(
+                            children: [
+                              Text('State: '),
+                              Text('${array['state']}',
+                                  style: TextStyle(
+                                    color: array['state'] == 'STARTED'
+                                        ? Colors.green
+                                        : Colors.red,
+                                  )),
+                            ],
+                          ),
                           children: [
-                            Expanded(
-                              child: LinearProgressIndicator(
-                                value: fillPercent,
-                                minHeight: 8,
-                                backgroundColor: Colors.grey[300],
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  fillPercent > 0.85
-                                      ? Colors.red
-                                      : fillPercent > 0.65
-                                          ? Colors.orange
-                                          : Colors.green,
+                            const Divider(),
+                            const SizedBox(height: 6),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: LinearProgressIndicator(
+                                    value: fillPercent,
+                                    minHeight: 8,
+                                    backgroundColor: Colors.grey[300],
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      fillPercent > 0.85
+                                          ? Colors.red
+                                          : fillPercent > 0.65
+                                              ? Colors.orange
+                                              : Colors.green,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                const SizedBox(width: 12),
+                                Text(
+                                  '${(fillPercent * 100).toStringAsFixed(1)}%',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ],
                             ),
-                            const SizedBox(width: 12),
-                            Text(
-                              '${(fillPercent * 100).toStringAsFixed(1)}%',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
+                            const SizedBox(height: 4),
+                            Text('$sizeUsedGB GB / $sizeGB GB'),
                           ],
                         ),
-                        const SizedBox(height: 4),
-                        Text('$sizeUsedGB GB / $sizeGB GB'),
+                        const SizedBox(height: 8),
                       ])),
             );
           } else {
@@ -370,27 +373,26 @@ class _MyDashboardPageState extends State<DashboardPage> {
             return Card(
                 elevation: 2,
                 child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    padding: const EdgeInsets.only(left: 8, right: 8),
+                    child: ExpansionTile(
+                        expandedAlignment: Alignment.centerLeft,
+                        expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                        shape: const Border(),
+                        initiallyExpanded: true,
+                        tilePadding: EdgeInsets.zero,
+                        leading: faIcon(FontAwesomeIcons.microchip),
+                        title: Text('System',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.1)),
+                        subtitle: Text('Infos'),
                         children: [
-                          Row(
-                            children: [
-                              faIcon(FontAwesomeIcons.microchip),
-                              const SizedBox(width: 16),
-                              Text('System',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 1.1,
-                                    fontSize: 16,
-                                  )),
-                            ],
-                          ),
-                          const SizedBox(height: 6),
                           Divider(),
                           const SizedBox(height: 6),
                           Text(
-                              'CPU: ${info['cpu']['manufacturer']}, ${info['cpu']['brand']}'),
+                            'CPU: ${info['cpu']['manufacturer']}, ${info['cpu']['brand']}',
+                            textAlign: TextAlign.left,
+                          ),
                           Text(
                               'Cores: ${info['cpu']['cores']}, Threads: ${info['cpu']['threads']}'),
                           Text(
@@ -451,6 +453,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                                   ),
                                 ]);
                           }),
+                          const SizedBox(height: 8),
                         ])));
           } else {
             return const SizedBox.shrink();
@@ -471,46 +474,36 @@ class _MyDashboardPageState extends State<DashboardPage> {
             if (parityHistory == null) {
               return const SizedBox.shrink();
             }
-
             return Card(
               elevation: 2,
               child: Container(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  padding: const EdgeInsets.only(left: 8, right: 8),
+                  child: ExpansionTile(
+                      expandedAlignment: Alignment.centerLeft,
+                      expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                      shape: const Border(),
+                      initiallyExpanded: false,
+                      tilePadding: EdgeInsets.zero,
+                      leading: faIcon(FontAwesomeIcons.heartPulse),
+                      title: Text('Parity',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.1,
+                          )),
+                      subtitle: Row(children: [
+                        Text('Status: '),
+                        Text('${parityHistory['status']}',
+                            style: TextStyle(
+                              color: parityHistory['status'] == 'OK' ||
+                                      parityHistory['status'] == 'COMPLETED'
+                                  ? Colors.green
+                                  : Colors.red,
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ]),
                       children: [
-                        Row(
-                          children: [
-                            faIcon(FontAwesomeIcons.heartPulse),
-                            const SizedBox(width: 16),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Parity',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 1.1,
-                                      fontSize: 16,
-                                    )),
-                                Row(children: [
-                                  Text('Status: '),
-                                  Text('${parityHistory['status']}',
-                                      style: TextStyle(
-                                        color:
-                                            parityHistory['status'] == 'OK' ||
-                                                    parityHistory['status'] ==
-                                                        'COMPLETED'
-                                                ? Colors.green
-                                                : Colors.red,
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                ]),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 6),
                         Divider(),
+                        const SizedBox(height: 6),
                         Row(children: [
                           SizedBox(
                             width: 24,
@@ -593,6 +586,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                             Text(' MB/s')
                           ],
                         ),
+                        const SizedBox(height: 8),
                       ])),
             );
           } else {
@@ -616,28 +610,19 @@ class _MyDashboardPageState extends State<DashboardPage> {
                 elevation: 2,
                 child: Container(
                     padding: const EdgeInsets.all(8),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    child: ExpansionTile(
+                        expandedAlignment: Alignment.centerLeft,
+                        expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                        shape: const Border(),
+                        initiallyExpanded: false,
+                        tilePadding: EdgeInsets.zero,
+                        leading: faIcon(FontAwesomeIcons.batteryThreeQuarters),
+                        title: Text('UPS',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.1)),
+                        subtitle: Text('Devices'),
                         children: [
-                          Row(
-                            children: [
-                              faIcon(FontAwesomeIcons.batteryThreeQuarters),
-                              const SizedBox(width: 16),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('UPS Devices',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: 1.1,
-                                        fontSize: 16,
-                                      ))
-                                ],
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 6),
-                          Divider(),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: List.generate(upsDevices.length, (index) {
@@ -645,90 +630,91 @@ class _MyDashboardPageState extends State<DashboardPage> {
                               final battery = device['battery'];
                               final power = device['power'];
                               return Builder(
-                              builder: (context) => Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if (index > 0) ...[
-                                    const SizedBox(height: 4),
-                                  ],
-                                Text(
-                                  device['name'] ??
-                                    device['model'] ??
-                                    'Unknown Model',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15),
-                                ),
-                                const SizedBox(height: 4),
-                                Row(
+                                builder: (context) => Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                  SizedBox(
-                                    width: 24,
-                                    child: Center(
-                                      child: faIcon(
-                                        FontAwesomeIcons.plug,
-                                        size: 16)),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text('Status: '),
-                                  Text(
-                                    device['status'] ?? 'Unknown',
-                                    style: TextStyle(
-                                    color: device['status'] == 'ONLINE'
-                                      ? Colors.green
-                                      : Colors.red,
-                                    fontWeight: FontWeight.bold,
+                                    if (index > 0) ...[
+                                      const SizedBox(height: 4),
+                                    ],
+                                    Text(
+                                      device['name'] ??
+                                          device['model'] ??
+                                          'Unknown Model',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15),
                                     ),
-                                  ),
+                                    const SizedBox(height: 4),
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 24,
+                                          child: Center(
+                                              child: faIcon(
+                                                  FontAwesomeIcons.plug,
+                                                  size: 16)),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text('Status: '),
+                                        Text(
+                                          device['status'] ?? 'Unknown',
+                                          style: TextStyle(
+                                            color: device['status'] == 'ONLINE'
+                                                ? Colors.green
+                                                : Colors.red,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 3),
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 24,
+                                          child: Center(
+                                              child: faIcon(
+                                                  FontAwesomeIcons.batteryFull,
+                                                  size: 16)),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text('Battery: '),
+                                        Text(
+                                            '${battery?['chargeLevel'] ?? '-'}%'),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                            'Health: ${battery?['health'] ?? '-'}'),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 3),
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 24,
+                                          child: Center(
+                                              child: faIcon(
+                                                  FontAwesomeIcons.bolt,
+                                                  size: 16)),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text('Voltage '),
+                                        Text(
+                                            'In: ${power?['inputVoltage'] ?? '-'} V'),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                            'Out: ${power?['outputVoltage'] ?? '-'} V'),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                            'Load: ${power?['loadPercentage'] ?? '-'}%'),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 3),
                                   ],
                                 ),
-                                const SizedBox(height: 3),
-                                Row(
-                                  children: [
-                                  SizedBox(
-                                    width: 24,
-                                    child: Center(
-                                      child: faIcon(
-                                        FontAwesomeIcons.batteryFull,
-                                        size: 16)),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text('Battery: '),
-                                  Text(
-                                    '${battery?['chargeLevel'] ?? '-'}%'),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    'Health: ${battery?['health'] ?? '-'}'),
-                                  ],
-                                ),
-                                const SizedBox(height: 3),
-                                Row(
-                                  children: [
-                                  SizedBox(
-                                    width: 24,
-                                    child: Center(
-                                      child: faIcon(
-                                        FontAwesomeIcons.bolt,
-                                        size: 16)),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text('Voltage '),
-                                  Text(
-                                    'In: ${power?['inputVoltage'] ?? '-'} V'),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    'Out: ${power?['outputVoltage'] ?? '-'} V'),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    'Load: ${power?['loadPercentage'] ?? '-'}%'),
-                                  ],
-                                ),
-                                const SizedBox(height: 3),
-                                ],
-                              ),
                               );
                             }),
-                          )
+                          ),
+                          const SizedBox(height: 8),
                         ])));
           } else {
             return const SizedBox.shrink();

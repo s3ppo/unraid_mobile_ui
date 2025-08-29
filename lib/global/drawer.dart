@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:unmobile/global/routes.dart';
 import 'package:unmobile/notifiers/auth_state.dart';
+import 'package:unmobile/notifiers/theme_mode.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({Key? key}) : super(key: key);
@@ -14,12 +15,14 @@ class MyDrawer extends StatefulWidget {
 class _MyDrawerState extends State<MyDrawer> {
   String _selectedServer = '';
   AuthState? _state;
+  ThemeNotifier? _theme;
 
   @override
   void initState() {
     super.initState();
     _state = Provider.of<AuthState>(context, listen: false);
-    if(_state!.client != null) {
+    _theme = Provider.of<ThemeNotifier>(context, listen: false);
+    if (_state!.client != null) {
       _state!.client!.resetStore();
       _selectedServer = _state!.getSelectedServerIp() ?? '';
     }
@@ -133,7 +136,7 @@ class _MyDrawerState extends State<MyDrawer> {
           leading: SizedBox(
             width: 30,
             child: Center(
-              child: FaIcon(FontAwesomeIcons.gauge),
+              child: faIcon(FontAwesomeIcons.gauge),
             ),
           ),
           title: const Text('Dashboard'),
@@ -143,7 +146,7 @@ class _MyDrawerState extends State<MyDrawer> {
       ListTile(
           leading: SizedBox(
             width: 30,
-            child: Center(child: FaIcon(FontAwesomeIcons.hardDrive)),
+            child: Center(child: faIcon(FontAwesomeIcons.hardDrive)),
           ),
           title: const Text('Array'),
           onTap: () {
@@ -152,7 +155,7 @@ class _MyDrawerState extends State<MyDrawer> {
       ListTile(
           leading: SizedBox(
             width: 30,
-            child: Center(child: FaIcon(FontAwesomeIcons.folder)),
+            child: Center(child: faIcon(FontAwesomeIcons.folder)),
           ),
           title: const Text('Shares'),
           onTap: () {
@@ -161,7 +164,7 @@ class _MyDrawerState extends State<MyDrawer> {
       ListTile(
           leading: SizedBox(
             width: 30,
-            child: Center(child: FaIcon(FontAwesomeIcons.docker)),
+            child: Center(child: faIcon(FontAwesomeIcons.docker)),
           ),
           title: const Text('Docker Containers'),
           onTap: () {
@@ -170,7 +173,7 @@ class _MyDrawerState extends State<MyDrawer> {
       ListTile(
           leading: SizedBox(
             width: 30,
-            child: Center(child: FaIcon(FontAwesomeIcons.desktop)),
+            child: Center(child: faIcon(FontAwesomeIcons.desktop)),
           ),
           title: const Text('Virtual Machines'),
           onTap: () {
@@ -179,7 +182,7 @@ class _MyDrawerState extends State<MyDrawer> {
       ListTile(
           leading: SizedBox(
             width: 30,
-            child: Center(child: FaIcon(FontAwesomeIcons.server)),
+            child: Center(child: faIcon(FontAwesomeIcons.server)),
           ),
           title: const Text('System Info'),
           onTap: () {
@@ -188,7 +191,7 @@ class _MyDrawerState extends State<MyDrawer> {
       ListTile(
           leading: SizedBox(
             width: 30,
-            child: Center(child: FaIcon(FontAwesomeIcons.puzzlePiece)),
+            child: Center(child: faIcon(FontAwesomeIcons.puzzlePiece)),
           ),
           title: const Text('Plugins'),
           onTap: () {
@@ -197,7 +200,7 @@ class _MyDrawerState extends State<MyDrawer> {
       ListTile(
           leading: SizedBox(
             width: 30,
-            child: Center(child: FaIcon(FontAwesomeIcons.gear)),
+            child: Center(child: faIcon(FontAwesomeIcons.gear)),
           ),
           title: const Text('Settings'),
           onTap: () {
@@ -207,7 +210,7 @@ class _MyDrawerState extends State<MyDrawer> {
           leading: SizedBox(
             width: 30,
             child:
-                Center(child: FaIcon(FontAwesomeIcons.arrowRightFromBracket)),
+                Center(child: faIcon(FontAwesomeIcons.arrowRightFromBracket)),
           ),
           title: const Text('Logout'),
           onTap: () {
@@ -234,5 +237,13 @@ class _MyDrawerState extends State<MyDrawer> {
                 });
           }),
     ]));
+  }
+
+    Widget faIcon(IconData icon, {double? size}) {
+    return FaIcon(
+      icon,
+      color: _theme!.isDarkMode ? Colors.orange : Colors.black,
+      size: size,
+    );
   }
 }
