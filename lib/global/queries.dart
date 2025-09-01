@@ -222,19 +222,28 @@ class Queries {
   static const getArrayCard = r'''
     query {
       array {
-        state
         id
+        state
         capacity {
           kilobytes {
             free
             used
             total
           }
-          disks {
-            free
-            used
-            total
-          }
+        }
+        disks {
+          id
+          name
+          fsSize
+          fsFree
+          fsUsed
+        }
+        caches {
+          id
+          name
+          fsSize
+          fsFree
+          fsUsed
         }
       }
     }
@@ -316,5 +325,4 @@ class Queries {
       }
     }
   ''';
-
 }

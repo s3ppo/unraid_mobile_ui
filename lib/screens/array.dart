@@ -161,7 +161,7 @@ class _MyArrayPageState extends State<ArrayPage> {
                           ),
                           SizedBox(height: 2),
                           Text(
-                            'Belegt: ${used.round()} GB / $sizeGB GB (${(fillPercent * 100).toStringAsFixed(1)}%)',
+                            '${used.round()} GB / $sizeGB GB (${(fillPercent * 100).toStringAsFixed(1)}%)',
                             style: TextStyle(
                                 fontSize: 12, color: Colors.grey[700]),
                           ),

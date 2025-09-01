@@ -160,96 +160,96 @@ class _MyDashboardPageState extends State<DashboardPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ExpansionTile(
-                            shape: const Border(),
-                            initiallyExpanded: true,
-                            tilePadding: EdgeInsets.zero,
-                            expandedAlignment: Alignment.centerLeft,
-                            expandedCrossAxisAlignment:
-                                CrossAxisAlignment.start,
-                            leading: faIcon(FontAwesomeIcons.server),
-                            title: Text(server['name'],
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1.1,
-                                  fontSize: 16,
-                                )),
-                            subtitle: Text('Version: ${vars['version']}'),
-                            children: [
-                              const Divider(),
-                              const SizedBox(height: 6),
-                              Row(
-                                children: [
+                              shape: const Border(),
+                              initiallyExpanded: true,
+                              tilePadding: EdgeInsets.zero,
+                              expandedAlignment: Alignment.centerLeft,
+                              expandedCrossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                              leading: faIcon(FontAwesomeIcons.server),
+                              title: Text(server['name'],
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.1,
+                                    fontSize: 16,
+                                  )),
+                              subtitle: Text('Version: ${vars['version']}'),
+                              children: [
+                                const Divider(),
+                                const SizedBox(height: 6),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 24,
+                                      child: Center(
+                                        child: faIcon(FontAwesomeIcons.plug,
+                                            size: 16),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text('Status: '),
+                                    Text(
+                                      server['status'],
+                                      style: TextStyle(
+                                        color: server['status'] == 'ONLINE'
+                                            ? Colors.green
+                                            : Colors.red,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 3),
+                                Row(children: [
                                   SizedBox(
                                     width: 24,
                                     child: Center(
-                                      child: faIcon(FontAwesomeIcons.plug,
+                                        child: faIcon(FontAwesomeIcons.clock,
+                                            size: 16)),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text('Uptime: '),
+                                  Builder(
+                                    builder: (context) {
+                                      final isoTimestamp = info['os']['uptime'];
+                                      final dateTime =
+                                          DateTime.tryParse(isoTimestamp);
+                                      if (dateTime == null) {
+                                        return Text('Unknown');
+                                      }
+                                      final duration =
+                                          DateTime.now().difference(dateTime);
+                                      String formatted;
+                                      if (duration.inDays > 0) {
+                                        formatted =
+                                            '${duration.inDays} days ${duration.inHours % 24} hours';
+                                      } else if (duration.inHours > 0) {
+                                        formatted =
+                                            '${duration.inHours} hours ${duration.inMinutes % 60} minutes';
+                                      } else {
+                                        formatted =
+                                            '${duration.inMinutes} minutes';
+                                      }
+                                      return Text(formatted);
+                                    },
+                                  ),
+                                ]),
+                                const SizedBox(height: 3),
+                                Row(children: [
+                                  SizedBox(
+                                    width: 24,
+                                    child: Center(
+                                      child: faIcon(
+                                          FontAwesomeIcons.networkWired,
                                           size: 16),
                                     ),
                                   ),
                                   const SizedBox(width: 8),
-                                  Text('Status: '),
-                                  Text(
-                                    server['status'],
-                                    style: TextStyle(
-                                      color: server['status'] == 'ONLINE'
-                                          ? Colors.green
-                                          : Colors.red,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 3),
-                              Row(children: [
-                                SizedBox(
-                                  width: 24,
-                                  child: Center(
-                                      child: faIcon(FontAwesomeIcons.clock,
-                                          size: 16)),
-                                ),
-                                const SizedBox(width: 8),
-                                Text('Uptime: '),
-                                Builder(
-                                  builder: (context) {
-                                    final isoTimestamp = info['os']['uptime'];
-                                    final dateTime =
-                                        DateTime.tryParse(isoTimestamp);
-                                    if (dateTime == null) {
-                                      return Text('Unknown');
-                                    }
-                                    final duration =
-                                        DateTime.now().difference(dateTime);
-                                    String formatted;
-                                    if (duration.inDays > 0) {
-                                      formatted =
-                                          '${duration.inDays} days ${duration.inHours % 24} hours';
-                                    } else if (duration.inHours > 0) {
-                                      formatted =
-                                          '${duration.inHours} hours ${duration.inMinutes % 60} minutes';
-                                    } else {
-                                      formatted =
-                                          '${duration.inMinutes} minutes';
-                                    }
-                                    return Text(formatted);
-                                  },
-                                ),
-                              ]),
-                              const SizedBox(height: 3),
-                              Row(children: [
-                                SizedBox(
-                                  width: 24,
-                                  child: Center(
-                                    child: faIcon(FontAwesomeIcons.networkWired,
-                                        size: 16),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Text('Lan IP: '),
-                                Text(server['lanip']),
-                              ]),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
+                                  Text('Lan IP: '),
+                                  Text(server['lanip']),
+                                ]),
+                                const SizedBox(height: 8),
+                              ])
                         ])));
           } else {
             return const SizedBox.shrink();
@@ -266,7 +266,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
           } else if (snapshot.hasData && snapshot.data!.data != null) {
             final array = snapshot.data!.data!['array'];
 
-            //Total size in GB
+            //Total size in TB
             double size = array['capacity']['kilobytes']['total'] != null
                 ? double.tryParse(array['capacity']['kilobytes']['total']
                             .toString()) !=
@@ -274,11 +274,12 @@ class _MyDashboardPageState extends State<DashboardPage> {
                     ? double.parse(array['capacity']['kilobytes']['total']
                             .toString()) /
                         1024 /
+                        1024 /
                         1024
                     : 0
                 : 0;
-            int sizeGB = size.round();
-            //Used size in GB
+            double sizeTB = double.parse(size.toStringAsFixed(2));
+            //Used size in TB
             double used = array['capacity']['kilobytes']['used'] != null
                 ? double.tryParse(array['capacity']['kilobytes']['used']
                             .toString()) !=
@@ -286,11 +287,12 @@ class _MyDashboardPageState extends State<DashboardPage> {
                     ? double.parse(
                             array['capacity']['kilobytes']['used'].toString()) /
                         1024 /
+                        1024 /
                         1024
                     : 0
                 : 0;
             double fillPercent = size > 0 ? (used / size) : 0;
-            int sizeUsedGB = used.round();
+            double sizeUsedTB = double.parse(used.toStringAsFixed(2));
 
             return Card(
               elevation: 2,
@@ -300,58 +302,203 @@ class _MyDashboardPageState extends State<DashboardPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ExpansionTile(
-                          shape: const Border(),
-                          initiallyExpanded: true,
-                          tilePadding: EdgeInsets.zero,
-                          expandedAlignment: Alignment.centerLeft,
-                          expandedCrossAxisAlignment: CrossAxisAlignment.start,
-                          leading: faIcon(FontAwesomeIcons.hardDrive),
-                          title: Text('Array',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1.1)),
-                          subtitle: Row(
-                            children: [
-                              Text('State: '),
-                              Text('${array['state']}',
-                                  style: TextStyle(
-                                    color: array['state'] == 'STARTED'
-                                        ? Colors.green
-                                        : Colors.red,
-                                  )),
-                            ],
-                          ),
-                          children: [
-                            const Divider(),
-                            const SizedBox(height: 6),
-                            Row(
+                            shape: const Border(),
+                            initiallyExpanded: true,
+                            tilePadding: EdgeInsets.zero,
+                            expandedAlignment: Alignment.centerLeft,
+                            expandedCrossAxisAlignment:
+                                CrossAxisAlignment.start,
+                            leading: faIcon(FontAwesomeIcons.hardDrive),
+                            title: Text('Array',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.1)),
+                            subtitle: Row(
                               children: [
-                                Expanded(
-                                  child: LinearProgressIndicator(
-                                    value: fillPercent,
-                                    minHeight: 8,
-                                    backgroundColor: Colors.grey[300],
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      fillPercent > 0.85
-                                          ? Colors.red
-                                          : fillPercent > 0.65
-                                              ? Colors.orange
-                                              : Colors.green,
-                                    ),
-                                  ),
+                                Text('State: '),
+                                Text('${array['state']}',
+                                    style: TextStyle(
+                                      color: array['state'] == 'STARTED'
+                                          ? Colors.green
+                                          : Colors.red,
+                                    )),
+                              ],
+                            ),
+                            children: [
+                              const Divider(),
+                              const SizedBox(height: 6),
+                              Text(
+                                'Total',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
                                 ),
+                              ),
+                              Row(children: [
+                                Expanded(
+                                    child: LinearProgressIndicator(
+                                        value: fillPercent,
+                                        minHeight: 8,
+                                        backgroundColor: Colors.grey[300],
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                          fillPercent > 0.85
+                                              ? Colors.red
+                                              : fillPercent > 0.65
+                                                  ? Colors.orange
+                                                  : Colors.green,
+                                        ))),
                                 const SizedBox(width: 12),
                                 Text(
                                   '${(fillPercent * 100).toStringAsFixed(1)}%',
                                   style: TextStyle(fontWeight: FontWeight.bold),
+                                )
+                              ]),
+                              const SizedBox(height: 2),
+                              Text('$sizeUsedTB TB / $sizeTB TB'),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Disks',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
                                 ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            Text('$sizeUsedGB GB / $sizeGB GB'),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      children: List.generate(
+                                        array['disks'].length,
+                                        (index) {
+                                          final disk = array['disks'][index];
+                                          double total = disk['fsSize'] != null
+                                              ? double.tryParse(disk['fsSize']
+                                                      .toString()) ??
+                                                  0
+                                              : 0;
+                                          double used = disk['fsUsed'] != null
+                                              ? double.tryParse(disk['fsUsed']
+                                                      .toString()) ??
+                                                  0
+                                              : 0;
+                                          double percent =
+                                              total > 0 ? (used / total) : 0;
+                                          return Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 4.0),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  disk['name'] ?? 'Unknown',
+                                                  style: const TextStyle(
+                                                      fontSize: 12),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                Expanded(
+                                                  child:
+                                                      LinearProgressIndicator(
+                                                    value: percent,
+                                                    minHeight: 8,
+                                                    backgroundColor:
+                                                        Colors.grey[300],
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation<
+                                                            Color>(
+                                                      percent > 0.85
+                                                          ? Colors.red
+                                                          : percent > 0.65
+                                                              ? Colors.orange
+                                                              : Colors.green,
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                Text(
+                                                  '${(used / 1024 / 1024 / 1024).toStringAsFixed(2)} TB / ${(total / 1024 / 1024 / 1024).toStringAsFixed(2)} TB',
+                                                  style: const TextStyle(
+                                                      fontSize: 12),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Caches',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      children: List.generate(
+                                        array['caches'].length,
+                                        (index) {
+                                          final cache = array['caches'][index];
+                                          double total = cache['fsSize'] != null
+                                              ? double.tryParse(cache['fsSize']
+                                                      .toString()) ??
+                                                  0
+                                              : 0;
+                                          double used = cache['fsUsed'] != null
+                                              ? double.tryParse(cache['fsUsed']
+                                                      .toString()) ??
+                                                  0
+                                              : 0;
+                                          double percent =
+                                              total > 0 ? (used / total) : 0;
+                                          return Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 4.0),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  cache['name'] ?? 'Unknown',
+                                                  style: const TextStyle(
+                                                      fontSize: 12),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                Expanded(
+                                                  child:
+                                                      LinearProgressIndicator(
+                                                    value: percent,
+                                                    minHeight: 8,
+                                                    backgroundColor:
+                                                        Colors.grey[300],
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation<
+                                                            Color>(
+                                                      percent > 0.85
+                                                          ? Colors.red
+                                                          : percent > 0.65
+                                                              ? Colors.orange
+                                                              : Colors.green,
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                Text(
+                                                  '${(used / 1024 / 1024 / 1024).toStringAsFixed(2)} TB / ${(total / 1024 / 1024 / 1024).toStringAsFixed(2)} TB',
+                                                  style: const TextStyle(
+                                                      fontSize: 12),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                             const SizedBox(height: 8),
+                            ]),
                       ])),
             );
           } else {
@@ -401,7 +548,11 @@ class _MyDashboardPageState extends State<DashboardPage> {
                           Text(
                               'Baseboard: ${info['baseboard']['manufacturer']}, ${info['baseboard']['model']}'),
                           const SizedBox(height: 8),
-                          Text('Memory'),
+                          Divider(),
+                          Text('Memory',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              )),
                           Builder(builder: (context) {
                             double total = double.tryParse(
                                         metrics['memory']['total'].toString())
@@ -422,31 +573,27 @@ class _MyDashboardPageState extends State<DashboardPage> {
                             return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
+                                  Row(children: [
+                                    Expanded(
                                         child: LinearProgressIndicator(
-                                          value: percent,
-                                          minHeight: 8,
-                                          backgroundColor: Colors.grey[300],
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                            percent > 0.85
-                                                ? Colors.red
-                                                : percent > 0.65
-                                                    ? Colors.orange
-                                                    : Colors.green,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Text(
-                                        '${(percent * 100).toStringAsFixed(1)}%',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
+                                            value: percent,
+                                            minHeight: 8,
+                                            backgroundColor: Colors.grey[300],
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                              percent > 0.85
+                                                  ? Colors.red
+                                                  : percent > 0.65
+                                                      ? Colors.orange
+                                                      : Colors.green,
+                                            ))),
+                                    const SizedBox(width: 12),
+                                    Text(
+                                      '${(percent * 100).toStringAsFixed(1)}%',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ]),
                                   const SizedBox(height: 4),
                                   Text(
                                     '$usedGB GB / $totalGB GB',
