@@ -43,7 +43,46 @@ class _MyArrayPageState extends State<ArrayPage> {
           title: const Text('Array'),
           elevation: 0,
         ),
-        body: showArrayContent());
+        body: showArrayContent(),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Theme.of(context).buttonTheme.colorScheme?.primary,
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (BuildContext context) {
+                return Wrap(
+                  children: [
+                    ListTile(
+                      leading: const Icon(Icons.play_arrow),
+                      title: const Text('Start'),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        doSetArrayState('START');
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.stop),
+                      title: const Text('Stop'),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        doSetArrayState('STOP');
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.check),
+                      title: const Text('Parity Check'),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        doSetArrayState('PARITY_CHECK');
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          child: const Icon(Icons.menu),
+        ));
   }
 
   Widget showArrayContent() {

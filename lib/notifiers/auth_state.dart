@@ -62,10 +62,13 @@ class AuthState extends ChangeNotifier {
   Future<void> connectUnraid(
       {required String token, required String ip, required String prot}) async {
     String endPoint;
+    String wsEndPoint;
     if (prot == 'https' || prot == 'https_insecure') {
       endPoint = 'https://$ip/graphql';
+      wsEndPoint = 'wss://$ip/graphql';
     } else {
       endPoint = 'http://$ip/graphql';
+      wsEndPoint = 'ws://$ip/graphql';
     }
 
     IOClient getInsecureIOClient() {
@@ -77,10 +80,27 @@ class AuthState extends ChangeNotifier {
       return IOClient(httpClient);
     }
 
-    var link = HttpLink(
+    final httpLink = HttpLink(
       endPoint,
       defaultHeaders: {'Origin': packageName, 'x-api-key': token},
       httpClient: getInsecureIOClient(),
+    );
+
+    final wsLink = WebSocketLink(
+      wsEndPoint,
+      config: SocketClientConfig(
+        autoReconnect: true,
+        initialPayload: () => {
+          'Origin': packageName,
+          'x-api-key': token,
+        },
+      ),
+    );
+
+    final link = Link.split(
+      (request) => request.isSubscription,
+      wsLink,
+      httpLink,
     );
 
     _client = GraphQLClient(link: link, cache: GraphQLCache());

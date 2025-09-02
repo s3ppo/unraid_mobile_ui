@@ -25,6 +25,8 @@ class _MyDashboardPageState extends State<DashboardPage> {
   Future<QueryResult>? _parityCard;
   Future<QueryResult>? _upsCard;
 
+  bool _showMoreArrayDetails = false;
+
   @override
   void initState() {
     super.initState();
@@ -356,148 +358,174 @@ class _MyDashboardPageState extends State<DashboardPage> {
                               const SizedBox(height: 2),
                               Text('$sizeUsedTB TB / $sizeTB TB'),
                               const SizedBox(height: 8),
-                              Text(
-                                'Disks',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      children: List.generate(
-                                        array['disks'].length,
-                                        (index) {
-                                          final disk = array['disks'][index];
-                                          double total = disk['fsSize'] != null
-                                              ? double.tryParse(disk['fsSize']
-                                                      .toString()) ??
-                                                  0
-                                              : 0;
-                                          double used = disk['fsUsed'] != null
-                                              ? double.tryParse(disk['fsUsed']
-                                                      .toString()) ??
-                                                  0
-                                              : 0;
-                                          double percent =
-                                              total > 0 ? (used / total) : 0;
-                                          return Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 4.0),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  disk['name'] ?? 'Unknown',
-                                                  style: const TextStyle(
-                                                      fontSize: 12),
-                                                ),
-                                                const SizedBox(width: 8),
-                                                Expanded(
-                                                  child:
-                                                      LinearProgressIndicator(
-                                                    value: percent,
-                                                    minHeight: 8,
-                                                    backgroundColor:
-                                                        Colors.grey[300],
-                                                    valueColor:
-                                                        AlwaysStoppedAnimation<
-                                                            Color>(
-                                                      percent > 0.85
-                                                          ? Colors.red
-                                                          : percent > 0.65
-                                                              ? Colors.orange
-                                                              : Colors.green,
-                                                    ),
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 8),
-                                                Text(
-                                                  '${(used / 1024 / 1024 / 1024).toStringAsFixed(2)} TB / ${(total / 1024 / 1024 / 1024).toStringAsFixed(2)} TB',
-                                                  style: const TextStyle(
-                                                      fontSize: 12),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        },
-                                      ),
+                                GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                  _showMoreArrayDetails =
+                                    !_showMoreArrayDetails;
+                                  });
+                                },
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                  Icon(
+                                    _showMoreArrayDetails
+                                      ? Icons.keyboard_arrow_up
+                                      : Icons.keyboard_arrow_down,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    _showMoreArrayDetails ? 'less' : 'more',
+                                    style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                    fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Caches',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                  ],
                                 ),
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      children: List.generate(
-                                        array['caches'].length,
-                                        (index) {
-                                          final cache = array['caches'][index];
-                                          double total = cache['fsSize'] != null
-                                              ? double.tryParse(cache['fsSize']
-                                                      .toString()) ??
-                                                  0
-                                              : 0;
-                                          double used = cache['fsUsed'] != null
-                                              ? double.tryParse(cache['fsUsed']
-                                                      .toString()) ??
-                                                  0
-                                              : 0;
-                                          double percent =
-                                              total > 0 ? (used / total) : 0;
-                                          return Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 4.0),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  cache['name'] ?? 'Unknown',
-                                                  style: const TextStyle(
-                                                      fontSize: 12),
-                                                ),
-                                                const SizedBox(width: 8),
-                                                Expanded(
-                                                  child:
-                                                      LinearProgressIndicator(
-                                                    value: percent,
-                                                    minHeight: 8,
-                                                    backgroundColor:
-                                                        Colors.grey[300],
-                                                    valueColor:
-                                                        AlwaysStoppedAnimation<
-                                                            Color>(
-                                                      percent > 0.85
-                                                          ? Colors.red
-                                                          : percent > 0.65
-                                                              ? Colors.orange
-                                                              : Colors.green,
+                                ),
+                              if (_showMoreArrayDetails) ...[
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Disks',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        children: List.generate(
+                                          array['disks'].length,
+                                          (index) {
+                                            final disk = array['disks'][index];
+                                            double total = disk['fsSize'] !=
+                                                    null
+                                                ? double.tryParse(disk['fsSize']
+                                                        .toString()) ??
+                                                    0
+                                                : 0;
+                                            double used = disk['fsUsed'] != null
+                                                ? double.tryParse(disk['fsUsed']
+                                                        .toString()) ??
+                                                    0
+                                                : 0;
+                                            double percent =
+                                                total > 0 ? (used / total) : 0;
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 4.0),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    disk['name'] ?? 'Unknown',
+                                                    style: const TextStyle(
+                                                        fontSize: 12),
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  Expanded(
+                                                    child:
+                                                        LinearProgressIndicator(
+                                                      value: percent,
+                                                      minHeight: 8,
+                                                      backgroundColor:
+                                                          Colors.grey[300],
+                                                      valueColor:
+                                                          AlwaysStoppedAnimation<
+                                                              Color>(
+                                                        percent > 0.85
+                                                            ? Colors.red
+                                                            : percent > 0.65
+                                                                ? Colors.orange
+                                                                : Colors.green,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                const SizedBox(width: 8),
-                                                Text(
-                                                  '${(used / 1024 / 1024 / 1024).toStringAsFixed(2)} TB / ${(total / 1024 / 1024 / 1024).toStringAsFixed(2)} TB',
-                                                  style: const TextStyle(
-                                                      fontSize: 12),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        },
+                                                  const SizedBox(width: 8),
+                                                  Text(
+                                                    '${(used / 1024 / 1024 / 1024).toStringAsFixed(2)} / ${(total / 1024 / 1024 / 1024).toStringAsFixed(2)} TB',
+                                                    style: const TextStyle(
+                                                        fontSize: 12),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        ),
                                       ),
                                     ),
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Caches',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                ],
-                              ),
-                             const SizedBox(height: 8),
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                        child: Column(
+                                            children: List.generate(
+                                      array['caches'].length,
+                                      (index) {
+                                        final cache = array['caches'][index];
+                                        double total = cache['fsSize'] != null
+                                            ? double.tryParse(cache['fsSize']
+                                                    .toString()) ??
+                                                0
+                                            : 0;
+                                        double used = cache['fsUsed'] != null
+                                            ? double.tryParse(cache['fsUsed']
+                                                    .toString()) ??
+                                                0
+                                            : 0;
+                                        double percent =
+                                            total > 0 ? (used / total) : 0;
+                                        return Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 4.0),
+                                            child: Row(children: [
+                                              Text(
+                                                cache['name'] ?? 'Unknown',
+                                                style: const TextStyle(
+                                                    fontSize: 12),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Expanded(
+                                                child: LinearProgressIndicator(
+                                                  value: percent,
+                                                  minHeight: 8,
+                                                  backgroundColor:
+                                                      Colors.grey[300],
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                          Color>(
+                                                    percent > 0.85
+                                                        ? Colors.red
+                                                        : percent > 0.65
+                                                            ? Colors.orange
+                                                            : Colors.green,
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Text(
+                                                '${(used / 1024 / 1024 / 1024).toStringAsFixed(2)} / ${(total / 1024 / 1024 / 1024).toStringAsFixed(2)} TB',
+                                                style: const TextStyle(
+                                                    fontSize: 12),
+                                              ),
+                                            ]));
+                                      },
+                                    ))),
+                                  ],
+                                )
+                              ],
+                              const SizedBox(height: 8),
                             ]),
                       ])),
             );
