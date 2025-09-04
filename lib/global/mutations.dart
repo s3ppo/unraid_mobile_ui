@@ -76,7 +76,7 @@ class Mutations {
   ''';  
 
   static const String setArrayState = r'''
-    mutation SetState($input: ArrayStateInput) {
+    mutation SetState($input: ArrayStateInput!) {
       array {
         setState(input: $input) {
           state

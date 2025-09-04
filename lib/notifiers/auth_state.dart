@@ -90,11 +90,12 @@ class AuthState extends ChangeNotifier {
       wsEndPoint,
       config: SocketClientConfig(
         autoReconnect: true,
-        initialPayload: () => {
+        initialPayload: {
           'Origin': packageName,
           'x-api-key': token,
-        },
+        }
       ),
+      subProtocol: GraphQLProtocol.graphqlTransportWs
     );
 
     final link = Link.split(

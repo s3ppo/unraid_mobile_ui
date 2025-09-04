@@ -3,6 +3,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:unmobile/global/drawer.dart';
 import 'package:unmobile/global/queries.dart';
+import 'package:unmobile/global/subscriptions.dart';
 import 'package:unmobile/notifiers/auth_state.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:unmobile/global/routes.dart';
@@ -24,6 +25,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
   Future<QueryResult>? _infoCard;
   Future<QueryResult>? _parityCard;
   Future<QueryResult>? _upsCard;
+  Stream<QueryResult>? _cpuMetricsSubscription;
 
   bool _showMoreArrayDetails = false;
 
@@ -40,7 +42,14 @@ class _MyDashboardPageState extends State<DashboardPage> {
       getInfoCard();
       getParityCard();
       getUpsCard();
+      getMetricsSubscriptions();
     }
+  }
+
+  void getMetricsSubscriptions() {
+    _cpuMetricsSubscription = _state!.client!.subscribe(SubscriptionOptions(
+      document: gql(Subscriptions.getCpuMetrics),
+    )).asBroadcastStream();
   }
 
   void getNotifications() {
@@ -336,7 +345,8 @@ class _MyDashboardPageState extends State<DashboardPage> {
                                 ),
                               ),
                               Row(children: [
-                                Expanded(
+                                SizedBox(
+                                    width: MediaQuery.of(context).size.width * 0.70,
                                     child: LinearProgressIndicator(
                                         value: fillPercent,
                                         minHeight: 8,
@@ -349,42 +359,41 @@ class _MyDashboardPageState extends State<DashboardPage> {
                                                   ? Colors.orange
                                                   : Colors.green,
                                         ))),
-                                const SizedBox(width: 12),
-                                Text(
+                                Expanded( child: Text(
                                   '${(fillPercent * 100).toStringAsFixed(1)}%',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                )
+                                  style: TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.right,
+                                ))
                               ]),
                               const SizedBox(height: 2),
                               Text('$sizeUsedTB TB / $sizeTB TB'),
                               const SizedBox(height: 8),
-                                GestureDetector(
+                              GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                  _showMoreArrayDetails =
-                                    !_showMoreArrayDetails;
+                                    _showMoreArrayDetails =
+                                        !_showMoreArrayDetails;
                                   });
                                 },
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                  Icon(
-                                    _showMoreArrayDetails
-                                      ? Icons.keyboard_arrow_up
-                                      : Icons.keyboard_arrow_down,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    _showMoreArrayDetails ? 'less' : 'more',
-                                    style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                    fontWeight: FontWeight.bold,
+                                    Icon(
+                                      _showMoreArrayDetails
+                                          ? Icons.keyboard_arrow_up
+                                          : Icons.keyboard_arrow_down,
+                                      color: Colors.orange,
                                     ),
-                                  ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      _showMoreArrayDetails ? 'less' : 'more',
+                                      style: TextStyle(
+                                        color: Colors.orange,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ],
                                 ),
-                                ),
+                              ),
                               if (_showMoreArrayDetails) ...[
                                 const SizedBox(height: 8),
                                 Text(
@@ -570,8 +579,83 @@ class _MyDashboardPageState extends State<DashboardPage> {
                           ),
                           Text(
                               'Cores: ${info['cpu']['cores']}, Threads: ${info['cpu']['threads']}'),
-                          Text(
-                              'Load: ${double.parse(metrics['cpu']['percentTotal'].toString()).toStringAsFixed(2)} %'),
+                          Text('Load: '),
+                          StreamBuilder<QueryResult>(
+                            stream: _cpuMetricsSubscription,
+                            builder: (context, cpuSnapshot) {
+                              if (cpuSnapshot.hasData &&
+                                  cpuSnapshot.data!.data != null &&
+                                  cpuSnapshot.data!.data!['systemMetricsCpu'] !=
+                                      null) {
+                                final cpuMetrics =
+                                    cpuSnapshot.data!.data!['systemMetricsCpu'];
+                                final percentTotal = cpuMetrics['percentTotal'];
+                                double percent =
+                                    double.tryParse(percentTotal.toString()) ??
+                                        0;
+                                return Row(
+                                  children: [
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width * 0.70,
+                                      child: LinearProgressIndicator(
+                                        value: percent / 100,
+                                        minHeight: 8,
+                                        backgroundColor: Colors.grey[300],
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                          percent > 85
+                                              ? Colors.red
+                                              : percent > 65
+                                                  ? Colors.orange
+                                                  : Colors.green,
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                        child: Text(
+                                            '${percent.toStringAsFixed(2)}%',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                            textAlign: TextAlign.right))
+                                  ],
+                                );
+                              } else {
+                                final percentTotal =
+                                    metrics['cpu']['percentTotal'];
+                                double percent =
+                                    double.tryParse(percentTotal.toString()) ??
+                                        0;
+                                return Row(
+                                  children: [
+                                    SizedBox(
+                                        width: MediaQuery.of(context).size.width * 0.70,
+                                        child: LinearProgressIndicator(
+                                          value: percent / 100,
+                                          minHeight: 8,
+                                          backgroundColor: Colors.grey[300],
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                            percent > 85
+                                                ? Colors.red
+                                                : percent > 65
+                                                    ? Colors.orange
+                                                    : Colors.green,
+                                          ),
+                                        )),
+                                    Expanded(
+                                      child: Text(
+                                        '${percent.toStringAsFixed(2)}%',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.right,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }
+                            },
+                          ),
                           const SizedBox(height: 8),
                           Text(
                               'Baseboard: ${info['baseboard']['manufacturer']}, ${info['baseboard']['model']}'),
@@ -602,11 +686,12 @@ class _MyDashboardPageState extends State<DashboardPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(children: [
-                                    Expanded(
-                                        child: LinearProgressIndicator(
-                                            value: percent,
-                                            minHeight: 8,
-                                            backgroundColor: Colors.grey[300],
+                                    SizedBox(
+                                        width: MediaQuery.of(context).size.width * 0.70,
+                                      child: LinearProgressIndicator(
+                                          value: percent,
+                                          minHeight: 8,
+                                          backgroundColor: Colors.grey[300],
                                             valueColor:
                                                 AlwaysStoppedAnimation<Color>(
                                               percent > 0.85
@@ -615,11 +700,13 @@ class _MyDashboardPageState extends State<DashboardPage> {
                                                       ? Colors.orange
                                                       : Colors.green,
                                             ))),
-                                    const SizedBox(width: 12),
-                                    Text(
-                                      '${(percent * 100).toStringAsFixed(1)}%',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                    Expanded(
+                                      child: Text(
+                                        '${(percent * 100).toStringAsFixed(1)}%',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                            textAlign: TextAlign.right,
+                                      ),
                                     ),
                                   ]),
                                   const SizedBox(height: 4),

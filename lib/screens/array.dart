@@ -50,8 +50,11 @@ class _MyArrayPageState extends State<ArrayPage> {
             showModalBottomSheet(
               context: context,
               builder: (BuildContext context) {
-                return Wrap(
+                return SizedBox(height: 160, child: Wrap(
                   children: [
+                    SizedBox( height: 40, child: ListTile(
+                      title: Text('Array Operation'),
+                    )),
                     ListTile(
                       leading: const Icon(Icons.play_arrow),
                       title: const Text('Start'),
@@ -67,17 +70,9 @@ class _MyArrayPageState extends State<ArrayPage> {
                         Navigator.of(context).pop();
                         doSetArrayState('STOP');
                       },
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.check),
-                      title: const Text('Parity Check'),
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        doSetArrayState('PARITY_CHECK');
-                      },
-                    ),
+                    )
                   ],
-                );
+                ));
               },
             );
           },
@@ -87,44 +82,6 @@ class _MyArrayPageState extends State<ArrayPage> {
 
   Widget showArrayContent() {
     return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-      /*Container(
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.all(8),
-        child: Row(children: [
-          OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(color: Colors.grey), //Theme.of(context).primaryColor),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-              ),
-            ),
-            onPressed: null, //() => doSetArrayState(_arrayState == 'STARTED' ? 'STOP' : 'START'),
-            child: Text(_arrayState == 'STARTED' ? 'Stop' : ''),
-          ),
-          Container(width: 10),
-            OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(color: Colors.grey),
-              shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-              ),
-            ),
-            onPressed: null,
-            child: Text('Check', style: TextStyle(color: Colors.grey)),
-            ),
-          Container(width: 10),
-            OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(color: Colors.grey),
-              shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-              ),
-            ),
-            onPressed: null,
-            child: Text('History', style: TextStyle(color: Colors.grey)),
-            ),
-        ])
-      ),*/
       Expanded(
           child: FutureBuilder<QueryResult>(
         future: _array,
@@ -146,67 +103,100 @@ class _MyArrayPageState extends State<ArrayPage> {
             array.addAll(parities);
             array.addAll(caches);
             array.add(boots);
+            _arrayState = result.data!['array']['state'] ?? "";
 
-            return ListView.builder(
-                itemCount: array.length,
-                itemBuilder: (context, index) {
-                  final arr = array[index];
-                  Icon icon;
-                  if (arr['status'] == 'DISK_OK') {
-                    icon = const Icon(FontAwesomeIcons.solidCircle,
-                        size: 15, color: Colors.green);
-                  } else {
-                    icon = const Icon(FontAwesomeIcons.solidCircle,
-                        size: 15, color: Colors.red);
-                  }
+            // Gruppiere die Einträge nach Typ
+            Map<String, List> grouped = {
+              'Disks': disks,
+              'Parities': parities,
+              'Caches': caches,
+              'Boot': [boots],
+            };
 
-                  if (arr['fsSize'] == null) {
-                    arr['fsSize'] = arr['size'];
-                  }
-                  if (arr['fsUsed'] == null) {
-                    arr['fsUsed'] = 0;
-                  }
-                  if (arr['fsFree'] == null) {
-                    arr['fsFree'] = 0;
-                  }
+            return ListView(
+              children: grouped.entries.map((entry) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              entry.key,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            const Divider()
+                          ],
+                        )),
+                    ...entry.value.map<Widget>((arr) {
+                      Icon icon;
+                      if (arr['status'] == 'DISK_OK') {
+                        icon = const Icon(FontAwesomeIcons.solidCircle,
+                            size: 15, color: Colors.green);
+                      } else {
+                        icon = const Icon(FontAwesomeIcons.solidCircle,
+                            size: 15, color: Colors.red);
+                      }
 
-                  //Total size in GB
-                  double size = arr['fsSize'] / 1024 / 1024;
-                  int sizeGB = size.round();
-                  //Used size in GB
-                  double used =
-                      arr['fsUsed'] != null ? arr['fsUsed'] / 1024 / 1024 : 0;
-                  double fillPercent = size > 0 ? (used / size) : 0;
+                      if (arr['fsSize'] == null) {
+                        arr['fsSize'] = arr['size'];
+                      }
+                      if (arr['fsUsed'] == null) {
+                        arr['fsUsed'] = 0;
+                      }
+                      if (arr['fsFree'] == null) {
+                        arr['fsFree'] = 0;
+                      }
 
-                  return ListTile(
-                      leading: icon,
-                      title: Text(arr['name']),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      double size = arr['fsSize'] / 1024 / 1024;
+                      int sizeGB = size.round();
+                      double used = arr['fsUsed'] != null
+                          ? arr['fsUsed'] / 1024 / 1024
+                          : 0;
+                      double fillPercent = size > 0 ? (used / size) : 0;
+
+                      return Column(
                         children: [
-                          Text(arr['device']),
-                          SizedBox(height: 4),
-                          LinearProgressIndicator(
-                            value: fillPercent.clamp(0.0, 1.0),
-                            minHeight: 8,
-                            backgroundColor: Colors.grey[300],
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              fillPercent > 0.9
-                                  ? Colors.red
-                                  : (fillPercent > 0.7
-                                      ? Colors.orange
-                                      : Colors.green),
+                          ListTile(
+                            leading: icon,
+                            title: Text(arr['name']),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(arr['device']),
+                                SizedBox(height: 4),
+                                LinearProgressIndicator(
+                                  value: fillPercent.clamp(0.0, 1.0),
+                                  minHeight: 8,
+                                  backgroundColor: Colors.grey[300],
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    fillPercent > 0.9
+                                        ? Colors.red
+                                        : (fillPercent > 0.7
+                                            ? Colors.orange
+                                            : Colors.green),
+                                  ),
+                                ),
+                                SizedBox(height: 2),
+                                Text(
+                                  '${used.round()} GB / $sizeGB GB (${(fillPercent * 100).toStringAsFixed(1)}%)',
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.grey[700]),
+                                ),
+                              ],
                             ),
                           ),
-                          SizedBox(height: 2),
-                          Text(
-                            '${used.round()} GB / $sizeGB GB (${(fillPercent * 100).toStringAsFixed(1)}%)',
-                            style: TextStyle(
-                                fontSize: 12, color: Colors.grey[700]),
-                          ),
                         ],
-                      ));
-                });
+                      );
+                    }),
+                  ],
+                );
+              }).toList(),
+            );
           } else {
             return const Center(child: Text('No data available'));
           }
@@ -232,6 +222,9 @@ class _MyArrayPageState extends State<ArrayPage> {
             "input": {"desiredState": "${targetState}"}
           }));
 
+      if (result.hasException) {
+        throw Exception(result.exception!.graphqlErrors[0].message);
+      }
       _arrayState = result.data!['array']['setState']['state'];
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -241,7 +234,7 @@ class _MyArrayPageState extends State<ArrayPage> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.red,
-        content: Align(alignment: Alignment.center, child: Text('Failed')),
+        content: Align(alignment: Alignment.center, child: Text(e.toString())),
         duration: const Duration(seconds: 3),
       ));
     }
