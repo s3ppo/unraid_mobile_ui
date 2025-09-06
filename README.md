@@ -52,7 +52,10 @@ https://play.google.com/apps/testing/com.hw.unraidui
 
 Connection Issues
     - Before 7.2.0 beta Unraid Connect Plugin has to be installed
+    
     - Check if your port is correct (it has to be the same that you are using for your Unraid Web Login)
+    
     - Check if you can reach /graphql endpoint in browser (http(s)://ip:port/graphql)
+    
     - App settings/authorizations on your device, 'Local Area Network' has to be allowed
     
