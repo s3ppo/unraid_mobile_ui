@@ -91,7 +91,7 @@ class _MySettingsMultiserverState extends State<SettingsMultiserver> {
               ),
               DropdownButtonFormField<String>(
                 decoration: const InputDecoration(labelText: 'Protocol'),
-                value: 'http',
+                initialValue: 'http',
                 items: [
                   DropdownMenuItem(value: 'http', child: Text('http')),
                   DropdownMenuItem(value: 'https', child: Text('https')),

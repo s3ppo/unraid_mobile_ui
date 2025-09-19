@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         child: Consumer<ThemeNotifier>(
           builder: (context, themeNotifier, child) {
             return MaterialApp(
-              title: 'unMobile',
+              title: 'unConnect',
               debugShowCheckedModeBanner: false,
               theme: themeNotifier.isDarkMode ? darkTheme : lightTheme,
               onGenerateRoute: Routes.onGenerateRoute,

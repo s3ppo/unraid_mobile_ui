@@ -97,7 +97,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('unMobile'),
+          title: const Text('unConnect'),
           actions: <Widget>[
             IconButton(
               icon: Icon(

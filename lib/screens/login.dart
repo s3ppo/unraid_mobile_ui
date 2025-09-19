@@ -31,7 +31,7 @@ class _MyLoginPageState extends State<LoginPage> {
                 child: Column(children: <Widget>[
       Container(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-          height: 80,
+          height: 150,
           width: MediaQuery.of(context).size.width,
           alignment: Alignment.topCenter,
           child: Image.asset('assets/icon/icon.png')),
@@ -61,44 +61,47 @@ class _MyLoginPageState extends State<LoginPage> {
               Row(
                 children: [
                     Flexible(
-                    child: RadioListTile<String>(
+                    child: ListTile(
                       dense: true,
                       contentPadding: EdgeInsets.zero,
                       title: const Text('http', style: TextStyle(fontSize: 14)),
-                      value: 'http',
-                      groupValue: _protocol,
-                      onChanged: (String? value) {
-                      setState(() {
-                        _protocol = value!;
-                      });
+                      leading: _protocol == 'http'
+                          ? const Icon(Icons.radio_button_checked)
+                          : const Icon(Icons.radio_button_off),
+                      onTap: () {
+                        setState(() {
+                          _protocol = 'http';
+                        });
                       },
                     ),
                     ),
                     Flexible(
-                    child: RadioListTile<String>(
+                    child: ListTile(
                       dense: true,
                       contentPadding: EdgeInsets.zero,
                       title: const Text('https', style: TextStyle(fontSize: 14)),
-                      value: 'https',
-                      groupValue: _protocol,
-                      onChanged: (String? value) {
-                      setState(() {
-                        _protocol = value!;
-                      });
+                      leading: _protocol == 'https'
+                          ? const Icon(Icons.radio_button_checked)
+                          : const Icon(Icons.radio_button_off),
+                      onTap: () {
+                        setState(() {
+                          _protocol = 'https';
+                        });
                       },
                     ),
                     ),
                     Flexible(
-                    child: RadioListTile<String>(
+                    child: ListTile(
                       dense: true,
                       contentPadding: EdgeInsets.zero,
                       title: const Text('https (insecure)', style: TextStyle(fontSize: 14)),
-                      value: 'https_insecure',
-                      groupValue: _protocol,
-                      onChanged: (String? value) {
-                      setState(() {
-                        _protocol = value!;
-                      });
+                      leading: _protocol == 'https_insecure'
+                          ? const Icon(Icons.radio_button_checked)
+                          : const Icon(Icons.radio_button_off),
+                      onTap: () {
+                        setState(() {
+                          _protocol = 'https_insecure';
+                        });
                       },
                     ),
                     ),
