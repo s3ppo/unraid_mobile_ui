@@ -103,17 +103,23 @@ class _MyDockersPageState extends State<DockersPage> {
                                 )
                               : const Icon(Icons.image_not_supported),
                       title: Text(name),
-                      subtitle: Row(children: [
+                        subtitle: Row(children: [
                         Icon(
-                            running
-                                ? FontAwesomeIcons.play
-                                : FontAwesomeIcons.stop,
-                            color: running ? Colors.green : Colors.red,
-                            size: 16),
+                          running
+                            ? FontAwesomeIcons.play
+                            : FontAwesomeIcons.stop,
+                          color: running ? Colors.green : Colors.red,
+                          size: 16),
                         const SizedBox(width: 4),
                         Text(docker['state'] == 'RUNNING'
-                            ? 'Running'
-                            : 'Stopped')
+                          ? 'Running'
+                          : 'Stopped'),
+                        const SizedBox(width: 10),
+                        if (docker['status'] != null && docker['status'].toString().contains('healthy')) ...[
+                            const Text('- healthy'),
+                            const SizedBox(width: 4),
+                            const Icon(FontAwesomeIcons.heartPulse, size: 12),
+                          ]
                       ]));
                 });
           } else {
