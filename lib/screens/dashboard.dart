@@ -921,7 +921,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                                         Text(
                                           device['status'] ?? 'Unknown',
                                           style: TextStyle(
-                                            color: device['status'] == 'ONLINE'
+                                            color: device['status'] == 'Online'
                                                 ? Colors.green
                                                 : Colors.red,
                                             fontWeight: FontWeight.bold,
