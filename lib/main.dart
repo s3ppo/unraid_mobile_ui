@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/services.dart';
 import 'package:json_theme/json_theme.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +8,8 @@ import 'package:unmobile/global/notifiers.dart';
 import 'package:unmobile/global/routes.dart';
 import 'package:unmobile/screens/dashboard.dart';
 import 'package:unmobile/screens/login.dart';
+import 'package:unmobile/l10n/app_localizations.dart';
+import 'package:unmobile/notifiers/locale_notifier.dart';
 import 'notifiers/auth_state.dart';
 import 'notifiers/theme_mode.dart';
 
@@ -35,12 +38,25 @@ class MyApp extends StatelessWidget {
         providers: providers,
         child: Consumer<ThemeNotifier>(
           builder: (context, themeNotifier, child) {
-            return MaterialApp(
-              title: 'unConnect',
-              debugShowCheckedModeBanner: false,
-              theme: themeNotifier.isDarkMode ? darkTheme : lightTheme,
-              onGenerateRoute: Routes.onGenerateRoute,
-              home: Consumer<AuthState>(builder: (context, state, child) {
+            return Consumer<LocaleNotifier>(
+              builder: (context, localeNotifier, _) {
+                return MaterialApp(
+                  onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+                  debugShowCheckedModeBanner: false,
+                  theme: themeNotifier.isDarkMode ? darkTheme : lightTheme,
+                  locale: localeNotifier.locale,
+                  localizationsDelegates: const [
+                    AppLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                  supportedLocales: const [
+                    Locale('en'),
+                    Locale('zh'),
+                  ],
+                  onGenerateRoute: Routes.onGenerateRoute,
+                  home: Consumer<AuthState>(builder: (context, state, child) {
                 if (state.initialized) {
                   if (state.client != null) {
                     return const DashboardPage();
@@ -57,9 +73,11 @@ class MyApp extends StatelessWidget {
                           color: Theme.of(context).scaffoldBackgroundColor,
                           child: const CircularProgressIndicator()))));
                 }
-              })
+              }),
+                );
+              },
             );
-          }
+          },
         ));
   }
 }

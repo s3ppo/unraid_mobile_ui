@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:unmobile/global/drawer.dart';
 import 'package:unmobile/global/queries.dart';
 import 'package:unmobile/global/subscriptions.dart';
+import 'package:unmobile/l10n/app_localizations.dart';
 import 'package:unmobile/notifiers/auth_state.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:unmobile/global/routes.dart';
@@ -184,7 +185,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                                     letterSpacing: 1.1,
                                     fontSize: 16,
                                   )),
-                              subtitle: Text('Version: ${vars['version']}'),
+                              subtitle: Text('${AppLocalizations.of(context)!.version}: ${vars['version']}'),
                               children: [
                                 const Divider(),
                                 const SizedBox(height: 6),
@@ -198,7 +199,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                                       ),
                                     ),
                                     const SizedBox(width: 8),
-                                    Text('Status: '),
+                                    Text('${AppLocalizations.of(context)!.status}: '),
                                     Text(
                                       server['status'],
                                       style: TextStyle(
@@ -219,7 +220,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                                             size: 16)),
                                   ),
                                   const SizedBox(width: 8),
-                                  Text('Uptime: '),
+                                  Text('${AppLocalizations.of(context)!.upTime}: '),
                                   Builder(
                                     builder: (context) {
                                       final isoTimestamp = info['os']['uptime'];
@@ -256,7 +257,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                                     ),
                                   ),
                                   const SizedBox(width: 8),
-                                  Text('Lan IP: '),
+                                  Text('${AppLocalizations.of(context)!.lanIP}: '),
                                   Text(server['lanip']),
                                 ]),
                                 const SizedBox(height: 8),
@@ -320,13 +321,13 @@ class _MyDashboardPageState extends State<DashboardPage> {
                             expandedCrossAxisAlignment:
                                 CrossAxisAlignment.start,
                             leading: faIcon(FontAwesomeIcons.hardDrive),
-                            title: Text('Array',
+                            title: Text(AppLocalizations.of(context)!.array,
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     letterSpacing: 1.1)),
                             subtitle: Row(
                               children: [
-                                Text('State: '),
+                                Text('${AppLocalizations.of(context)!.state}: '),
                                 Text('${array['state']}',
                                     style: TextStyle(
                                       color: array['state'] == 'STARTED'
@@ -339,7 +340,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                               const Divider(),
                               const SizedBox(height: 6),
                               Text(
-                                'Total',
+                                AppLocalizations.of(context)!.total,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -397,7 +398,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                               if (_showMoreArrayDetails) ...[
                                 const SizedBox(height: 8),
                                 Text(
-                                  'Disks',
+                                  AppLocalizations.of(context)!.disks,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -470,7 +471,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  'Caches',
+                                  AppLocalizations.of(context)!.caches,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -565,11 +566,11 @@ class _MyDashboardPageState extends State<DashboardPage> {
                         initiallyExpanded: true,
                         tilePadding: EdgeInsets.zero,
                         leading: faIcon(FontAwesomeIcons.microchip),
-                        title: Text('System',
+                        title: Text(AppLocalizations.of(context)!.system,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1.1)),
-                        subtitle: Text('Infos'),
+                        subtitle: Text(AppLocalizations.of(context)!.infos),
                         children: [
                           Divider(),
                           const SizedBox(height: 6),
@@ -661,7 +662,7 @@ class _MyDashboardPageState extends State<DashboardPage> {
                               'Baseboard: ${info['baseboard']['manufacturer']}, ${info['baseboard']['model']}'),
                           const SizedBox(height: 8),
                           Divider(),
-                          Text('Memory',
+                          Text(AppLocalizations.of(context)!.memory,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                               )),

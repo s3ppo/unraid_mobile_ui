@@ -1,0 +1,52 @@
+{
+  "appTitle": "unConnect",
+  "dashBoardTitle": "仪表盘",
+  "arrayTitle": "阵列",
+  "sharesTitle": "共享",
+  "dockerContainerTitle": "Docker 容器",
+  "virtualMachineTitle": "虚拟机",
+  "systemInfoTitle": "系统信息",
+  "systemTitle": "系统",
+  "pluginsTitle": "插件",
+  "settingsTitle": "设置",
+  "multiserverSettingsTitle": "多服务器设置",
+  "languageTitle": "语言",
+  "languageSystemDefault": "跟随系统",
+  "languageEnglish": "英语",
+  "languageChinese": "中文（简体）",
+  "logoutTitle": "退出",
+  "notificationsTitle": "通知",
+  "version": "版本",
+  "status": "状态",
+  "upTime": "运行时间",
+  "lanIP": "Lan IP",
+  "array": "阵列",
+  "state": "状态",
+  "total": "总和",
+  "disks": "磁盘",
+  "disk": "磁盘",
+  "caches": "缓存",
+  "cache": "缓存",
+  "system": "系统",
+  "infos": "信息",
+  "memory": "内存",
+  "noData": "暂无数据",
+  "freeSpace": "剩余：{size} GB",
+  "@freeSpace": {
+    "placeholders": {
+      "size": {
+        "type": "int",
+        "description": "以 GB 为单位的剩余空间"
+      }
+    }
+  },
+  "errorWithMessage": "错误：{message}",
+  "@errorWithMessage": {
+    "placeholders": {
+      "message": {
+        "type": "String",
+        "description": "错误详情"
+      }
+    }
+  }
+}

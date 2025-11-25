@@ -5,6 +5,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:unmobile/global/mutations.dart';
 import 'package:unmobile/global/queries.dart';
+import 'package:unmobile/l10n/app_localizations.dart';
 import 'package:unmobile/notifiers/auth_state.dart';
 
 class VmsPage extends StatefulWidget {
@@ -40,7 +41,7 @@ class _MyVmsPageState extends State<VmsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Virtual Machines'),
+          title: Text(AppLocalizations.of(context)!.virtualMachineTitle),
           actions: <Widget>[],
           elevation: 0,
         ),

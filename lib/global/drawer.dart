@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:unmobile/global/routes.dart';
+import 'package:unmobile/l10n/app_localizations.dart';
 import 'package:unmobile/notifiers/auth_state.dart';
 import 'package:unmobile/notifiers/theme_mode.dart';
 
@@ -139,7 +140,7 @@ class _MyDrawerState extends State<MyDrawer> {
               child: faIcon(FontAwesomeIcons.gauge),
             ),
           ),
-          title: const Text('Dashboard'),
+          title: Text(AppLocalizations.of(context)!.dashBoardTitle),
           onTap: () {
             Navigator.of(context).pushReplacementNamed(Routes.dashboard);
           }),
@@ -148,7 +149,7 @@ class _MyDrawerState extends State<MyDrawer> {
             width: 30,
             child: Center(child: faIcon(FontAwesomeIcons.hardDrive)),
           ),
-          title: const Text('Array'),
+          title: Text(AppLocalizations.of(context)!.arrayTitle),
           onTap: () {
             Navigator.of(context).pushNamed(Routes.array);
           }),
@@ -157,7 +158,7 @@ class _MyDrawerState extends State<MyDrawer> {
             width: 30,
             child: Center(child: faIcon(FontAwesomeIcons.folder)),
           ),
-          title: const Text('Shares'),
+          title: Text(AppLocalizations.of(context)!.sharesTitle),
           onTap: () {
             Navigator.of(context).pushNamed(Routes.shares);
           }),
@@ -166,7 +167,7 @@ class _MyDrawerState extends State<MyDrawer> {
             width: 30,
             child: Center(child: faIcon(FontAwesomeIcons.docker)),
           ),
-          title: const Text('Docker Containers'),
+          title: Text(AppLocalizations.of(context)!.dockerContainerTitle),
           onTap: () {
             Navigator.of(context).pushNamed(Routes.dockers);
           }),
@@ -175,7 +176,7 @@ class _MyDrawerState extends State<MyDrawer> {
             width: 30,
             child: Center(child: faIcon(FontAwesomeIcons.desktop)),
           ),
-          title: const Text('Virtual Machines'),
+          title: Text(AppLocalizations.of(context)!.virtualMachineTitle),
           onTap: () {
             Navigator.of(context).pushNamed(Routes.vms);
           }),
@@ -184,7 +185,7 @@ class _MyDrawerState extends State<MyDrawer> {
             width: 30,
             child: Center(child: faIcon(FontAwesomeIcons.server)),
           ),
-          title: const Text('System Info'),
+          title: Text(AppLocalizations.of(context)!.systemInfoTitle),
           onTap: () {
             Navigator.of(context).pushNamed(Routes.system);
           }),
@@ -193,7 +194,7 @@ class _MyDrawerState extends State<MyDrawer> {
             width: 30,
             child: Center(child: faIcon(FontAwesomeIcons.puzzlePiece)),
           ),
-          title: const Text('Plugins'),
+          title: Text(AppLocalizations.of(context)!.pluginsTitle),
           onTap: () {
             Navigator.of(context).pushNamed(Routes.plugins);
           }),
@@ -202,7 +203,7 @@ class _MyDrawerState extends State<MyDrawer> {
             width: 30,
             child: Center(child: faIcon(FontAwesomeIcons.gear)),
           ),
-          title: const Text('Settings'),
+          title: Text(AppLocalizations.of(context)!.settingsTitle),
           onTap: () {
             Navigator.of(context).pushNamed(Routes.settings);
           }),
@@ -212,7 +213,7 @@ class _MyDrawerState extends State<MyDrawer> {
             child:
                 Center(child: faIcon(FontAwesomeIcons.arrowRightFromBracket)),
           ),
-          title: const Text('Logout'),
+          title: Text(AppLocalizations.of(context)!.logoutTitle),
           onTap: () {
             showDialog(
                 context: context,

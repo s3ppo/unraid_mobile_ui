@@ -1,0 +1,52 @@
+{
+  "appTitle": "unConnect",
+  "dashBoardTitle": "Dashboard",
+  "arrayTitle": "Array",
+  "sharesTitle": "Shares",
+  "dockerContainerTitle": "Docker Containers",
+  "virtualMachineTitle": "Virtual Machines",
+  "systemInfoTitle": "System Info",
+  "systemTitle": "System",
+  "pluginsTitle": "Plugins",
+  "settingsTitle": "Settings",
+  "multiserverSettingsTitle": "Multiserver Settings",
+  "languageTitle": "Language",
+  "languageSystemDefault": "System default",
+  "languageEnglish": "English",
+  "languageChinese": "Chinese (Simplified)",
+  "logoutTitle": "Logout",
+  "notificationsTitle": "Notifications",
+  "version": "Version",
+  "status": "Status",
+  "upTime": "Uptime",
+  "lanIP": "Lan IP",
+  "array": "Array",
+  "state": "State",
+  "total": "Total",
+  "disks": "Disks",
+  "disk": "Disk",
+  "caches": "Caches",
+  "cache": "Cache",
+  "system": "System",
+  "infos": "Infos",
+  "memory": "Memory",
+  "noData": "No data available",
+  "freeSpace": "Free: {size} GB",
+  "@freeSpace": {
+    "placeholders": {
+      "size": {
+        "type": "int",
+        "description": "Free size in gigabytes"
+      }
+    }
+  },
+  "errorWithMessage": "Error: {message}",
+  "@errorWithMessage": {
+    "placeholders": {
+      "message": {
+        "type": "String",
+        "description": "Error message details"
+      }
+    }
+  }
+}

@@ -4,6 +4,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:unmobile/global/queries.dart';
 import 'package:unmobile/notifiers/auth_state.dart';
+import 'package:unmobile/l10n/app_localizations.dart';
 
 class SharesPage extends StatefulWidget {
   const SharesPage({Key? key}) : super(key: key);
@@ -20,7 +21,7 @@ class _MySharesPageState extends State<SharesPage> {
   void initState() {
     super.initState();
     _state = Provider.of<AuthState>(context, listen: false);
-    if(_state!.client != null) {
+    if (_state!.client != null) {
       _state!.client!.resetStore();
       getShares();
     }
@@ -36,7 +37,7 @@ class _MySharesPageState extends State<SharesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Shares'),
+          title: Text(AppLocalizations.of(context)!.sharesTitle),
           actions: <Widget>[],
           elevation: 0,
         ),
@@ -50,7 +51,12 @@ class _MySharesPageState extends State<SharesPage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(
+              child: Text(
+                AppLocalizations.of(context)!
+                    .errorWithMessage(snapshot.error.toString()),
+              ),
+            );
           } else if (snapshot.hasData && snapshot.data!.data != null) {
             final result = snapshot.data!;
 
@@ -80,12 +86,16 @@ class _MySharesPageState extends State<SharesPage> {
                   return ListTile(
                       title: Text(share['name']),
                       subtitle: Text(share['comment'] ?? ''),
-                      trailing: Text('Free: $sizeGB GB'),
+                      trailing: Text(
+                        AppLocalizations.of(context)!.freeSpace(sizeGB),
+                      ),
                       leading: Icon(FontAwesomeIcons.solidCircle,
                           size: 15, color: iconColor));
                 });
           } else {
-            return const Center(child: Text('No data available'));
+            return Center(
+              child: Text(AppLocalizations.of(context)!.noData),
+            );
           }
         });
   }
