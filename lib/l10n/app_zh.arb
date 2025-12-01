@@ -1,4 +1,6 @@
 {
+  "login": "登录",
+  "needHelp": "需要帮助？",
   "appTitle": "unConnect",
   "dashBoardTitle": "仪表盘",
   "arrayTitle": "阵列",
@@ -32,6 +34,13 @@
   "memory": "内存",
   "noData": "暂无数据",
   "freeSpace": "剩余：{size} GB",
+  "start": "启动",
+  "stop": "停止",
+  "cancel": "取消",
+  "pause": "暂停",
+  "resume": "恢复",
+  "reboot": "重启",
+  "forceStop": "强制停止",
   "@freeSpace": {
     "placeholders": {
       "size": {

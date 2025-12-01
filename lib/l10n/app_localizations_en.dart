@@ -9,6 +9,12 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get login => 'LOGIN';
+
+  @override
+  String get needHelp => 'Need help?';
+
+  @override
   String get appTitle => 'unConnect';
 
   @override
@@ -108,6 +114,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String freeSpace(int size) {
     return 'Free: $size GB';
   }
+
+  @override
+  String get start => 'Start';
+
+  @override
+  String get stop => 'Stop';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get pause => 'Pause';
+
+  @override
+  String get resume => 'Resume';
+
+  @override
+  String get reboot => 'Reboot';
+
+  @override
+  String get forceStop => 'Force Stop';
 
   @override
   String errorWithMessage(String message) {

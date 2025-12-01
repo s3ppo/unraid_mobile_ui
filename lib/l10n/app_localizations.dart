@@ -98,6 +98,18 @@ abstract class AppLocalizations {
     Locale('zh')
   ];
 
+  /// No description provided for @login.
+  ///
+  /// In en, this message translates to:
+  /// **'LOGIN'**
+  String get login;
+
+  /// No description provided for @needHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Need help?'**
+  String get needHelp;
+
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
@@ -295,6 +307,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Free: {size} GB'**
   String freeSpace(int size);
+
+  /// No description provided for @start.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get start;
+
+  /// No description provided for @stop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get stop;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @pause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get pause;
+
+  /// No description provided for @resume.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get resume;
+
+  /// No description provided for @reboot.
+  ///
+  /// In en, this message translates to:
+  /// **'Reboot'**
+  String get reboot;
+
+  /// No description provided for @forceStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Force Stop'**
+  String get forceStop;
 
   /// No description provided for @errorWithMessage.
   ///

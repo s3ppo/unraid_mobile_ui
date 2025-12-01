@@ -9,6 +9,12 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
+  String get login => '登录';
+
+  @override
+  String get needHelp => '需要帮助？';
+
+  @override
   String get appTitle => 'unConnect';
 
   @override
@@ -108,6 +114,27 @@ class AppLocalizationsZh extends AppLocalizations {
   String freeSpace(int size) {
     return '剩余：$size GB';
   }
+
+  @override
+  String get start => '启动';
+
+  @override
+  String get stop => '停止';
+
+  @override
+  String get cancel => '取消';
+
+  @override
+  String get pause => '暂停';
+
+  @override
+  String get resume => '恢复';
+
+  @override
+  String get reboot => '重启';
+
+  @override
+  String get forceStop => '强制停止';
 
   @override
   String errorWithMessage(String message) {

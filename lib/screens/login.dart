@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:unmobile/l10n/app_localizations.dart';
 import 'package:unmobile/notifiers/auth_state.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -123,7 +124,7 @@ class _MyLoginPageState extends State<LoginPage> {
                   borderRadius: BorderRadius.all(Radius.circular(2)),
                 ),
               ),
-              child: const Text('LOGIN',
+              child: Text(AppLocalizations.of(context)!.login,
                   style: TextStyle(
                       fontWeight: FontWeight.w600, color: Colors.white)),
               onPressed: () => loginUser())
@@ -131,7 +132,7 @@ class _MyLoginPageState extends State<LoginPage> {
               ),
       TextButton(
           onPressed: () async => launchUrl(Uri.parse('https://github.com/s3ppo/unraid_mobile_ui')),
-          child: const Text('Need help?'),
+          child: Text(AppLocalizations.of(context)!.needHelp),
         ), 
     ]))));
   }

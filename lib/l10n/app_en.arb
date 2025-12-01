@@ -1,4 +1,6 @@
 {
+  "login": "LOGIN",
+  "needHelp": "Need help?",
   "appTitle": "unConnect",
   "dashBoardTitle": "Dashboard",
   "arrayTitle": "Array",
@@ -32,6 +34,13 @@
   "memory": "Memory",
   "noData": "No data available",
   "freeSpace": "Free: {size} GB",
+  "start": "Start",
+  "stop": "Stop",
+  "cancel": "Cancel",
+  "pause": "Pause",
+  "resume": "Resume",
+  "reboot": "Reboot",
+  "forceStop": "Force Stop",
   "@freeSpace": {
     "placeholders": {
       "size": {

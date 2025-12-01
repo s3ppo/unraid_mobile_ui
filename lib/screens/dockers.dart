@@ -77,8 +77,8 @@ class _MyDockersPageState extends State<DockersPage> {
                           actions: <BottomSheetAction>[
                             BottomSheetAction(
                               title: running
-                                  ? const Text('Stop')
-                                  : const Text('Start'),
+                                  ? Text(AppLocalizations.of(context)!.stop)
+                                  : Text(AppLocalizations.of(context)!.start),
                               onPressed: (_) async {
                                 Navigator.of(context).pop();
                                 docker = await startStopDocker(running, docker);
@@ -87,7 +87,7 @@ class _MyDockersPageState extends State<DockersPage> {
                             )
                           ],
                           cancelAction:
-                              CancelAction(title: const Text('Cancel')),
+                              CancelAction(title: Text(AppLocalizations.of(context)!.cancel)),
                         );
                       },
                       leading:
