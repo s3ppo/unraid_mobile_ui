@@ -54,11 +54,11 @@ class _MyArrayPageState extends State<ArrayPage> {
                 return SizedBox(height: 160, child: Wrap(
                   children: [
                     SizedBox( height: 40, child: ListTile(
-                      title: Text('Array Operation'),
+                      title: Text(AppLocalizations.of(context)!.arrayOperation),
                     )),
                     ListTile(
                       leading: const Icon(Icons.play_arrow),
-                      title: const Text('Start'),
+                      title: Text(AppLocalizations.of(context)!.arrayOperationStart),
                       onTap: () {
                         Navigator.of(context).pop();
                         doSetArrayState('START');
@@ -66,7 +66,7 @@ class _MyArrayPageState extends State<ArrayPage> {
                     ),
                     ListTile(
                       leading: const Icon(Icons.stop),
-                      title: const Text('Stop'),
+                      title: Text(AppLocalizations.of(context)!.arrayOperationStop),
                       onTap: () {
                         Navigator.of(context).pop();
                         doSetArrayState('STOP');

@@ -113,8 +113,8 @@ class _MyDockersPageState extends State<DockersPage> {
                           size: 16),
                         const SizedBox(width: 4),
                         Text(docker['state'] == 'RUNNING'
-                          ? 'Running'
-                          : 'Stopped'),
+                          ? AppLocalizations.of(context)!.running
+                          : AppLocalizations.of(context)!.stopped),
                         const SizedBox(width: 10),
                         if (docker['status'] != null && docker['status'].toString().contains('healthy')) ...[
                             const Text('- healthy'),

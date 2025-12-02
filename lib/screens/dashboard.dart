@@ -234,13 +234,13 @@ class _MyDashboardPageState extends State<DashboardPage> {
                                       String formatted;
                                       if (duration.inDays > 0) {
                                         formatted =
-                                            '${duration.inDays} days ${duration.inHours % 24} hours';
+                                            '${duration.inDays} ${AppLocalizations.of(context)!.days} ${duration.inHours % 24} ${AppLocalizations.of(context)!.hours}';
                                       } else if (duration.inHours > 0) {
                                         formatted =
-                                            '${duration.inHours} hours ${duration.inMinutes % 60} minutes';
+                                            '${duration.inHours} ${AppLocalizations.of(context)!.hours} ${duration.inMinutes % 60} ${AppLocalizations.of(context)!.minutes}';
                                       } else {
                                         formatted =
-                                            '${duration.inMinutes} minutes';
+                                            '${duration.inMinutes} ${AppLocalizations.of(context)!.minutes}';
                                       }
                                       return Text(formatted);
                                     },

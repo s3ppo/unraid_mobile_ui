@@ -75,6 +75,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get upTime => 'Uptime';
 
   @override
+  String get days => 'days';
+
+  @override
+  String get hours => 'hours';
+
+  @override
+  String get minutes => 'minutes';
+
+  @override
   String get lanIP => 'Lan IP';
 
   @override
@@ -97,6 +106,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cache => 'Cache';
+
+  @override
+  String get arrayOperation => 'Array Operation';
+
+  @override
+  String get arrayOperationStart => 'Start';
+
+  @override
+  String get arrayOperationStop => 'Stop';
 
   @override
   String get system => 'System';
@@ -135,6 +153,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get forceStop => 'Force Stop';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get running => 'Running';
+
+  @override
+  String get stopped => 'Stopped';
+
+  @override
+  String get addServer => 'Add Server';
 
   @override
   String errorWithMessage(String message) {

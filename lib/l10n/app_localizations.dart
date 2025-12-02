@@ -230,6 +230,24 @@ abstract class AppLocalizations {
   /// **'Uptime'**
   String get upTime;
 
+  /// No description provided for @days.
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get days;
+
+  /// No description provided for @hours.
+  ///
+  /// In en, this message translates to:
+  /// **'hours'**
+  String get hours;
+
+  /// No description provided for @minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'minutes'**
+  String get minutes;
+
   /// No description provided for @lanIP.
   ///
   /// In en, this message translates to:
@@ -277,6 +295,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cache'**
   String get cache;
+
+  /// No description provided for @arrayOperation.
+  ///
+  /// In en, this message translates to:
+  /// **'Array Operation'**
+  String get arrayOperation;
+
+  /// No description provided for @arrayOperationStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get arrayOperationStart;
+
+  /// No description provided for @arrayOperationStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get arrayOperationStop;
 
   /// No description provided for @system.
   ///
@@ -349,6 +385,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Force Stop'**
   String get forceStop;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// No description provided for @running.
+  ///
+  /// In en, this message translates to:
+  /// **'Running'**
+  String get running;
+
+  /// No description provided for @stopped.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopped'**
+  String get stopped;
+
+  /// No description provided for @addServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Server'**
+  String get addServer;
 
   /// No description provided for @errorWithMessage.
   ///

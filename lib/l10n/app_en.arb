@@ -21,6 +21,9 @@
   "version": "Version",
   "status": "Status",
   "upTime": "Uptime",
+  "days": "days",
+  "hours": "hours",
+  "minutes": "minutes",
   "lanIP": "Lan IP",
   "array": "Array",
   "state": "State",
@@ -29,6 +32,9 @@
   "disk": "Disk",
   "caches": "Caches",
   "cache": "Cache",
+  "arrayOperation": "Array Operation",
+  "arrayOperationStart": "Start",
+  "arrayOperationStop": "Stop",
   "system": "System",
   "infos": "Infos",
   "memory": "Memory",
@@ -41,6 +47,11 @@
   "resume": "Resume",
   "reboot": "Reboot",
   "forceStop": "Force Stop",
+  "add": "Add",
+  "running": "Running",
+  "stopped": "Stopped",
+  "multiserverSettingsTitle": "Multiserver Settings",
+  "addServer": "Add Server",
   "@freeSpace": {
     "placeholders": {
       "size": {

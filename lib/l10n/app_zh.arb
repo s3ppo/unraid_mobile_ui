@@ -21,7 +21,10 @@
   "version": "版本",
   "status": "状态",
   "upTime": "运行时间",
-  "lanIP": "Lan IP",
+  "days": "天",
+  "hours": "小时",
+  "minutes": "分钟",
+  "lanIP": "局域网IP",
   "array": "阵列",
   "state": "状态",
   "total": "总和",
@@ -29,6 +32,9 @@
   "disk": "磁盘",
   "caches": "缓存",
   "cache": "缓存",
+  "arrayOperation": "阵列操作",
+  "arrayOperationStart": "启动阵列",
+  "arrayOperationStop": "停止阵列",
   "system": "系统",
   "infos": "信息",
   "memory": "内存",
@@ -41,6 +47,11 @@
   "resume": "恢复",
   "reboot": "重启",
   "forceStop": "强制停止",
+  "add": "添加",
+  "running": "运行中",
+  "stopped": "已停止",
+  "multiserverSettingsTitle": "多服务器设置",
+  "addServer": "添加服务器",
   "@freeSpace": {
     "placeholders": {
       "size": {

@@ -75,7 +75,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get upTime => '运行时间';
 
   @override
-  String get lanIP => 'Lan IP';
+  String get days => '天';
+
+  @override
+  String get hours => '小时';
+
+  @override
+  String get minutes => '分钟';
+
+  @override
+  String get lanIP => '局域网IP';
 
   @override
   String get array => '阵列';
@@ -97,6 +106,15 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get cache => '缓存';
+
+  @override
+  String get arrayOperation => '阵列操作';
+
+  @override
+  String get arrayOperationStart => '启动阵列';
+
+  @override
+  String get arrayOperationStop => '停止阵列';
 
   @override
   String get system => '系统';
@@ -135,6 +153,18 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get forceStop => '强制停止';
+
+  @override
+  String get add => '添加';
+
+  @override
+  String get running => '运行中';
+
+  @override
+  String get stopped => '已停止';
+
+  @override
+  String get addServer => '添加服务器';
 
   @override
   String errorWithMessage(String message) {
