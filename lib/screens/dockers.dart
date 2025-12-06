@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:unmobile/global/mutations.dart';
+import 'package:unmobile/l10n/app_localizations.dart';
 import 'package:unmobile/notifiers/auth_state.dart';
 import 'package:unmobile/global/queries.dart';
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
@@ -39,7 +40,7 @@ class _MyDockersPageState extends State<DockersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Docker Containers'),
+          title: Text(AppLocalizations.of(context)!.dockerContainerTitle),
           actions: <Widget>[],
           elevation: 0,
         ),
@@ -76,8 +77,8 @@ class _MyDockersPageState extends State<DockersPage> {
                           actions: <BottomSheetAction>[
                             BottomSheetAction(
                               title: running
-                                  ? const Text('Stop')
-                                  : const Text('Start'),
+                                  ? Text(AppLocalizations.of(context)!.stop)
+                                  : Text(AppLocalizations.of(context)!.start),
                               onPressed: (_) async {
                                 Navigator.of(context).pop();
                                 docker = await startStopDocker(running, docker);
@@ -86,7 +87,7 @@ class _MyDockersPageState extends State<DockersPage> {
                             )
                           ],
                           cancelAction:
-                              CancelAction(title: const Text('Cancel')),
+                              CancelAction(title: Text(AppLocalizations.of(context)!.cancel)),
                         );
                       },
                       leading:
@@ -112,8 +113,8 @@ class _MyDockersPageState extends State<DockersPage> {
                           size: 16),
                         const SizedBox(width: 4),
                         Text(docker['state'] == 'RUNNING'
-                          ? 'Running'
-                          : 'Stopped'),
+                          ? AppLocalizations.of(context)!.running
+                          : AppLocalizations.of(context)!.stopped),
                         const SizedBox(width: 10),
                         if (docker['status'] != null && docker['status'].toString().contains('healthy')) ...[
                             const Text('- healthy'),

@@ -1,0 +1,72 @@
+{
+  "login": "LOGIN",
+  "needHelp": "Need help?",
+  "appTitle": "unConnect",
+  "dashBoardTitle": "Dashboard",
+  "arrayTitle": "Array",
+  "sharesTitle": "Shares",
+  "dockerContainerTitle": "Docker Containers",
+  "virtualMachineTitle": "Virtual Machines",
+  "systemInfoTitle": "System Info",
+  "systemTitle": "System",
+  "pluginsTitle": "Plugins",
+  "settingsTitle": "Settings",
+  "multiserverSettingsTitle": "Multiserver Settings",
+  "languageTitle": "Language",
+  "languageSystemDefault": "System default",
+  "languageEnglish": "English",
+  "languageChinese": "Chinese (Simplified)",
+  "logoutTitle": "Logout",
+  "notificationsTitle": "Notifications",
+  "version": "Version",
+  "status": "Status",
+  "upTime": "Uptime",
+  "days": "days",
+  "hours": "hours",
+  "minutes": "minutes",
+  "lanIP": "Lan IP",
+  "array": "Array",
+  "state": "State",
+  "total": "Total",
+  "disks": "Disks",
+  "disk": "Disk",
+  "caches": "Caches",
+  "cache": "Cache",
+  "arrayOperation": "Array Operation",
+  "arrayOperationStart": "Start",
+  "arrayOperationStop": "Stop",
+  "system": "System",
+  "infos": "Infos",
+  "memory": "Memory",
+  "noData": "No data available",
+  "freeSpace": "Free: {size} GB",
+  "start": "Start",
+  "stop": "Stop",
+  "cancel": "Cancel",
+  "pause": "Pause",
+  "resume": "Resume",
+  "reboot": "Reboot",
+  "forceStop": "Force Stop",
+  "add": "Add",
+  "running": "Running",
+  "stopped": "Stopped",
+  "multiserverSettingsTitle": "Multiserver Settings",
+  "addServer": "Add Server",
+  "@freeSpace": {
+    "placeholders": {
+      "size": {
+        "type": "int",
+        "description": "Free size in gigabytes"
+      }
+    }
+  },
+  "errorWithMessage": "Error: {message}",
+  "@errorWithMessage": {
+    "placeholders": {
+      "message": {
+        "type": "String",
+        "description": "Error message details"
+      }
+    }
+  }
+}

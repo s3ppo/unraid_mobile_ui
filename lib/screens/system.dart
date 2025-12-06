@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:unmobile/global/queries.dart';
+import 'package:unmobile/l10n/app_localizations.dart';
 import 'package:unmobile/notifiers/auth_state.dart';
 import 'package:unmobile/global/routes.dart';
 
@@ -38,7 +39,7 @@ class _MySystemPageState extends State<SystemPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('System'),
+          title: Text(AppLocalizations.of(context)!.systemTitle),
           actions: <Widget>[
           ],
           elevation: 0,

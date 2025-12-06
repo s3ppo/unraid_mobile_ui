@@ -5,6 +5,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:unmobile/global/mutations.dart';
 import 'package:unmobile/global/queries.dart';
+import 'package:unmobile/l10n/app_localizations.dart';
 import 'package:unmobile/notifiers/auth_state.dart';
 
 class VmsPage extends StatefulWidget {
@@ -40,7 +41,7 @@ class _MyVmsPageState extends State<VmsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Virtual Machines'),
+          title: Text(AppLocalizations.of(context)!.virtualMachineTitle),
           actions: <Widget>[],
           elevation: 0,
         ),
@@ -92,7 +93,7 @@ class _MyVmsPageState extends State<VmsPage> {
                           actions: <BottomSheetAction>[
                             if (running) ...[
                               BottomSheetAction(
-                                title: const Text('Stop'),
+                                title: Text(AppLocalizations.of(context)!.stop),
                                 onPressed: (_) async {
                                   Navigator.of(context).pop();
                                   vm = await commandVM('stop', vm);
@@ -100,7 +101,7 @@ class _MyVmsPageState extends State<VmsPage> {
                                 },
                               ),
                               BottomSheetAction(
-                                title: const Text('Force Stop'),
+                                title: Text(AppLocalizations.of(context)!.forceStop),
                                 onPressed: (_) async {
                                   Navigator.of(context).pop();
                                   vm = await commandVM('forceStop', vm);
@@ -108,14 +109,14 @@ class _MyVmsPageState extends State<VmsPage> {
                                 },
                               ),
                               BottomSheetAction(
-                                  title: const Text('Pause'),
+                                  title: Text(AppLocalizations.of(context)!.pause),
                                   onPressed: (_) async {
                                     Navigator.of(context).pop();
                                     vm = await commandVM('pause', vm);
                                     setState(() {});
                                   }),
                               BottomSheetAction(
-                                title: const Text('Reboot'),
+                                title: Text(AppLocalizations.of(context)!.reboot),
                                 onPressed: (_) async {
                                   Navigator.of(context).pop();
                                   vm = await commandVM('reboot', vm);
@@ -124,7 +125,7 @@ class _MyVmsPageState extends State<VmsPage> {
                               ),
                             ] else if (shutoff) ...[
                               BottomSheetAction(
-                                title: const Text('Start'),
+                                title: Text(AppLocalizations.of(context)!.start),
                                 onPressed: (_) async {
                                   Navigator.of(context).pop();
                                   vm = await commandVM('start', vm);
@@ -142,7 +143,7 @@ class _MyVmsPageState extends State<VmsPage> {
                             ],
                             if (paused) ...[
                               BottomSheetAction(
-                                title: const Text('Resume'),
+                                title: Text(AppLocalizations.of(context)!.resume),
                                 onPressed: (_) async {
                                   Navigator.of(context).pop();
                                   vm = await commandVM('resume', vm);
@@ -152,7 +153,7 @@ class _MyVmsPageState extends State<VmsPage> {
                             ]
                           ],
                           cancelAction:
-                              CancelAction(title: const Text('Cancel')),
+                              CancelAction(title: Text(AppLocalizations.of(context)!.cancel)),
                         );
                       },
                       leading: iconVm,

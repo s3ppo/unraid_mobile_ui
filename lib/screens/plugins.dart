@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:unmobile/global/queries.dart';
+import 'package:unmobile/l10n/app_localizations.dart';
 import 'package:unmobile/notifiers/auth_state.dart';
 
 class PluginsPage extends StatefulWidget {
@@ -37,7 +38,7 @@ class _MyPluginsPageState extends State<PluginsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Plugins'),
+          title: Text(AppLocalizations.of(context)!.pluginsTitle),
           actions: <Widget>[],
           elevation: 0,
         ),

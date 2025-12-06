@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:unmobile/l10n/app_localizations.dart';
 import 'package:unmobile/notifiers/auth_state.dart';
 
 class SettingsMultiserver extends StatefulWidget {
@@ -27,7 +28,7 @@ class _MySettingsMultiserverState extends State<SettingsMultiserver> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Multiserver Settings'),
+        title: Text(AppLocalizations.of(context)!.multiserverSettingsTitle),
         actions: <Widget>[],
         elevation: 0,
       ),
@@ -73,7 +74,7 @@ class _MySettingsMultiserverState extends State<SettingsMultiserver> {
         String token = '';
         String protocol = 'http';
         return AlertDialog(
-          title: const Text('Add Server'),
+          title: Text(AppLocalizations.of(context)!.addServer),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -111,7 +112,7 @@ class _MySettingsMultiserverState extends State<SettingsMultiserver> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
             TextButton(
               onPressed: () async {
@@ -123,7 +124,7 @@ class _MySettingsMultiserverState extends State<SettingsMultiserver> {
                 }
                 Navigator.of(context).pop();
               },
-              child: const Text('Add'),
+              child: Text(AppLocalizations.of(context)!.add),
             ),
           ],
         );

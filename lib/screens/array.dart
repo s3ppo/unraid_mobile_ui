@@ -4,6 +4,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:unmobile/global/mutations.dart';
 import 'package:unmobile/global/queries.dart';
+import 'package:unmobile/l10n/app_localizations.dart';
 import 'package:unmobile/notifiers/auth_state.dart';
 
 class ArrayPage extends StatefulWidget {
@@ -40,7 +41,7 @@ class _MyArrayPageState extends State<ArrayPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Array'),
+          title: Text(AppLocalizations.of(context)!.arrayTitle),
           elevation: 0,
         ),
         body: showArrayContent(),
@@ -53,11 +54,11 @@ class _MyArrayPageState extends State<ArrayPage> {
                 return SizedBox(height: 160, child: Wrap(
                   children: [
                     SizedBox( height: 40, child: ListTile(
-                      title: Text('Array Operation'),
+                      title: Text(AppLocalizations.of(context)!.arrayOperation),
                     )),
                     ListTile(
                       leading: const Icon(Icons.play_arrow),
-                      title: const Text('Start'),
+                      title: Text(AppLocalizations.of(context)!.arrayOperationStart),
                       onTap: () {
                         Navigator.of(context).pop();
                         doSetArrayState('START');
@@ -65,7 +66,7 @@ class _MyArrayPageState extends State<ArrayPage> {
                     ),
                     ListTile(
                       leading: const Icon(Icons.stop),
-                      title: const Text('Stop'),
+                      title: Text(AppLocalizations.of(context)!.arrayOperationStop),
                       onTap: () {
                         Navigator.of(context).pop();
                         doSetArrayState('STOP');
